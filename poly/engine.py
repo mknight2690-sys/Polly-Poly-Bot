@@ -466,6 +466,17 @@ class PaperEngine:
 
         entry = float(pos.get("entry") or pos.get("entry_price") or 0)
         age = time.time() - float(pos.get("opened_at") or time.time())
+        # Scratch seats that open already red (never went green) — bypass min_hold
+        if (
+            bool(self.params.values.get("abort_instant_red", True))
+            and entry > 0.01
+            and age <= float(self.params.values.get("abort_instant_red_sec") or 3.0)
+            and mark + float(self.params.values.get("abort_instant_red_tol") or 0.005)
+            < entry
+            and float(pos.get("mfe") or 0.0) <= 0.0
+            and not pos.get("arb_pair")
+        ):
+            return "open_abort"
         min_hold = float(self.params.values.get("min_hold_sec") or 60.0)
 
         # Big winners / dead losers only — no fee-churn scalps
@@ -643,16 +654,65 @@ class PaperEngine:
         pos["trail_mode"] = mode
         pos["trail_giveback"] = giveback
 
+    def _event_has_red_seat(self, cand: dict) -> bool:
+        """True if an open seat on same event/window is already underwater."""
+        if not bool(self.params.values.get("block_stack_on_red", True)):
+            return False
+        ev = str(cand.get("event_slug") or "")
+        win = cand.get("window_ts")
+        slug = str(cand.get("market_slug") or cand.get("title") or "")
+        for pos in self.positions:
+            same = False
+            if ev and str(pos.get("event_slug") or "") == ev:
+                same = True
+            elif slug and str(pos.get("market_slug") or pos.get("title") or "") == slug:
+                same = True
+            if win is not None and pos.get("window_ts") is not None:
+                try:
+                    same = same or abs(float(pos.get("window_ts")) - float(win)) < 1.0
+                except Exception:
+                    pass
+            if not same:
+                continue
+            entry = float(pos.get("entry") or 0.0)
+            mark = float(pos.get("mark") or entry)
+            if entry > 0 and mark + 1e-9 < entry:
+                return True
+            if float(pos.get("upnl") or 0.0) < 0:
+                return True
+        return False
+
     def _open(self, cand: dict, size_usd: float, advice: dict) -> dict | None:
+        if self._event_has_red_seat(cand):
+            return None
         quoted = float(cand.get("price") or 0.0)
         mid = quoted
         token = str(cand.get("token_id") or "")
         reason = str(cand.get("reason") or "")
         is_lag = "spot_lag" in reason or bool(cand.get("urgent_fak"))
-        # Lag snipes: skip REST midpoint (adds 100-400ms). Cross book slightly for FAK.
+        # Lag snipes: cross book for FAK, but refuse opens that are already red on the book
         if is_lag:
             entry = min(0.99, max(0.01, quoted + 0.02))
             mid = entry
+            if bool(self.params.values.get("skip_stale_lag_open", True)) and token:
+                try:
+                    live = poly.midpoint(token)
+                    if live is not None:
+                        live = float(live)
+                        adverse = float(self.params.values.get("open_max_adverse") or 0.01)
+                        # Impulse already faded vs signal quote → seat would open red
+                        if quoted > 0 and live + adverse < quoted:
+                            return None
+                        # Book already below our cross → don't chase into a hole
+                        if live + adverse < entry:
+                            return None
+                        # Re-anchor entry to fresh mid only if still not adverse
+                        entry = min(0.99, max(0.01, live + 0.02))
+                        mid = entry
+                        if quoted > 0 and live + adverse < quoted:
+                            return None
+                except Exception:
+                    pass
         else:
             if token:
                 try:
@@ -667,6 +727,9 @@ class PaperEngine:
             if quoted > 0 and abs(mid - quoted) > 0.08:
                 return None
             entry = self._fill_price(mid, str(cand.get("side") or "YES"))
+            adverse = float(self.params.values.get("open_max_adverse") or 0.01)
+            if mid + adverse < entry:
+                return None
         side_u = str(cand.get("side") or "").upper()
         if "fair_odds" in reason:
             lo = float(self.params.values.get("fair_min_price") or 0.48)
@@ -790,6 +853,20 @@ class PaperEngine:
             if not clob.get("posted"):
                 self._rollback_failed_live_open(pos)
                 return None
+        # Refuse to keep a seat that is already red on the first mark
+        if bool(self.params.values.get("abort_instant_red", True)) and token:
+            try:
+                live = poly.midpoint(token)
+                if live is not None:
+                    live = float(live)
+                    pos["mark"] = live
+                    tol = float(self.params.values.get("abort_instant_red_tol") or 0.005)
+                    fill_px = float(pos.get("entry") or entry)
+                    if live + tol < fill_px:
+                        self._close(pos, "open_abort")
+                        return None
+            except Exception:
+                pass
         tf = str(pos.get("timeframe") or "").lower().strip()
         if tf.endswith("m") and tf[:-1].isdigit():
             tf_bit = f"{tf[:-1]} minute "
@@ -1141,12 +1218,19 @@ class PaperEngine:
         )
         if mode == "live" and armed:
             urgent = True
-        elif r in ("trail_sl", "sl", "tp") or r.startswith("claim"):
+        elif r in ("trail_sl", "sl", "tp", "open_abort") or r.startswith("claim"):
             urgent = True
         # Aggressive sell for trail/force exits so FAK fills before stop runs
         px = float(mark)
-        if r.startswith("claim") or r in ("tp", "max_hold", "settle_win", "trail_sl", "sl"):
-            if r in ("trail_sl", "sl"):
+        if r.startswith("claim") or r in (
+            "tp",
+            "max_hold",
+            "settle_win",
+            "trail_sl",
+            "sl",
+            "open_abort",
+        ):
+            if r in ("trail_sl", "sl", "open_abort"):
                 # Cross hard for stop fills — speed > price improvement
                 px = max(0.01, mark - 0.06)
             elif mark >= 0.90:
@@ -1201,6 +1285,7 @@ class PaperEngine:
             "trail_sl",
             "sl",
             "tp",
+            "open_abort",
             "claim_win",
             "claim_loss",
             "claim_early",

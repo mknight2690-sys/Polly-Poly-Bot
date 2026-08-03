@@ -98,6 +98,16 @@ PARAM_SPEC: dict[str, dict[str, Any]] = {
     "engine_poll_sec_lag": {"default": 1.5, "min": 0.5, "max": 8.0},
     # When True: only spot_lag / spot_lag_endgame seats — no fair_odds/momentum/arb
     "lag_only": {"default": True, "bool": True},
+    # Don't open into an already-red book (last losers opened underwater)
+    "skip_stale_lag_open": {"default": True, "bool": True},
+    # Skip if live mid is this far below intended entry (price points)
+    "open_max_adverse": {"default": 0.01, "min": 0.0, "max": 0.10},
+    # If first marks after open are already red, scratch immediately
+    "abort_instant_red": {"default": True, "bool": True},
+    "abort_instant_red_sec": {"default": 3.0, "min": 0.5, "max": 15.0},
+    "abort_instant_red_tol": {"default": 0.005, "min": 0.0, "max": 0.05},
+    # Don't add another seat on same event/window while one is already red
+    "block_stack_on_red": {"default": True, "bool": True},
 }
 
 DASHBOARD_DEFAULT = {
