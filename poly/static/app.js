@@ -831,17 +831,35 @@ function syncVoiceUi() {
   $("#vc-persona-name").textContent = currentPersona().name;
 }
 
+function alertVoiceKey(a) {
+  return `${a.kind}:${a.ts}:${a.market_slug || a.title}:${a.side}`;
+}
+
+function markAlertsHeard(rows) {
+  for (const a of rows || []) {
+    _spokenAlertKeys.add(alertVoiceKey(a));
+  }
+  if (_spokenAlertKeys.size > 400) {
+    _spokenAlertKeys = new Set(Array.from(_spokenAlertKeys).slice(-200));
+  }
+}
+
 function watchAlertsForVoice() {
-  if (!STATE || !_voicePrefs.enabled) return;
-  const tradingOn = !!STATE?.account?.trading_enabled;
+  if (!STATE) return;
   const rows = STATE.alerts || [];
+  // Voice off: keep the heard-set caught up so unmute never dumps the backlog
+  if (!_voicePrefs.enabled) {
+    markAlertsHeard(rows);
+    return;
+  }
+  const tradingOn = !!STATE?.account?.trading_enabled;
   // Newest first in state; speak newest TAKE/CLOSE we haven't spoken
   for (const a of rows.slice(0, 12).reverse()) {
     const kind = String(a.kind || "").toUpperCase();
     if (!["TAKE", "CLOSE", "LIVE"].includes(kind)) continue;
     // STOP: only finish callouts for seats we're already in (CLOSE / path LIVE)
     if (!tradingOn && kind === "TAKE") continue;
-    const key = `${a.kind}:${a.ts}:${a.market_slug || a.title}:${a.side}`;
+    const key = alertVoiceKey(a);
     if (_spokenAlertKeys.has(key)) continue;
     // Skip ancient alerts on first paint
     if (Date.now() / 1000 - Number(a.ts || 0) > 90 && _spokenAlertKeys.size === 0) {
@@ -1040,8 +1058,14 @@ function wireControls() {
     _voicePrefs.enabled = !_voicePrefs.enabled;
     saveVoicePrefs();
     syncVoiceUi();
-    if (_voicePrefs.enabled) speakLine(`${currentPersona().name} armed. Bet callouts on.`, { interrupt: true });
-    else if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (_voicePrefs.enabled) {
+      // Catch up silently — do not announce the muted window
+      markAlertsHeard(STATE?.alerts || []);
+      speakLine(`${currentPersona().name} armed. Bet callouts on.`, { interrupt: true });
+    } else if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      markAlertsHeard(STATE?.alerts || []);
+    }
   });
   $("#btn-voice-persona")?.addEventListener("click", () => {
     const idx = PERSONAS.findIndex((p) => p.id === _voicePrefs.persona);
