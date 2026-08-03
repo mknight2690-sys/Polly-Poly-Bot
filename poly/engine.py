@@ -795,6 +795,7 @@ class PaperEngine:
                 ),
             ),
             "best_mark": entry,
+            "signal_entry": entry,
             "trail_armed": False,
             "trail_mode": "",
             "category": advice.get("category") or "",
@@ -821,7 +822,6 @@ class PaperEngine:
         self.fees_paid += entry_fee
         self.positions.append(pos)
         self._sync_equity()
-        bet_tracker.ensure(pos)
         slug = pos["market_slug"] or pos["title"]
         self.cooldowns[slug] = time.time()
         self._maybe_clob_order(pos, size_usd=size_usd, entry=entry)
@@ -838,6 +838,29 @@ class PaperEngine:
                 self.mirror_paper_to_live(set_start=False, max_age_sec=0.0)
             except Exception:
                 pass
+            # Swept the book far above signal — dump immediately, don't fake-TP
+            if pos.get("abort_bad_fill"):
+                bet_tracker.ensure(pos)
+                try:
+                    bet_tracker.resync_fill(pos)
+                except Exception:
+                    pass
+                self.memory.add_lesson(
+                    f"BAD FILL abort {pos.get('side')} {str(pos.get('title') or '')[:50]} "
+                    f"signal {float(pos.get('signal_entry') or 0):.3f} → "
+                    f"fill {float(pos.get('entry') or 0):.3f}",
+                    source="live_exec",
+                )
+                self._close(pos, "open_abort")
+                return None
+        # Tracker after fill sync so ROI uses real entry (not signal mid)
+        bet_tracker.ensure(pos)
+        try:
+            bet_tracker.resync_fill(pos)
+        except Exception:
+            pass
+        fill_px = float(pos.get("entry") or entry)
+        fill_cost = float(pos.get("cost") or size_usd)
         tf = str(pos.get("timeframe") or "").lower().strip()
         if tf.endswith("m") and tf[:-1].isdigit():
             tf_bit = f"{tf[:-1]} minute "
@@ -847,23 +870,23 @@ class PaperEngine:
             tf_bit = ""
         if exec_mode == "dry_run":
             speak = (
-                f"Took {tf_bit}{pos['side']} on {pos['title'][:70]} at {entry:.2f}. Dry run."
+                f"Took {tf_bit}{pos['side']} on {pos['title'][:70]} at {fill_px:.2f}. Dry run."
             )
         elif exec_mode == "live":
             speak = (
-                f"Took {tf_bit}{pos['side']} on {pos['title'][:70]} at {entry:.2f}."
+                f"Took {tf_bit}{pos['side']} on {pos['title'][:70]} at {fill_px:.2f}."
             )
         else:
             speak = (
-                f"Took {tf_bit}{pos['side']} on {pos['title'][:70]} at {entry:.2f}."
+                f"Took {tf_bit}{pos['side']} on {pos['title'][:70]} at {fill_px:.2f}."
             )
         alerts.emit(
             "TAKE",
             pos["title"],
-            detail=f"{pos['side']} @ {entry:.3f} size=${float(pos.get('cost') or size_usd):.2f} | {pos['reason']}",
+            detail=f"{pos['side']} @ {fill_px:.3f} size=${fill_cost:.2f} | {pos['reason']}",
             side=pos["side"],
-            price=entry,
-            size_usd=float(pos.get("cost") or size_usd),
+            price=fill_px,
+            size_usd=fill_cost,
             reason=str(pos.get("reason") or ""),
             confidence=pos["confidence"],
             market_slug=pos["market_slug"],
@@ -1141,6 +1164,7 @@ class PaperEngine:
             }
             # Sync seat to what was actually posted (size may bump for $1 min)
             if result.get("posted") and result.get("size"):
+                signal_px = float(pos.get("signal_entry") or entry)
                 # Floor to 2dp so the later live SELL makerAmount matches inventory
                 new_shares = float(int(float(result["size"]) * 100) / 100.0)
                 if new_shares < 0.01:
@@ -1159,10 +1183,41 @@ class PaperEngine:
                     pos["cost"] = new_cost
                     pos["shares"] = new_shares
                     pos["entry"] = new_px
+                # Rebase TP/SL off FILL — not signal — or a 0.515 signal + 0.77 fill
+                # looks like +$1.25 and falsely triggers TP into a loss.
+                tp_d = float(
+                    pos.get("_tp_delta")
+                    or self.params.values.get("tp_price_delta")
+                    or 0.16
+                )
+                sl_d = float(pos.get("_sl_delta") or 0.14)
+                pos["tp"] = min(0.99, new_px + tp_d)
+                pos["sl"] = max(0.01, new_px - sl_d)
+                pos["initial_sl"] = pos["sl"]
+                pos["best_mark"] = new_px
+                pos["fill_entry"] = new_px
+                pos["signal_entry"] = signal_px
+                slip = new_px - signal_px if signal_px > 0 else 0.0
+                pos["entry_slip"] = slip
+                max_slip = float(self.params.values.get("lag_max_entry_slip") or 0.06)
+                if mode == "live" and slip > max_slip + 1e-9:
+                    pos["abort_bad_fill"] = True
+                    pos["clob"]["msg"] = (
+                        f"bad fill slip +{slip:.3f} (signal {signal_px:.3f} → fill {new_px:.3f})"
+                    )[:160]
+                try:
+                    bet_tracker.resync_fill(pos)
+                except Exception:
+                    pass
             if mode == "live" and result.get("posted"):
                 self.memory.add_lesson(
                     f"CLOB LIVE BUY {pos.get('side')} {pos.get('title','')[:50]} "
-                    f"@ {float(result.get('price') or entry):.3f} size={float(result.get('size') or shares):.4f}",
+                    f"@ {float(result.get('price') or entry):.3f} size={float(result.get('size') or shares):.4f}"
+                    + (
+                        f" (signal {float(pos.get('signal_entry') or entry):.3f})"
+                        if pos.get("signal_entry")
+                        else ""
+                    ),
                     source="live_exec",
                 )
             elif mode == "dry_run":

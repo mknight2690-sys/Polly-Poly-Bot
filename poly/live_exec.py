@@ -599,12 +599,11 @@ class LiveExec:
                                 resp, used = _post_limit(0.01, "limit_gtc_dump_01")
                                 base["mkt_err"] = f"{type(mkt_err2).__name__}: {mkt_err2}"[:160]
                         elif urgent or _is_liq_miss(mkt_err):
-                            # Liquidity miss: FAK already empty — cross with marketable limit
+                            # Liquidity miss: cross hard, but only penny-dump stops/dust
                             cross = min(0.99, px + 0.06) if is_buy else max(0.01, px - 0.12)
                             try:
                                 resp, used = _post_limit(cross, "limit_gtc_cross")
                                 base["mkt_err"] = f"{type(mkt_err).__name__}: {mkt_err}"[:160]
-                                # Still resting? cancel and dump at 0.01 (sells) / 0.99 (buys)
                                 st0 = (
                                     str((resp or {}).get("status") or "").lower()
                                     if isinstance(resp, dict)
@@ -612,6 +611,7 @@ class LiveExec:
                                 )
                                 if (
                                     not is_buy
+                                    and px <= 0.20
                                     and st0 == "live"
                                     and not (
                                         (resp or {}).get("takingAmount")
@@ -625,7 +625,7 @@ class LiveExec:
                                         pass
                                     resp, used = _post_limit(0.01, "limit_gtc_dump_01")
                             except Exception:
-                                if not is_buy:
+                                if not is_buy and px <= 0.20:
                                     try:
                                         resp, used = _post_limit(0.01, "limit_gtc_dump_01")
                                     except Exception:
@@ -967,12 +967,16 @@ class LiveExec:
             )
 
         px0 = max(0.01, min(0.99, float(price)))
-        attempts = [
-            px0,
-            max(0.01, px0 - 0.10),
-            max(0.01, px0 - 0.25),
-            0.01,
-        ]
+        # Escalate for fills — but do NOT penny-dump TP winners (that turned
+        # a marked +$1.25 into a realized loss). Deep dump only near floor.
+        if px0 <= 0.20:
+            attempts = [px0, max(0.01, px0 - 0.05), 0.01]
+        else:
+            attempts = [
+                px0,
+                max(0.01, px0 - 0.08),
+                max(0.05, px0 - 0.16),
+            ]
         # de-dupe while preserving order
         seen: set[float] = set()
         prices: list[float] = []

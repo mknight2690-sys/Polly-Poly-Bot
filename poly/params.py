@@ -83,6 +83,8 @@ PARAM_SPEC: dict[str, dict[str, Any]] = {
     "lag_min_move": {"default": 0.0007, "min": 0.0003, "max": 0.02},  # 7 bps
     "lag_min_edge": {"default": 0.04, "min": 0.01, "max": 0.30},
     "lag_slip_buffer": {"default": 0.01, "min": 0.0, "max": 0.10},
+    # Live FAK buy: if fill is worse than signal by more than this, abort the seat
+    "lag_max_entry_slip": {"default": 0.06, "min": 0.02, "max": 0.20},
     "lag_min_price": {"default": 0.42, "min": 0.15, "max": 0.70},
     "lag_max_price": {"default": 0.82, "min": 0.55, "max": 0.95},
     "lag_tfs": {"default": "5m,15m"},

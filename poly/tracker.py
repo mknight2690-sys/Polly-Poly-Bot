@@ -77,6 +77,42 @@ class LiveBetTracker:
             self.lives[pid] = life
             return life
 
+    def resync_fill(self, pos: dict) -> dict:
+        """After a live fill, rebase life entry/cost/shares so ROI isn't phantom."""
+        pid = str(pos.get("id") or "")
+        entry = float(pos.get("entry") or 0.0)
+        cost = float(pos.get("cost") or 0.0)
+        shares = float(pos.get("shares") or 0.0)
+        with self._lock:
+            life = self.lives.get(pid)
+            if not life:
+                # ensure without lock re-entry — create inline
+                pass
+            else:
+                old = float(life.get("entry") or 0.0)
+                if entry > 0 and abs(entry - old) > 1e-6:
+                    now = time.time()
+                    life["entry"] = entry
+                    life["cost"] = cost
+                    life["shares"] = shares
+                    life["mfe"] = 0.0
+                    life["mae"] = 0.0
+                    life["mfe_roi"] = 0.0
+                    life["mae_roi"] = 0.0
+                    life["last_mark"] = entry
+                    life["last_upnl"] = 0.0
+                    life["last_roi"] = 0.0
+                    life["milestones"] = []
+                    life["path"] = [[now, entry, 0.0]]
+                    life["grade"] = "C"
+                    life["updated_at"] = now
+                    life["fill_resynced"] = True
+                    return life
+                life["cost"] = cost or float(life.get("cost") or 0.0)
+                life["shares"] = shares or float(life.get("shares") or 0.0)
+                return life
+        return self.ensure(pos)
+
     def _append_archive(self, life: dict):
         try:
             os.makedirs(os.path.dirname(LIVES_PATH), exist_ok=True)
