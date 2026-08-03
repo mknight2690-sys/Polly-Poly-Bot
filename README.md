@@ -15,11 +15,46 @@ python run_poly.py
 
 Open the deck in Chrome and hard-refresh after upgrades. Execution boots **dry_run + disarmed** — arm only when the user explicitly asks to spend.
 
+## Desktop shortcuts (Windows) — start / stop Polly
+
+From the repo folder you can one-click create Desktop shortcuts:
+
+```powershell
+cd path\to\Polly-Poly-Bot
+powershell -NoProfile -ExecutionPolicy Bypass -File .\create_desktop_shortcuts.ps1
+```
+
+That puts **Start Polly** and **Stop Polly** on your Desktop.
+
+| Shortcut | What it runs | Effect |
+|----------|----------------|--------|
+| **Start Polly** | `Start Polly.bat` → `start_polly.ps1` | Starts `python run_poly.py` in the background (skips if port **18112** is already listening). Deck: http://127.0.0.1:18112/ |
+| **Stop Polly** | `Stop Polly.bat` → `stop_polly.ps1` | Kills the process listening on **18112** and any `run_poly.py` Python process |
+
+### Make the shortcuts yourself (manual)
+
+1. Open the repo folder in File Explorer.
+2. Right-click **Start Polly.bat** → **Show more options** (Win11) → **Send to** → **Desktop (create shortcut)** — or drag to Desktop while holding `Alt`.
+3. Repeat for **Stop Polly.bat**.
+4. Optional: rename the Desktop icons to **Start Polly** / **Stop Polly**.
+
+### Run without shortcuts
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\start_polly.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\stop_polly.ps1
+```
+
+Logs (start): `logs/polly_stdout.log` and `logs/polly_stderr.log`.
+
 ## Layout
 
 | Path | Role |
 |------|------|
 | `run_poly.py` | Launch server on port 18112 |
+| `start_polly.ps1` / `Start Polly.bat` | Start deck |
+| `stop_polly.ps1` / `Stop Polly.bat` | Stop deck |
+| `create_desktop_shortcuts.ps1` | Install Desktop Start/Stop shortcuts |
 | `poly/` | Engine, edges, live exec, UI |
 | `credentials/poly_clob.example.txt` | Creds template (copy → `poly_clob.txt`) |
 | `data/` | Local runtime state (gitignored) |
