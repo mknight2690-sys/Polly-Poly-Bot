@@ -28,8 +28,8 @@ That puts **Start Polly** and **Stop Polly** on your Desktop.
 
 | Shortcut | What it runs | Effect |
 |----------|----------------|--------|
-| **Start Polly** | `Start Polly.bat` → `start_polly.ps1` | Starts `python run_poly.py` in the background (skips if port **18112** is already listening). Deck: http://127.0.0.1:18112/ |
-| **Stop Polly** | `Stop Polly.bat` → `stop_polly.ps1` | Kills the process listening on **18112** and any `run_poly.py` Python process |
+| **Start Polly** | `Start Polly.bat` → `start_polly.ps1` | **Single instance only** (mutex + port **18112**). If already running, does not start a second process. Waits until the deck responds, then opens **http://127.0.0.1:18112/** in your default browser. |
+| **Stop Polly** | `Stop Polly.bat` → `stop_polly.ps1` | Stops the listener on **18112**, any `run_poly.py` process, and clears `logs/polly.pid`. |
 
 ### Make the shortcuts yourself (manual)
 
