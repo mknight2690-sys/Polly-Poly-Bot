@@ -1141,7 +1141,10 @@ class PaperEngine:
             }
             # Sync seat to what was actually posted (size may bump for $1 min)
             if result.get("posted") and result.get("size"):
-                new_shares = float(result["size"])
+                # Floor to 2dp so the later live SELL makerAmount matches inventory
+                new_shares = float(int(float(result["size"]) * 100) / 100.0)
+                if new_shares < 0.01:
+                    new_shares = float(result["size"])
                 new_px = float(result.get("price") or entry)
                 old_cost = float(pos.get("cost") or size_usd)
                 new_cost = new_shares * new_px

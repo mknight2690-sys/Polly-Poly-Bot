@@ -48,7 +48,9 @@ def _round_size(size: float, *, up: bool = False) -> float:
 
 def _market_sell_size(size: float) -> float:
     """Floor shares to 2dp — venue rejects sell FAK maker amounts finer than that."""
-    return _floor_decimals(max(0.0, float(size)), MARKET_SELL_SIZE_DECIMALS)
+    # Format through 2dp string to kill binary float dust (4.15 -> 4.149999…)
+    floored = _floor_decimals(max(0.0, float(size)), MARKET_SELL_SIZE_DECIMALS)
+    return float(f"{floored:.2f}")
 
 
 def _market_buy_amount(price: float, size: float) -> float:
@@ -570,14 +572,22 @@ class LiveExec:
                     msg = str(err).lower()
                     return "invalid maker amount" in msg or "invalid amounts" in msg
 
-                # Urgent lag: FAK first — on amount reject, floor+retry then aggressive limit
+                def _is_liq_miss(err: Exception) -> bool:
+                    msg = str(err).lower()
+                    return (
+                        "no orders found" in msg
+                        or "no match" in msg
+                        or "couldn't be fully filled" in msg
+                        or "could not be fully filled" in msg
+                    )
+
+                # Urgent lag: FAK first — on reject, floor/retry then cross the book hard
                 if urgent or (not prefer_limit and hasattr(self._client, "create_and_post_market_order")):
                     try:
                         resp = _post_market_fak()
                         used = "market_fak_urgent" if urgent else "market_fak"
                     except Exception as mkt_err:
                         if _is_amount_err(mkt_err) and not is_buy:
-                            # Re-floor and retry FAK once, then cross with limit
                             sz = _market_sell_size(sz)
                             amount = float(sz)
                             base["size"] = sz
@@ -585,19 +595,43 @@ class LiveExec:
                                 resp = _post_market_fak()
                                 used = "market_fak_amount_retry"
                             except Exception as mkt_err2:
-                                slip = -0.08
-                                resp, used = _post_limit(px + slip, "limit_gtc_amount_fallback")
+                                # Dump at penny — must clear inventory for paper-parity closes
+                                resp, used = _post_limit(0.01, "limit_gtc_dump_01")
                                 base["mkt_err"] = f"{type(mkt_err2).__name__}: {mkt_err2}"[:160]
-                        elif urgent and not _is_amount_err(mkt_err):
-                            # Liquidity miss: still try one aggressive limit cross
-                            slip = 0.04 if is_buy else -0.08
+                        elif urgent or _is_liq_miss(mkt_err):
+                            # Liquidity miss: FAK already empty — cross with marketable limit
+                            cross = min(0.99, px + 0.06) if is_buy else max(0.01, px - 0.12)
                             try:
-                                resp, used = _post_limit(px + slip, "limit_gtc_urgent_fallback")
+                                resp, used = _post_limit(cross, "limit_gtc_cross")
                                 base["mkt_err"] = f"{type(mkt_err).__name__}: {mkt_err}"[:160]
+                                # Still resting? cancel and dump at 0.01 (sells) / 0.99 (buys)
+                                st0 = (
+                                    str((resp or {}).get("status") or "").lower()
+                                    if isinstance(resp, dict)
+                                    else ""
+                                )
+                                if (
+                                    not is_buy
+                                    and st0 == "live"
+                                    and not (
+                                        (resp or {}).get("takingAmount")
+                                        or (resp or {}).get("makingAmount")
+                                    )
+                                ):
+                                    try:
+                                        if resp.get("orderID"):
+                                            self._client.cancel_order(resp.get("orderID"))
+                                    except Exception:
+                                        pass
+                                    resp, used = _post_limit(0.01, "limit_gtc_dump_01")
                             except Exception:
-                                raise mkt_err
-                        elif urgent:
-                            raise mkt_err
+                                if not is_buy:
+                                    try:
+                                        resp, used = _post_limit(0.01, "limit_gtc_dump_01")
+                                    except Exception:
+                                        raise mkt_err
+                                else:
+                                    raise mkt_err
                         else:
                             used = "limit_gtc_fallback"
                             slip = 0.04 if is_buy else -0.04
@@ -913,18 +947,102 @@ class LiveExec:
         paper_stats: dict | None = None,
         urgent: bool = False,
     ) -> dict[str, Any]:
-        """Sell / exit — market FAK (limit fallback inside place_order)."""
-        return self.place_order(
-            token_id=token_id,
-            side="SELL",
-            price=price,
-            size=size,
-            mode=mode,
-            armed=armed,
-            paper_stats=paper_stats,
-            order_type="FAK",
-            urgent=bool(urgent),
-        )
+        """Sell / exit — escalate until the live close actually posts.
+
+        Paper closes at mark instantly; live must dump inventory. Retry FAK at
+        worse prices, then a marketable limit at 0.01 so seats don't ghost.
+        """
+        mode_l = (mode or self._creds_meta.get("mode") or "paper").lower().strip()
+        if mode_l in PAPER_MODES or mode_l == "dry_run":
+            return self.place_order(
+                token_id=token_id,
+                side="SELL",
+                price=price,
+                size=size,
+                mode=mode,
+                armed=armed,
+                paper_stats=paper_stats,
+                order_type="FAK",
+                urgent=bool(urgent),
+            )
+
+        px0 = max(0.01, min(0.99, float(price)))
+        attempts = [
+            px0,
+            max(0.01, px0 - 0.10),
+            max(0.01, px0 - 0.25),
+            0.01,
+        ]
+        # de-dupe while preserving order
+        seen: set[float] = set()
+        prices: list[float] = []
+        for p in attempts:
+            p = round(float(p), 2)
+            if p in seen:
+                continue
+            seen.add(p)
+            prices.append(p)
+
+        last: dict[str, Any] = {}
+        filled_shares = 0.0
+        remain = float(size)
+        for i, px in enumerate(prices):
+            if remain < 0.01:
+                break
+            last = self.place_order(
+                token_id=token_id,
+                side="SELL",
+                price=px,
+                size=remain,
+                mode=mode,
+                armed=armed,
+                paper_stats=paper_stats,
+                order_type="FAK",
+                urgent=True,
+                prefer_limit=False,
+            )
+            if last.get("posted"):
+                got = float(last.get("size") or 0) or remain
+                filled_shares += got
+                remain = max(0.0, remain - got)
+                # Partial fill — keep dumping remainder at worse px
+                if remain >= 0.01 and i < len(prices) - 1:
+                    last = {
+                        **last,
+                        "partial": True,
+                        "filled_shares": filled_shares,
+                        "remain": remain,
+                    }
+                    continue
+                last["filled_shares"] = filled_shares
+                last["attempts"] = i + 1
+                return last
+            # Liquidity miss / amount err — brief pause then worse price
+            try:
+                time.sleep(0.05)
+            except Exception:
+                pass
+
+        if filled_shares >= 0.01 and not last.get("posted"):
+            # Book what we dumped even if final remainder failed
+            last = {
+                **(last or {}),
+                "ok": True,
+                "posted": True,
+                "partial": True,
+                "size": filled_shares,
+                "filled_shares": filled_shares,
+                "remain": remain,
+                "msg": f"partial exit filled {filled_shares:.2f}, remain {remain:.2f}",
+            }
+        elif last:
+            last["attempts"] = len(prices)
+        return last or {
+            "ok": False,
+            "posted": False,
+            "mode": mode_l,
+            "msg": "exit_order produced no result",
+        }
 
     def status(self, *, paper_stats: dict | None = None) -> dict[str, Any]:
         ready = self.readiness(paper_stats=paper_stats)

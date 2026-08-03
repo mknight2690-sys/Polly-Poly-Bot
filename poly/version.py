@@ -6,9 +6,9 @@ dashboard top-right tag and chat stay in sync.
 from __future__ import annotations
 
 # Human + UI label — bump this whenever we ship a deck change.
-BUILD = "v0.37.9"
+BUILD = "v0.37.10"
 # Monotonic integer for quick compare / cache bust hints.
-BUILD_NUM = 47
+BUILD_NUM = 48
 
 __all__ = ["BUILD", "BUILD_NUM", "as_dict"]
 
