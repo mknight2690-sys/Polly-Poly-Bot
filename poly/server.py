@@ -215,7 +215,11 @@ def full_state() -> dict[str, Any]:
             },
         },
         "account": {
-            "source": str(params.values.get("exec_mode") or "paper"),
+            "source": (
+                "live"
+                if live.get("spending")
+                else str(params.values.get("exec_mode") or "paper")
+            ),
             "live": bool(live.get("spending")),
             "exec_mode": str(params.values.get("exec_mode") or "paper"),
             "live_trading_armed": bool(params.values.get("live_trading_armed")),
@@ -223,6 +227,8 @@ def full_state() -> dict[str, Any]:
             "balance": paper.get("balance"),
             "start_balance": paper.get("start_balance"),
             "peak_equity": paper.get("peak_equity"),
+            "live_clob_usd": (live.get("balance") or {}).get("balance_usd"),
+            "paper_equity": paper.get("equity"),
             "sizing": paper.get("sizing") or {},
             "positions": paper.get("positions") or [],
             "position_count": paper.get("position_count") or 0,
@@ -403,14 +409,18 @@ async def api_live_arm(payload: dict = Body(...)):
             await asyncio.to_thread(live_exec.prewarm_lag)
         except Exception:
             pass
-        # Size live seats off CLOB wallet from this arm — ignore paper equity
+        # Size live seats off CLOB wallet AND mirror paper bankroll to that wallet
         try:
             bal = await asyncio.to_thread(live_exec.fetch_balance)
             clob = float((bal or {}).get("balance_usd") or 0)
             engine.live_start_equity = clob
             engine.live_peak_equity = clob
+            mirrored = engine.mirror_paper_to_live(
+                set_start=True, max_age_sec=0.0, force=True
+            )
             memory.add_lesson(
-                f"Live sizing keyed to CLOB ${clob:.2f} (paper equity ignored while armed).",
+                f"Live ARMED — paper bankroll synced to CLOB "
+                f"${float((mirrored or {}).get('equity') or clob):.2f}.",
                 source="live_exec",
             )
         except Exception:

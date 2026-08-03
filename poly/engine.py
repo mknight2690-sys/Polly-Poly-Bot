@@ -258,6 +258,49 @@ class PaperEngine:
         except Exception:
             return None
 
+    def mirror_paper_to_live(
+        self,
+        *,
+        set_start: bool = False,
+        max_age_sec: float = 2.0,
+        force: bool = False,
+    ) -> dict[str, Any]:
+        """Keep paper ledger cash aligned with CLOB while LIVE+ARMED.
+
+        Free cash := CLOB collateral. Equity := cash + live seat mark value.
+        Call on arm (set_start=True) and after every live open/close.
+        """
+        mode = str(self.params.values.get("exec_mode") or "paper").lower().strip()
+        armed = bool(self.params.values.get("live_trading_armed"))
+        if not force and (mode != "live" or not armed):
+            return {"ok": False, "msg": "not live+armed"}
+        clob = self._clob_balance_usd(max_age_sec=max_age_sec)
+        if clob is None:
+            return {"ok": False, "msg": "clob balance unknown"}
+        self.balance = float(clob)
+        upnl = self._sync_equity()
+        live_eq = float(self.equity)
+        if set_start:
+            self.start_balance = live_eq
+            self.live_start_equity = live_eq
+            self.peak_equity = live_eq
+            self.live_peak_equity = live_eq
+        else:
+            if not float(self.live_start_equity or 0):
+                self.live_start_equity = live_eq
+            self.live_peak_equity = max(float(self.live_peak_equity or 0), live_eq)
+            self.peak_equity = max(float(self.peak_equity or 0), live_eq)
+        return {
+            "ok": True,
+            "clob": float(clob),
+            "balance": float(self.balance),
+            "equity": live_eq,
+            "upnl": float(upnl),
+            "start": float(self.start_balance),
+            "peak": float(self.peak_equity),
+            "set_start": bool(set_start),
+        }
+
     def _live_open_cost(self) -> float:
         """Cost of seats that actually posted to CLOB (not paper-only)."""
         total = 0.0
@@ -790,6 +833,11 @@ class PaperEngine:
             if not clob.get("posted"):
                 self._rollback_failed_live_open(pos)
                 return None
+            # Paper cash must track wallet after every live fill
+            try:
+                self.mirror_paper_to_live(set_start=False, max_age_sec=0.0)
+            except Exception:
+                pass
         tf = str(pos.get("timeframe") or "").lower().strip()
         if tf.endswith("m") and tf[:-1].isdigit():
             tf_bit = f"{tf[:-1]} minute "
@@ -1134,6 +1182,13 @@ class PaperEngine:
         if not token or shares <= 0 or mark <= 0:
             return {"ok": False, "msg": "missing token/size for exit", "mode": mode}
         armed = bool(self.params.values.get("live_trading_armed"))
+        # Always allow CLOB exit for seats that actually posted a live buy
+        live_posted = bool((pos.get("clob") or {}).get("posted")) and str(
+            (pos.get("clob") or {}).get("mode") or ""
+        ) == "live"
+        if live_posted:
+            mode = "live"
+            armed = True
         r = str(reason or "")
         # LIVE trail/TP/SL/claim: always FAK — never rest a GTC while the book moves
         urgent = bool(pos.get("urgent_fak")) or "spot_lag" in str(
@@ -1165,11 +1220,15 @@ class PaperEngine:
             else:
                 px = max(0.01, mark - 0.04)
         px = max(0.01, min(0.99, px))
+        # Venue sell FAK makerAmount (=shares) max 2 decimals
+        sell_shares = float(int(float(shares) * 100) / 100.0)
+        if sell_shares < 0.01:
+            sell_shares = float(shares)
         try:
             result = live_exec.exit_order(
                 token_id=token,
                 price=px,
-                size=float(shares),
+                size=float(sell_shares),
                 mode=mode,
                 armed=armed,
                 paper_stats=self._paper_stats_for_gate(),
@@ -1183,12 +1242,15 @@ class PaperEngine:
                 "side": "SELL",
                 "built": result.get("built"),
                 "px": px,
+                "price": result.get("price") or px,
+                "size": result.get("size") or sell_shares,
+                "order_path": result.get("used"),
                 "reason": r,
             }
             if mode == "live" and result.get("posted"):
                 self.memory.add_lesson(
                     f"CLOB LIVE SELL {pos.get('side')} {pos.get('title','')[:50]} "
-                    f"@ {px:.3f} size={shares:.2f} ({r or 'exit'})",
+                    f"@ {px:.3f} size={float(result.get('size') or sell_shares):.2f} ({r or 'exit'})",
                     source="live_exec",
                 )
             elif mode == "dry_run":
@@ -1227,21 +1289,136 @@ class PaperEngine:
         clob_exit = self._maybe_clob_exit(pos, mark=mark, shares=shares, reason=reason)
         if clob_exit:
             pos["clob_exit"] = clob_exit
-        entry_fee = float(pos.get("entry_fee") or 0.0)
-        exit_fee = self._taker_fee(
-            shares, mark, category=str(pos.get("category") or "crypto")
+        clob_entry = pos.get("clob") or {}
+        live_seat = (
+            bool(clob_entry.get("posted"))
+            and str(clob_entry.get("mode") or "") == "live"
+            and not str(reason or "").startswith("claim")
         )
-        # Resolution / claim_win near $1: selling may be redeem-like; still charge
-        # taker fee on book exits (paper assumes sell). Dust claim_loss same.
-        proceeds_gross = mark * shares
-        proceeds = proceeds_gross - exit_fee
-        pnl = proceeds_gross - cost - entry_fee - exit_fee
-        pnl = float(pnl)
+        # LIVE seat: never book paper PnL if the CLOB sell did not post —
+        # unless CLOB is already flat (dust / no conditional balance) or mark wiped.
+        if live_seat and clob_exit and not clob_exit.get("posted"):
+            fail_msg = str(clob_exit.get("msg") or "").lower()
+            already_flat = any(
+                x in fail_msg
+                for x in (
+                    "dust",
+                    "no conditional balance",
+                    "sell size 0",
+                    "not enough balance",
+                    "not enough balance / allowance",
+                )
+            ) or mark <= 0.02
+            if already_flat:
+                # Tokens gone (sold/resolved/dust) — free the seat so lag can snipe
+                clob_exit = {
+                    **clob_exit,
+                    "posted": True,
+                    "ok": True,
+                    "flat_reconcile": True,
+                    "price": mark,
+                    "size": 0.0,
+                    "msg": f"reconcile flat: {clob_exit.get('msg') or 'no balance'}"[:160],
+                }
+                pos["clob_exit"] = clob_exit
+                # Book wipeout / dust exit at mark (usually ~0)
+            else:
+                fails = int(pos.get("exit_fail_count") or 0) + 1
+                pos["exit_fail_count"] = fails
+                pos["exit_failed"] = True
+                pos["exit_fail_ts"] = time.time()
+                pos["exit_fail_reason"] = reason
+                pos["exit_fail_msg"] = str(clob_exit.get("msg") or "")[:160]
+                # After repeated hard fails, stop blocking seats forever
+                if fails >= 8:
+                    clob_exit = {
+                        **clob_exit,
+                        "posted": True,
+                        "ok": True,
+                        "flat_reconcile": True,
+                        "price": mark,
+                        "size": 0.0,
+                        "msg": f"reconcile after {fails} exit fails: {pos['exit_fail_msg']}"[:160],
+                    }
+                    pos["clob_exit"] = clob_exit
+                else:
+                    # Throttle voice/alerts — was spamming and filling max_positions
+                    last_alert = float(pos.get("exit_fail_alert_ts") or 0)
+                    if time.time() - last_alert >= 20.0:
+                        pos["exit_fail_alert_ts"] = time.time()
+                        self.memory.add_lesson(
+                            f"EXIT FAIL kept open {pos.get('side')} "
+                            f"{str(pos.get('title') or '')[:50]} ({reason}): "
+                            f"{pos['exit_fail_msg']}",
+                            source="live_exec",
+                        )
+                        alerts.emit(
+                            "EXIT_FAIL",
+                            str(pos.get("title") or ""),
+                            detail=(
+                                f"CLOB sell failed — seat kept open ({reason}): "
+                                f"{pos['exit_fail_msg']}"
+                            ),
+                            side=str(pos.get("side") or ""),
+                            price=mark,
+                            size_usd=cost,
+                            reason=reason,
+                            confidence=float(pos.get("confidence") or 0),
+                            market_slug=str(pos.get("market_slug") or ""),
+                            event_slug=str(pos.get("event_slug") or ""),
+                            speak=(
+                                f"Exit failed on {str(pos.get('title') or '')[:50]}. "
+                                f"Position still open."
+                            ),
+                            data={"position_id": pos.get("id"), "clob_exit": clob_exit},
+                        )
+                    self._sync_equity()
+                    self.save()
+                    return {"ok": False, "kept_open": True, "clob_exit": clob_exit}
+        # If live sell filled a different size, book that fill
+        if (
+            live_seat
+            and clob_exit.get("posted")
+            and clob_exit.get("size")
+            and not clob_exit.get("flat_reconcile")
+        ):
+            try:
+                fill_shares = float(clob_exit["size"])
+                if fill_shares > 0:
+                    shares = fill_shares
+                    pos["shares"] = shares
+            except Exception:
+                pass
+        entry_fee = float(pos.get("entry_fee") or 0.0)
+        # Prefer CLOB fill price when live exit posted
+        exit_px = mark
+        if live_seat and clob_exit.get("posted") and clob_exit.get("price"):
+            try:
+                exit_px = float(clob_exit["price"]) or mark
+            except Exception:
+                exit_px = mark
+        if clob_exit.get("flat_reconcile"):
+            # Inventory already gone on CLOB — don't invent sell proceeds
+            exit_fee = 0.0
+            proceeds_gross = 0.0
+            proceeds = 0.0
+            pnl = float(0.0 - cost - entry_fee)
+            reason = f"{reason}_flat" if reason and not str(reason).endswith("_flat") else reason
+        else:
+            exit_fee = self._taker_fee(
+                shares, mark, category=str(pos.get("category") or "crypto")
+            )
+            # Resolution / claim_win near $1: selling may be redeem-like; still charge
+            # taker fee on book exits (paper assumes sell). Dust claim_loss same.
+            proceeds_gross = exit_px * shares
+            proceeds = proceeds_gross - exit_fee
+            pnl = proceeds_gross - cost - entry_fee - exit_fee
+            pnl = float(pnl)
         self.balance += proceeds
         self.fees_paid += exit_fee
         trade = {
             **pos,
-            "exit": mark,
+            "exit": exit_px,
             "proceeds": proceeds,
             "proceeds_gross": proceeds_gross,
             "entry_fee": entry_fee,
@@ -1257,7 +1434,28 @@ class PaperEngine:
         }
         self.positions = [p for p in self.positions if p.get("id") != pos.get("id")]
         self.closed.append(trade)
-        self._sync_equity()
+        # LIVE seats: re-key paper cash to CLOB so phantom closes can't drift the book
+        if live_seat or (
+            str(self.params.values.get("exec_mode") or "").lower() == "live"
+            and bool(self.params.values.get("live_trading_armed"))
+        ):
+            try:
+                mirrored = self.mirror_paper_to_live(set_start=False, max_age_sec=0.0)
+                if mirrored.get("ok") and clob_exit.get("flat_reconcile"):
+                    # Replace invented wipeout PnL with wallet-delta estimate
+                    try:
+                        before = float(cost)
+                        after_eq = float(mirrored.get("equity") or self.equity)
+                        # keep trade audit, but don't leave paper stranded
+                        trade["pnl_ledger"] = pnl
+                        trade["mirrored_equity"] = after_eq
+                        trade["flat_reconcile"] = True
+                    except Exception:
+                        pass
+            except Exception:
+                self._sync_equity()
+        else:
+            self._sync_equity()
         self.memory.record_trade(trade)
         life = bet_tracker.close_life(
             pos,
@@ -1285,7 +1483,6 @@ class PaperEngine:
                 market=str(pos.get("market_slug") or ""),
                 trader=str(pos.get("copy_trader") or ""),
             )
-        exec_mode = str(self.params.values.get("exec_mode") or "paper").lower().strip()
         speak = (
             f"Closed {pos.get('side')} on {str(pos.get('title') or '')[:60]}. "
             f"{'Profit' if pnl >= 0 else 'Loss'} {abs(pnl):.2f} dollars."
@@ -1718,35 +1915,50 @@ class PaperEngine:
         return {"opened": opened, "closed": closed, "skipped": skipped, "armed": True}
 
     def _preview_sizing(self) -> dict[str, Any]:
-        """Next-seat preview for dashboard (paper + live-if-funded)."""
+        """Next-seat preview — LIVE+ARMED shows CLOB sizing (what lag actually uses)."""
         try:
-            out = compute_stake(
-                equity=float(self.equity),
-                balance=float(self.balance),
-                start_equity=float(self.start_balance or self.equity),
-                peak_equity=float(self.peak_equity or self.equity),
-                open_cost=open_invested(self.positions),
-                risk_frac=float(self.params.values.get("risk_frac") or 0.35),
-                min_bet=float(self.params.values.get("min_bet_usd") or 2.5),
-                max_bet_usd=float(self.params.values.get("max_bet_usd") or 0.0),
-                max_bet_frac=float(self.params.values.get("max_bet_frac") or 0.45),
-                heat_frac=float(self.params.values.get("portfolio_heat_frac") or 0.70),
-                size_mult=1.0,
-                confidence=0.75,
-                is_lag=bool(self.params.values.get("lag_only", True)),
-                live_clob_usd=None,
-                sizing_mode=str(self.params.values.get("sizing_mode") or "smart"),
-                grow_above_usd=float(
+            mode = str(self.params.values.get("exec_mode") or "paper").lower().strip()
+            armed = bool(self.params.values.get("live_trading_armed"))
+            spending = mode == "live" and armed
+            # Prefer last live seat size when spending so UI matches hot path
+            if spending and self.last_sizing.get("bankroll_source") == "live_clob":
+                out = dict(self.last_sizing)
+                out["mode"] = str(self.params.values.get("sizing_mode") or "smart")
+                out["risk_frac"] = float(self.params.values.get("risk_frac") or 0.35)
+                out["grow_above_usd"] = float(
                     self.params.values.get("sizing_grow_above_usd") or 50.0
-                ),
-            )
-            out["mode"] = str(self.params.values.get("sizing_mode") or "smart")
-            out["risk_frac"] = float(self.params.values.get("risk_frac") or 0.35)
-            out["grow_above_usd"] = float(
-                self.params.values.get("sizing_grow_above_usd") or 50.0
-            )
-            out["bankroll_source"] = "paper"
-            out["last"] = dict(self.last_sizing) if self.last_sizing else {}
+                )
+                out["last"] = dict(self.last_sizing)
+            else:
+                out = compute_stake(
+                    equity=float(self.equity),
+                    balance=float(self.balance),
+                    start_equity=float(self.start_balance or self.equity),
+                    peak_equity=float(self.peak_equity or self.equity),
+                    open_cost=open_invested(self.positions),
+                    risk_frac=float(self.params.values.get("risk_frac") or 0.35),
+                    min_bet=float(self.params.values.get("min_bet_usd") or 2.5),
+                    max_bet_usd=float(self.params.values.get("max_bet_usd") or 0.0),
+                    max_bet_frac=float(self.params.values.get("max_bet_frac") or 0.45),
+                    heat_frac=float(
+                        self.params.values.get("portfolio_heat_frac") or 0.70
+                    ),
+                    size_mult=1.0,
+                    confidence=0.75,
+                    is_lag=bool(self.params.values.get("lag_only", True)),
+                    live_clob_usd=None,
+                    sizing_mode=str(self.params.values.get("sizing_mode") or "smart"),
+                    grow_above_usd=float(
+                        self.params.values.get("sizing_grow_above_usd") or 50.0
+                    ),
+                )
+                out["mode"] = str(self.params.values.get("sizing_mode") or "smart")
+                out["risk_frac"] = float(self.params.values.get("risk_frac") or 0.35)
+                out["grow_above_usd"] = float(
+                    self.params.values.get("sizing_grow_above_usd") or 50.0
+                )
+                out["bankroll_source"] = "paper"
+                out["last"] = dict(self.last_sizing) if self.last_sizing else {}
             # Cached CLOB only — never block /api/state on RPC
             live_prev = None
             try:
@@ -1758,12 +1970,18 @@ class PaperEngine:
                     grow = float(
                         self.params.values.get("sizing_grow_above_usd") or 50.0
                     )
+                    invested = self._live_open_cost() if spending else 0.0
+                    live_eq = clob_f + invested
                     live_prev = compute_stake(
-                        equity=clob_f,
+                        equity=live_eq,
                         balance=clob_f,
-                        start_equity=clob_f,
-                        peak_equity=clob_f,
-                        open_cost=0.0,
+                        start_equity=float(
+                            getattr(self, "live_start_equity", 0) or live_eq
+                        ),
+                        peak_equity=float(
+                            getattr(self, "live_peak_equity", 0) or live_eq
+                        ),
+                        open_cost=invested,
                         risk_frac=float(self.params.values.get("risk_frac") or 0.35),
                         min_bet=min_b,
                         max_bet_usd=float(self.params.values.get("max_bet_usd") or 0.0),
@@ -1782,11 +2000,22 @@ class PaperEngine:
                         ),
                         grow_above_usd=grow,
                     )
+                    if live_eq + 1e-9 < grow:
+                        live_prev["stake"] = round(
+                            min(float(live_prev.get("stake") or 0), min_b), 4
+                        )
+                        live_prev["min_bet_phase"] = True
                     live_prev["live_clob_usd"] = clob_f
                     live_prev["bankroll_source"] = "live_clob"
             except Exception:
                 live_prev = None
             out["live_if_armed"] = live_prev
+            # LIVE+ARMED: surface the stake lag will actually use
+            if spending and live_prev:
+                for k, v in live_prev.items():
+                    if k != "live_if_armed":
+                        out[k] = v
+                out["bankroll_source"] = "live_clob"
             return out
         except Exception as e:
             return {"ok": False, "stake": 0.0, "why": str(e)[:80]}
@@ -1794,8 +2023,27 @@ class PaperEngine:
     def status(self) -> dict[str, Any]:
         # Never hit the network here — broadcaster /api/state call this on the
         # event loop. Marks are refreshed by mark_live / tick workers.
+        mode = str(self.params.values.get("exec_mode") or "paper").lower().strip()
+        armed = bool(self.params.values.get("live_trading_armed"))
+        spending = mode == "live" and armed
+        # LIVE+ARMED: overlay free cash from cached CLOB so header can't drift
+        if spending:
+            try:
+                cache = getattr(live_exec, "_bal_cache", None) or {}
+                clob = cache.get("balance_usd")
+                if clob is not None and float(clob) >= 0:
+                    self.balance = float(clob)
+            except Exception:
+                pass
         upnl = self._sync_equity()
-        start = float(self.start_balance or 0.0) or 1.0
+        if spending:
+            live_eq = float(self.equity)
+            self.live_peak_equity = max(float(self.live_peak_equity or 0), live_eq)
+            start = float(self.live_start_equity or self.start_balance or live_eq) or 1.0
+            peak = float(self.live_peak_equity or self.peak_equity or live_eq)
+        else:
+            start = float(self.start_balance or 0.0) or 1.0
+            peak = float(self.peak_equity or self.equity)
         total_pnl = float(self.equity) - start
         session_realized = sum(float(t.get("pnl") or 0.0) for t in self.closed)
         live = bet_tracker.status()
@@ -1856,14 +2104,15 @@ class PaperEngine:
         return {
             "equity": float(self.equity),
             "balance": float(self.balance),
-            "start_balance": float(self.start_balance),
-            "peak_equity": float(self.peak_equity or self.equity),
+            "start_balance": float(start if spending else self.start_balance),
+            "peak_equity": float(peak if spending else (self.peak_equity or self.equity)),
             "sizing": self._preview_sizing(),
             "upnl": float(upnl),
             "unrealized_pnl": float(upnl),
             "realized_pnl": float(session_realized),
             "total_pnl": float(total_pnl),
             "roi_pct": (total_pnl / start) * 100.0,
+            "bankroll_source": "live_clob" if spending else "paper",
             "fees_paid": float(self.fees_paid),
             "paper_fees": bool(self.params.values.get("paper_fees", True)),
             "paper_fee_rate": float(

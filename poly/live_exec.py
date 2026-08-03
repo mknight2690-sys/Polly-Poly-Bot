@@ -25,6 +25,16 @@ PAPER_MODES = {"paper", "off", ""}
 MIN_BUY_NOTIONAL_USD = 1.05
 MIN_SHARE_SIZE = 5.0
 SIZE_DECIMALS = 4
+# FAK/FOK market orders: sell makerAmount (=shares) max 2dp; buy makerAmount (=USDC) max 2dp
+MARKET_SELL_SIZE_DECIMALS = 2
+MARKET_BUY_AMOUNT_DECIMALS = 2
+
+
+def _floor_decimals(value: float, decimals: int) -> float:
+    import math
+
+    mult = 10 ** int(decimals)
+    return math.floor(float(value) * mult + 1e-12) / mult
 
 
 def _round_size(size: float, *, up: bool = False) -> float:
@@ -34,6 +44,18 @@ def _round_size(size: float, *, up: bool = False) -> float:
 
         return math.ceil(float(size) * mult - 1e-12) / mult
     return round(float(size), SIZE_DECIMALS)
+
+
+def _market_sell_size(size: float) -> float:
+    """Floor shares to 2dp — venue rejects sell FAK maker amounts finer than that."""
+    return _floor_decimals(max(0.0, float(size)), MARKET_SELL_SIZE_DECIMALS)
+
+
+def _market_buy_amount(price: float, size: float) -> float:
+    """USDC notional for market buy FAK — max 2dp maker amount."""
+    px = max(0.01, min(0.99, float(price)))
+    raw = max(float(size) * px, MIN_BUY_NOTIONAL_USD, MIN_SHARE_SIZE * px)
+    return max(0.01, _floor_decimals(raw, MARKET_BUY_AMOUNT_DECIMALS))
 
 
 def _ensure_buy_notional(price: float, size: float) -> tuple[float, float]:
@@ -149,6 +171,12 @@ class LiveExec:
         }
         self._raw = env
         self._client = None
+        # Drop stale incomplete-order noise after a successful creds load
+        if self._creds_meta.get("has_private_key") and self._creds_meta.get("has_funder"):
+            if (self._last_order or {}).get("msg") == "creds incomplete":
+                self._last_order = {}
+            if "missing PRIVATE_KEY" in str(self._last_error or ""):
+                self._last_error = ""
         return dict(self._creds_meta)
 
     def readiness(self, *, paper_stats: dict | None = None) -> dict[str, Any]:
@@ -475,17 +503,32 @@ class LiveExec:
                             have = float(raw) / 1_000_000.0
                         else:
                             have = float(raw or 0)
-                        if have > 0:
-                            sz = min(sz, have)
+                        # Already flat on CLOB — don't try to sell ghost size
+                        if have < 0.01:
+                            out = {
+                                "ok": False,
+                                "posted": False,
+                                "mode": "live",
+                                "msg": "sell size dust / no conditional balance",
+                                "have": have,
+                                **base,
+                            }
+                            self._last_order = out
+                            return out
+                        sz = min(sz, have)
                     except Exception:
                         pass
-                    sz = _round_size(sz, up=False)
-                    if sz <= 0:
+                    # Market sells: makerAmount=shares must be <=2 decimals
+                    if urgent or not prefer_limit:
+                        sz = _market_sell_size(sz)
+                    else:
+                        sz = _round_size(sz, up=False)
+                    if sz < 0.01:
                         out = {
                             "ok": False,
                             "posted": False,
                             "mode": "live",
-                            "msg": "sell size 0 / no conditional balance",
+                            "msg": "sell size dust / no conditional balance",
                             **base,
                         }
                         self._last_order = out
@@ -494,17 +537,19 @@ class LiveExec:
                 base["size"] = sz
 
                 side_enum = Side.BUY if is_buy else Side.SELL
-                amount = round(px * sz, 4) if is_buy else float(sz)
-                if is_buy:
-                    amount = max(amount, MIN_BUY_NOTIONAL_USD, MIN_SHARE_SIZE * px)
+                amount = _market_buy_amount(px, sz) if is_buy else float(_market_sell_size(sz))
                 resp = None
                 used = "market_fak"
 
                 def _post_limit(lim_px: float, label: str):
+                    lim_sz = sz if not is_buy else max(sz, MIN_SHARE_SIZE)
+                    # Limits tolerate 4dp size; still floor sells to 2dp to avoid rejects
+                    if not is_buy:
+                        lim_sz = _market_sell_size(lim_sz)
                     largs = OrderArgs(
                         token_id=str(token_id),
                         price=max(0.01, min(0.99, lim_px)),
-                        size=sz if not is_buy else max(sz, MIN_SHARE_SIZE),
+                        size=lim_sz,
                         side=side_enum,
                     )
                     signed = self._client.create_order(largs)
@@ -521,18 +566,43 @@ class LiveExec:
                         margs, order_type=OrderType.FAK
                     )
 
-                # Urgent lag: FAK only — never rest a GTC
+                def _is_amount_err(err: Exception) -> bool:
+                    msg = str(err).lower()
+                    return "invalid maker amount" in msg or "invalid amounts" in msg
+
+                # Urgent lag: FAK first — on amount reject, floor+retry then aggressive limit
                 if urgent or (not prefer_limit and hasattr(self._client, "create_and_post_market_order")):
                     try:
                         resp = _post_market_fak()
                         used = "market_fak_urgent" if urgent else "market_fak"
                     except Exception as mkt_err:
-                        if urgent:
+                        if _is_amount_err(mkt_err) and not is_buy:
+                            # Re-floor and retry FAK once, then cross with limit
+                            sz = _market_sell_size(sz)
+                            amount = float(sz)
+                            base["size"] = sz
+                            try:
+                                resp = _post_market_fak()
+                                used = "market_fak_amount_retry"
+                            except Exception as mkt_err2:
+                                slip = -0.08
+                                resp, used = _post_limit(px + slip, "limit_gtc_amount_fallback")
+                                base["mkt_err"] = f"{type(mkt_err2).__name__}: {mkt_err2}"[:160]
+                        elif urgent and not _is_amount_err(mkt_err):
+                            # Liquidity miss: still try one aggressive limit cross
+                            slip = 0.04 if is_buy else -0.08
+                            try:
+                                resp, used = _post_limit(px + slip, "limit_gtc_urgent_fallback")
+                                base["mkt_err"] = f"{type(mkt_err).__name__}: {mkt_err}"[:160]
+                            except Exception:
+                                raise mkt_err
+                        elif urgent:
                             raise mkt_err
-                        used = "limit_gtc_fallback"
-                        slip = 0.04 if is_buy else -0.04
-                        resp, used = _post_limit(px + slip, "limit_gtc_fallback")
-                        base["mkt_err"] = f"{type(mkt_err).__name__}: {mkt_err}"[:160]
+                        else:
+                            used = "limit_gtc_fallback"
+                            slip = 0.04 if is_buy else -0.04
+                            resp, used = _post_limit(px + slip, "limit_gtc_fallback")
+                            base["mkt_err"] = f"{type(mkt_err).__name__}: {mkt_err}"[:160]
                 elif prefer_limit and hasattr(self._client, "create_order"):
                     try:
                         # Passive at/near mid — buy at px, sell at px
