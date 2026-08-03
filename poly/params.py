@@ -41,12 +41,11 @@ PARAM_SPEC: dict[str, dict[str, Any]] = {
     # Asymmetric — wider TP / tighter SL so scratches can clear fees
     "tp_price_delta": {"default": 0.16, "min": 0.02, "max": 0.80},
     "sl_price_delta": {"default": 0.10, "min": 0.02, "max": 0.80},
-    # Mental trailing stop — arms at fee-aware breakeven, then trails peak
-    "trail_stop": {"default": True, "bool": True},
-    # Give back at most this fraction of peak profit (0.01 = trail 1% behind the win)
+    # Mental trailing stop — off (65x lag run used fixed TP/SL)
+    "trail_stop": {"default": False, "bool": True},
+    # Give back at most this fraction of peak profit (unused while trail_stop off)
     "trail_profit_giveback": {"default": 0.01, "min": 0.001, "max": 0.25},
-    "trail_be_cushion": {"default": 0.005, "min": 0.0, "max": 0.05},  # above exact fee BE
-    # legacy absolute distance (unused when trail_profit_giveback is set)
+    "trail_be_cushion": {"default": 0.005, "min": 0.0, "max": 0.05},
     "trail_distance": {"default": 0.05, "min": 0.02, "max": 0.30},
     "trail_arm_delta": {"default": 0.06, "min": 0.02, "max": 0.40},
     "trail_be_delta": {"default": 0.04, "min": 0.01, "max": 0.30},
@@ -98,16 +97,6 @@ PARAM_SPEC: dict[str, dict[str, Any]] = {
     "engine_poll_sec_lag": {"default": 1.5, "min": 0.5, "max": 8.0},
     # When True: only spot_lag / spot_lag_endgame seats — no fair_odds/momentum/arb
     "lag_only": {"default": True, "bool": True},
-    # Don't open into an already-red book (last losers opened underwater)
-    "skip_stale_lag_open": {"default": True, "bool": True},
-    # Skip if live mid is this far below intended entry (price points)
-    "open_max_adverse": {"default": 0.01, "min": 0.0, "max": 0.10},
-    # If first marks after open are already red, scratch immediately
-    "abort_instant_red": {"default": True, "bool": True},
-    "abort_instant_red_sec": {"default": 3.0, "min": 0.5, "max": 15.0},
-    "abort_instant_red_tol": {"default": 0.005, "min": 0.0, "max": 0.05},
-    # Don't add another seat on same event/window while one is already red
-    "block_stack_on_red": {"default": True, "bool": True},
 }
 
 DASHBOARD_DEFAULT = {
