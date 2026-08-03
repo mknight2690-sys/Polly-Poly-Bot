@@ -1,0 +1,27 @@
+# Secrets — never commit
+credentials/*
+!credentials/*.example.txt
+.env
+.env.*
+token.json
+credentials.json
+
+# Runtime / local state
+data/*
+!data/.gitkeep
+logs/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.Python
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

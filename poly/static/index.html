@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POLY // ALERT DECK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css?v=41">
+</head>
+<body>
+<div id="bg-grid"></div>
+
+<header>
+  <div class="brand">
+    <div class="pulse-dot" id="live-dot"></div>
+    <h1 id="deck-title">POLY // ALERT DECK</h1>
+  </div>
+
+  <div id="wallet-hdr" class="wallet-hdr frozen" aria-label="Polymarket wallet balance" title="Live CLOB balance — updates only when LIVE + ARMED">
+    <span class="wh-label">WALLET</span>
+    <span class="wh-val" id="hdr-wallet">$—</span>
+    <span class="wh-state" id="hdr-wallet-state">FROZEN</span>
+  </div>
+
+  <div id="trade-control" class="trade-control cold" aria-label="Entry engine control">
+    <div class="tc-core">
+      <div class="tc-ring"></div>
+      <div class="tc-meta">
+        <span class="tc-label" id="tc-label">ENTRIES</span>
+        <span class="tc-state" id="tc-state">COLD</span>
+        <span class="tc-sub" id="tc-sub">stopped</span>
+      </div>
+    </div>
+    <div class="tc-actions">
+      <button type="button" id="btn-trade-start" class="tc-btn start" title="Start new entries">
+        <span class="tc-ico">▶</span><span class="tc-txt">START</span>
+      </button>
+      <button type="button" id="btn-trade-stop" class="tc-btn stop" title="Stop new entries — finish open seats then idle">
+        <span class="tc-ico">■</span><span class="tc-txt">STOP</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="voice-control" class="voice-control" aria-label="Bet voice announcer">
+    <button type="button" id="btn-voice-toggle" class="vc-toggle off" title="Toggle voice callouts">
+      <span class="vc-ico" id="vc-ico">MIC</span>
+      <span class="vc-txt" id="vc-txt">VOICE OFF</span>
+    </button>
+    <button type="button" id="btn-voice-persona" class="vc-persona" title="Cycle announcer">
+      <span class="vc-persona-label">ANNOUNCER</span>
+      <span class="vc-persona-name" id="vc-persona-name">Chrome Sentinel</span>
+    </button>
+  </div>
+
+  <div id="autopilot-control" class="autopilot-control" aria-label="Autopilot execution mode">
+    <span class="ap-label">AUTOPILOT</span>
+    <button type="button" id="btn-ap-paper" class="ap-btn on" data-mode="paper" title="Paper only — no CLOB">PAPER</button>
+    <button type="button" id="btn-ap-dry" class="ap-btn" data-mode="dry_run" title="Build CLOB path, never post">DRY</button>
+    <button type="button" id="btn-ap-live" class="ap-btn" data-mode="live" title="Live mode (still needs ARM)">LIVE</button>
+    <button type="button" id="btn-ap-arm" class="ap-arm" title="Arm real USDC spend (requires LIVE + gate)">ARM</button>
+  </div>
+
+  <div class="bankroll-stack">
+    <div id="bankroll-control" class="bankroll-control" aria-label="Paper bankroll reset">
+      <span class="br-label">BANKROLL</span>
+      <span class="br-prefix">$</span>
+      <input id="bankroll-input" type="number" min="1" step="1" value="10" title="Set paper starting dollars">
+      <button type="button" id="btn-bankroll-ok" class="br-ok" title="Reset paper book to this amount — wipes PnL, keeps lessons">OK</button>
+    </div>
+    <div id="build-tag" class="build-tag" title="Deck build — hard-refresh if this doesn't match chat">—</div>
+  </div>
+
+  <div class="header-stats">
+    <div class="hstat"><span class="hlabel">SYNC</span><span class="hval" id="hdr-sync">—</span></div>
+    <div class="hstat"><span class="hlabel">EQUITY</span><span class="hval" id="hdr-equity">$—</span></div>
+    <div class="hstat"><span class="hlabel">ROI</span><span class="hval" id="hdr-roi">—%</span></div>
+    <div class="hstat"><span class="hlabel">ALERTS</span><span class="hval" id="hdr-alerts">0</span></div>
+    <div class="hstat"><span class="hlabel">MODE</span><span class="hval badge" id="hdr-trading">—</span></div>
+  </div>
+</header>
+
+<main>
+  <section id="widget-grid"></section>
+</main>
+
+<div id="bet-toast-stack" aria-live="polite"></div>
+
+<template id="tpl-widget">
+  <div class="widget">
+    <div class="widget-head"><span class="widget-title"></span><span class="widget-extra"></span></div>
+    <div class="widget-body"></div>
+  </div>
+</template>
+
+<script src="/static/app.js?v=41"></script>
+</body>
+</html>
