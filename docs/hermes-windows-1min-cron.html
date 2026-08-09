@@ -158,15 +158,16 @@
   <main class="wrap">
     <h1>Get Hermes trading for you on Windows</h1>
     <p class="lead">
-      Follow this page alone. No Cursor. No ChatGPT.
-      Install Hermes → open the dashboard → set VPN to a Blofin-accepted country → paste your Blofin key path →
-      create a 1-minute cron with <strong>Nous</strong> as the provider → paste the prompt → Hermes trades for you.
+      Follow this page alone. No Cursor. No ChatGPT. No OpenRouter.
+      Install Hermes → open the browser dashboard → VPN in a Blofin-accepted country → paste your Blofin key path →
+      create the cron in the dashboard <strong>Cron</strong> section → set Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong> →
+      paste the prompt → Hermes trades for you.
     </p>
 
     <div class="pill-row">
-      <span class="pill good">No OpenRouter key needed</span>
-      <span class="pill good">Free Nous</span>
-      <span class="pill">Dashboard cron</span>
+      <span class="pill good">Dashboard Cron only</span>
+      <span class="pill good">Nous + tencent/hy free</span>
+      <span class="pill">No OpenRouter</span>
       <span class="pill">1-minute loop</span>
     </div>
 
@@ -184,17 +185,18 @@
 
     <div class="goal">
       <strong>Simple path:</strong> install Hermes → <code>hermes dashboard</code> → VPN accepted country →
-      paste Blofin key path below → create cron → set provider to <strong>Nous</strong> → paste personalized prompt → done.
+      paste Blofin key path below → open dashboard <strong>Cron</strong> section → Provider <strong>Nous</strong> + Model <strong>tencent/hy free</strong> →
+      paste personalized prompt → save → done.
     </div>
 
     <nav class="toc" aria-label="Table of contents">
       <div><strong style="color:var(--text)">Do these in order</strong></div>
       <a href="#install">1. Install Hermes</a>
-      <a href="#dashboard">2. Open the dashboard</a>
+      <a href="#dashboard">2. Open the browser dashboard</a>
       <a href="#vpn">3. Put VPN in a Blofin-accepted country</a>
       <a href="#path">4. Paste your Blofin key path (builds the prompt)</a>
-      <a href="#cron">5. Create the 1-minute cron with Nous</a>
-      <a href="#prompt">6. Copy your personalized prompt into the cron</a>
+      <a href="#cron">5. Create the cron in the dashboard Cron section</a>
+      <a href="#prompt">6. Copy your personalized prompt into that cron</a>
       <a href="#check">7. Confirm it is working</a>
     </nav>
 
@@ -227,11 +229,12 @@ hermes doctor</pre>
     </div>
 
     <div class="note">
-      <strong>No OpenRouter key required</strong> for this guide. You will use free <strong>Nous</strong> as the cron provider.
-      If Hermes asks you to log into Nous Portal during setup/dashboard, do that — that is the free path.
+      You do <strong>not</strong> need OpenRouter at all. In the dashboard Cron setup you will pick
+      Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong> from the dropdowns.
+      If the dashboard asks you to log into Nous Portal, finish that once.
     </div>
 
-    <h2 id="dashboard">2. Open the dashboard</h2>
+    <h2 id="dashboard">2. Open the browser dashboard</h2>
     <div class="copy-block" data-copy>
       <header>
         <span>PowerShell — launch dashboard</span>
@@ -250,8 +253,8 @@ hermes doctor</pre>
     </div>
 
     <div class="steps-inline">
-      Keep the dashboard open. You will create the cron there.<br />
-      If the dashboard asks you to connect / log into <strong>Nous</strong>, finish that now.
+      Keep this browser dashboard open.<br />
+      We create the job in the dashboard <strong>Cron</strong> section — not from Hermes chat, not from CLI.
     </div>
 
     <h2 id="vpn">3. Put VPN in a Blofin-accepted country</h2>
@@ -330,35 +333,40 @@ API Secret: YOUR_API_SECRET</pre>
       <div class="status" id="pathStatus">Prompt uses placeholder path until you paste yours.</div>
     </div>
 
-    <h2 id="cron">5. Create the 1-minute cron with Nous</h2>
-    <p>In the Hermes dashboard Cron tab:</p>
+    <h2 id="cron">5. Create the cron in the dashboard Cron section</h2>
+    <p>
+      Do this in the browser dashboard only — the <strong>Cron</strong> section/tab at
+      <code>http://127.0.0.1:9119</code>. Do <strong>not</strong> create it from Hermes chat.
+    </p>
     <ol>
-      <li>Create a new cron job.</li>
+      <li>In the dashboard, open <strong>Cron</strong>.</li>
+      <li>Click create / new job.</li>
       <li>Schedule: <code>every 1m</code></li>
       <li>Name: <code>blofin-equity-vertical</code></li>
-      <li><strong>Provider / model: Nous</strong> (free Nous path — do not require OpenRouter)</li>
-      <li>If there is a free model picker, choose a free Nous / Tencent Hy free model if shown (example: <code>tencent/hy3:free</code>)</li>
+      <li>Provider dropdown: <strong>Nous</strong></li>
+      <li>Model dropdown: <strong>tencent/hy free</strong> (same free Tencent Hy option shown in the UI)</li>
       <li>Delivery: <code>local</code> is fine</li>
       <li>Prompt field: paste the personalized prompt from Section 6</li>
-      <li>Save, then run once to test</li>
+      <li>Save, then run once from the Cron section to test</li>
     </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>Cron settings cheat-sheet</span>
+        <span>Dashboard Cron settings</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>Schedule: every 1m
+      <pre>Where: Dashboard → Cron section (browser)
+Schedule: every 1m
 Name: blofin-equity-vertical
 Provider: Nous
-Model: free Nous / tencent/hy3:free (if listed)
+Model: tencent/hy free
 Deliver: local
 Prompt: paste Section 6</pre>
     </div>
 
     <div class="note">
-      Keep <code>hermes dashboard</code> (and/or gateway, if your install uses it for cron ticks) running.
-      If you close everything, the 1-minute loop stops.
+      Keep <code>hermes dashboard</code> running so cron keeps ticking.
+      If you close the dashboard host process, the 1-minute loop stops.
     </div>
 
     <div class="warn">
@@ -366,10 +374,10 @@ Prompt: paste Section 6</pre>
       Do not force bad entries just to “stay busy.”
     </div>
 
-    <h2 id="prompt">6. Copy your personalized prompt into the cron</h2>
+    <h2 id="prompt">6. Copy your personalized prompt into that cron</h2>
     <p>
       After you paste your path in Section 4, this prompt updates.
-      Then hit <strong>Copy</strong> and paste it into the cron Prompt box.
+      Hit <strong>Copy</strong>, then paste it into the Prompt box in the dashboard Cron create/edit form.
     </p>
 
     <div class="copy-block" data-copy>
@@ -383,8 +391,8 @@ Prompt: paste Section 6</pre>
     <h2 id="check">7. Confirm it is working</h2>
     <ol>
       <li>VPN still shows an accepted country.</li>
-      <li>Cron job is listed and set to Nous.</li>
-      <li>Run one tick from the dashboard.</li>
+      <li>In dashboard <strong>Cron</strong>, the job is listed with Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong>.</li>
+      <li>Run one tick from the Cron section.</li>
       <li>Hermes reads real USDT equity/available as JSON (not an HTML geo page).</li>
       <li>When it takes a trade, it shows up on Blofin with TP/SL.</li>
       <li>Lesson/memory files grow under <code>%LOCALAPPDATA%\hermes\</code> over time.</li>
@@ -400,8 +408,9 @@ Get-ChildItem "$env:LOCALAPPDATA\hermes\cron" -ErrorAction SilentlyContinue</pre
     </div>
 
     <div class="goal">
-      <strong>Done when:</strong> Hermes installed → dashboard open → VPN accepted → cron on Nous →
-      personalized prompt pasted → account JSON works → Hermes keeps the equity curve vertical on its own.
+      <strong>Done when:</strong> Hermes installed → browser dashboard open → VPN accepted →
+      Cron section job on <strong>Nous + tencent/hy free</strong> → personalized prompt pasted →
+      account JSON works → Hermes keeps the equity curve vertical on its own.
     </div>
 
     <footer>

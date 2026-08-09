@@ -10,7 +10,7 @@ Anyone can open this with no GitHub login:
 
 **https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html**
 
-Install Hermes → open dashboard → VPN in a Blofin-accepted country → paste Blofin key path (auto-builds prompt) → create 1m cron with **Nous** provider → paste prompt. No OpenRouter key required for the free Nous path. Copy buttons are on the page.
+Install Hermes → open browser dashboard → VPN in a Blofin-accepted country → paste Blofin key path (auto-builds prompt) → create the job in dashboard **Cron** with Provider **Nous** and Model **tencent/hy free** → paste prompt. No OpenRouter. Copy buttons are on the page.
 
 Local file: [docs/hermes-windows-1min-cron.html](docs/hermes-windows-1min-cron.html)
 
