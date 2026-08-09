@@ -4,6 +4,18 @@ Polymarket **Alert Deck** — paper trading, live dry-run / armed CLOB execution
 
 Dashboard: `http://127.0.0.1:18112`
 
+## Hermes Windows how-to (public)
+
+Standalone tutorial with copy buttons:
+
+- [Install Hermes CLI on Windows + dashboard + 1-minute free-model cron](docs/hermes-windows-1min-cron.html)
+
+Open locally:
+
+```powershell
+start docs\hermes-windows-1min-cron.html
+```
+
 ## Quick start
 
 ```bash
