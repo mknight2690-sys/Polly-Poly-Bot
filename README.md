@@ -6,15 +6,13 @@ Dashboard: `http://127.0.0.1:18112`
 
 ## Hermes Windows how-to (public)
 
-Standalone tutorial with copy buttons:
+Anyone can open this with no GitHub login:
 
-- [Install Hermes CLI on Windows + dashboard + 1-minute free-model cron](docs/hermes-windows-1min-cron.html)
+**https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html**
 
-Open locally:
+Install Hermes yourself (no AI needed), then use Hermes’ 1-minute cron to trade like this setup. Copy buttons are on the page.
 
-```powershell
-start docs\hermes-windows-1min-cron.html
-```
+Local file: [docs/hermes-windows-1min-cron.html](docs/hermes-windows-1min-cron.html)
 
 ## Quick start
 

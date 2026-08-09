@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hermes on Windows — Dashboard + 1-Minute Cron (Free Models)</title>
-  <meta name="description" content="Public how-to: install Hermes CLI on Windows, open the dashboard, set free Nous + Tencent/Hy models, and run a 1-minute Blofin trading cron with persistent learning." />
+  <title>Get Hermes Trading for You on Windows (Free Models + 1-Minute Cron)</title>
+  <meta name="description" content="Public no-AI-required tutorial: install Hermes on Windows, open the dashboard, use free Nous/Tencent Hy models, then paste a 1-minute Blofin trading cron with persistent learning." />
   <style>
     :root {
       --bg: #0b0d10;
@@ -28,151 +28,146 @@
       color: var(--text);
       line-height: 1.55;
     }
-    .wrap {
-      max-width: 920px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 40px 20px 80px; }
     h1 {
-      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-size: clamp(1.7rem, 3vw, 2.35rem);
       line-height: 1.15;
       margin: 0 0 12px;
       letter-spacing: -0.02em;
     }
-    .lead {
-      color: var(--muted);
-      font-size: 1.05rem;
-      margin: 0 0 28px;
-      max-width: 68ch;
-    }
-    .toc {
-      display: grid;
-      gap: 8px;
-      margin: 0 0 36px;
-      padding: 16px 18px;
+    .lead { color: var(--muted); font-size: 1.05rem; margin: 0 0 18px; max-width: 70ch; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; }
+    .pill {
       border: 1px solid var(--line);
-      border-radius: 12px;
       background: var(--panel);
+      color: #d7e2ef;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
     }
-    .toc a {
-      color: var(--accent);
-      text-decoration: none;
+    .pill.good { border-color: rgba(61,214,140,.35); color: var(--good); }
+    .toc {
+      display: grid; gap: 8px; margin: 0 0 36px; padding: 16px 18px;
+      border: 1px solid var(--line); border-radius: 12px; background: var(--panel);
     }
+    .toc a { color: var(--accent); text-decoration: none; }
     .toc a:hover { text-decoration: underline; }
     h2 {
-      margin: 42px 0 12px;
-      font-size: 1.35rem;
-      border-top: 1px solid var(--line);
-      padding-top: 28px;
+      margin: 42px 0 12px; font-size: 1.35rem;
+      border-top: 1px solid var(--line); padding-top: 28px;
     }
-    h3 {
-      margin: 22px 0 8px;
-      font-size: 1.05rem;
-      color: #d7e2ef;
-    }
+    h3 { margin: 22px 0 8px; font-size: 1.05rem; color: #d7e2ef; }
     p, li { color: #d5deea; }
-    .note, .warn {
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin: 14px 0;
-      border: 1px solid var(--line);
-      background: #10151c;
-      color: var(--muted);
-      font-size: 0.95rem;
+    .note, .warn, .goal {
+      border-radius: 10px; padding: 12px 14px; margin: 14px 0;
+      border: 1px solid var(--line); background: #10151c; color: var(--muted); font-size: 0.95rem;
     }
-    .warn {
-      border-color: rgba(255, 123, 114, 0.35);
-      background: rgba(255, 123, 114, 0.08);
-      color: #ffc7c2;
-    }
-    .note strong, .warn strong { color: var(--text); }
+    .warn { border-color: rgba(255,123,114,.35); background: rgba(255,123,114,.08); color: #ffc7c2; }
+    .goal { border-color: rgba(245,197,66,.35); background: rgba(245,197,66,.08); color: #ffe7a3; }
+    .note strong, .warn strong, .goal strong { color: var(--text); }
     ol, ul { padding-left: 1.25rem; }
     li { margin: 6px 0; }
     .copy-block {
-      position: relative;
-      margin: 12px 0 18px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--code);
-      overflow: hidden;
+      position: relative; margin: 12px 0 18px; border: 1px solid var(--line);
+      border-radius: 12px; background: var(--code); overflow: hidden;
     }
     .copy-block header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 8px 10px 8px 14px;
-      border-bottom: 1px solid var(--line);
-      background: #151b24;
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 8px 10px 8px 14px; border-bottom: 1px solid var(--line);
+      background: #151b24; color: var(--muted); font-size: 12px;
+      letter-spacing: 0.04em; text-transform: uppercase;
     }
     .copy-block pre {
-      margin: 0;
-      padding: 14px 16px 16px;
-      overflow-x: auto;
+      margin: 0; padding: 14px 16px 16px; overflow-x: auto;
       font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
-      font-size: 13px;
-      line-height: 1.45;
-      white-space: pre-wrap;
-      word-break: break-word;
-      color: #eaf2ff;
+      font-size: 13px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; color: #eaf2ff;
     }
     .copy-btn {
-      appearance: none;
-      border: 1px solid #3a4a60;
-      background: #1b2430;
-      color: var(--text);
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
+      appearance: none; border: 1px solid #3a4a60; background: #1b2430; color: var(--text);
+      border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 600; cursor: pointer;
     }
     .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .copy-btn.copied {
-      border-color: var(--good);
-      color: var(--good);
-    }
+    .copy-btn.copied { border-color: var(--good); color: var(--good); }
     code {
-      font-family: Consolas, "Cascadia Mono", monospace;
-      font-size: 0.92em;
-      background: #171d26;
-      border: 1px solid #2a3545;
-      border-radius: 5px;
-      padding: 1px 5px;
+      font-family: Consolas, "Cascadia Mono", monospace; font-size: 0.92em;
+      background: #171d26; border: 1px solid #2a3545; border-radius: 5px; padding: 1px 5px;
     }
-    footer {
-      margin-top: 48px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
+    footer { margin-top: 48px; color: var(--muted); font-size: 0.9rem; }
     a { color: var(--accent); }
+    .share {
+      margin: 0 0 24px; padding: 12px 14px; border-radius: 10px;
+      border: 1px solid rgba(61,214,140,.35); background: rgba(61,214,140,.08);
+    }
+    .share code { color: var(--good); border-color: rgba(61,214,140,.35); }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <h1>Hermes on Windows: Dashboard + 1-Minute Cron (Free Models)</h1>
+    <h1>Get Hermes trading for you on Windows</h1>
     <p class="lead">
-      Install Hermes CLI natively on Windows, open the local dashboard in your browser,
-      point it at free Nous / Tencent Hy models, then paste a self-contained 1-minute Blofin trading cron
-      with persistent learning memory at the start and end.
+      Follow this page by yourself. No Cursor. No ChatGPT. No extra AI helper until Hermes is installed.
+      After Hermes is up, Hermes becomes the trader — you paste one cron prompt and it keeps working the account.
     </p>
 
+    <div class="pill-row">
+      <span class="pill good">No AI needed for install</span>
+      <span class="pill">Windows PowerShell</span>
+      <span class="pill">Free models</span>
+      <span class="pill">1-minute cron</span>
+    </div>
+
+    <div class="share">
+      <strong style="color:var(--text)">Public link (share this):</strong><br />
+      <code>https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html</code>
+      <div style="margin-top:10px" class="copy-block" data-copy>
+        <header>
+          <span>Share URL</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html</pre>
+      </div>
+    </div>
+
+    <div class="goal">
+      <strong>End state:</strong> Hermes dashboard open → free model selected → gateway running →
+      1-minute cron using the Blofin prompt → Hermes scans, places/manages trades by hand each tick,
+      and writes durable lessons so the next tick starts smarter.
+    </div>
+
     <nav class="toc" aria-label="Table of contents">
-      <div><strong style="color:var(--text)">Contents</strong></div>
-      <a href="#install">1. Install Hermes CLI (Windows)</a>
-      <a href="#dashboard">2. Open the dashboard in your browser</a>
-      <a href="#models">3. Free models: Nous + Tencent / Hy</a>
-      <a href="#cron">4. Create the 1-minute cron</a>
-      <a href="#prompt">5. Full cron prompt (copy once)</a>
-      <a href="#verify">6. Verify learning is compounding</a>
+      <div><strong style="color:var(--text)">Do these in order</strong></div>
+      <a href="#before">0. What you need before starting</a>
+      <a href="#install">1. Install Hermes (no AI)</a>
+      <a href="#dashboard">2. Open the Hermes dashboard</a>
+      <a href="#models">3. Set free Nous + Tencent/Hy models</a>
+      <a href="#creds">4. Put your Blofin API keys where Hermes can find them</a>
+      <a href="#gateway">5. Start the gateway (keeps cron alive)</a>
+      <a href="#cron">6. Create the 1-minute trading cron</a>
+      <a href="#prompt">7. Full trading prompt (copy once)</a>
+      <a href="#check">8. Confirm it is actually trading / learning</a>
     </nav>
 
-    <h2 id="install">1. Install Hermes CLI (Windows)</h2>
-    <p>Open <strong>PowerShell</strong> (Windows Terminal is fine). No admin rights required. The installer lands under <code>%LOCALAPPDATA%\hermes\</code>.</p>
+    <h2 id="before">0. What you need before starting</h2>
+    <ul>
+      <li>A Windows PC</li>
+      <li>PowerShell / Windows Terminal</li>
+      <li>A Blofin account + API key file on your machine</li>
+      <li>VPN exit in a Blofin-accepted country (this guide assumes that)</li>
+      <li>Optional but recommended: free OpenRouter key at <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer">openrouter.ai/keys</a></li>
+    </ul>
+    <div class="note">
+      <strong>You do not need Cursor for this tutorial.</strong>
+      Install Hermes with PowerShell, then use Hermes chat/dashboard for everything after that.
+    </div>
+
+    <h2 id="install">1. Install Hermes (no AI)</h2>
+    <ol>
+      <li>Open <strong>PowerShell</strong>.</li>
+      <li>Copy/paste this install command and press Enter:</li>
+    </ol>
 
     <div class="copy-block" data-copy>
       <header>
@@ -182,21 +177,21 @@
       <pre>iex (irm https://hermes-agent.nousresearch.com/install.ps1)</pre>
     </div>
 
-    <div class="note">
-      <strong>Important:</strong> close and reopen your terminal after install so <code>hermes</code> is on PATH.
-      Then confirm:
-    </div>
+    <ol start="3">
+      <li>Close PowerShell, open a <strong>new</strong> PowerShell window.</li>
+      <li>Confirm Hermes works:</li>
+    </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>PowerShell — verify install</span>
+        <span>PowerShell — verify</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
       <pre>hermes --version
 hermes doctor</pre>
     </div>
 
-    <p>Optional first-time wizard:</p>
+    <p>Optional guided setup:</p>
     <div class="copy-block" data-copy>
       <header>
         <span>PowerShell — setup wizard</span>
@@ -205,8 +200,8 @@ hermes doctor</pre>
       <pre>hermes setup</pre>
     </div>
 
-    <h2 id="dashboard">2. Open the dashboard in your browser</h2>
-    <p>Start the local web dashboard. It opens <code>http://127.0.0.1:9119</code> by default.</p>
+    <h2 id="dashboard">2. Open the Hermes dashboard</h2>
+    <p>This is your control panel in the browser.</p>
 
     <div class="copy-block" data-copy>
       <header>
@@ -216,52 +211,45 @@ hermes doctor</pre>
       <pre>hermes dashboard</pre>
     </div>
 
-    <p>If the browser doesn’t open automatically:</p>
+    <p>Browser should open automatically. If not, go here:</p>
     <div class="copy-block" data-copy>
       <header>
-        <span>Browser URL</span>
+        <span>Dashboard URL</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
       <pre>http://127.0.0.1:9119</pre>
     </div>
 
-    <div class="copy-block" data-copy>
-      <header>
-        <span>Optional flags</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre># custom port
-hermes dashboard --port 8080
-
-# start without auto-opening browser
-hermes dashboard --no-open</pre>
-    </div>
-
     <div class="note">
-      Keep this local. Default bind is loopback only. Don’t expose <code>--host 0.0.0.0</code> unless you intentionally configure dashboard auth.
+      Leave this running. You will use the dashboard Cron tab and/or Hermes chat to create the 1-minute job.
     </div>
 
-    <h2 id="models">3. Free models: Nous + Tencent / Hy</h2>
-    <p>
-      Hermes can route through the <strong>Nous Portal</strong> inference gateway and free OpenRouter-style endpoints.
-      A common free combo people use is <strong>Nous provider</strong> with <code>tencent/hy3:free</code> (and Nous Hermes free when available).
-    </p>
+    <h2 id="models">3. Set free Nous + Tencent/Hy models</h2>
+    <p>Goal: Hermes should use free models so cron ticks don’t burn paid credits.</p>
 
-    <h3>A) Put your OpenRouter key in Hermes env (recommended fallback path)</h3>
+    <h3>A) Add OpenRouter key (recommended)</h3>
     <ol>
       <li>Create a key at <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer">openrouter.ai/keys</a>.</li>
-      <li>Edit <code>%LOCALAPPDATA%\hermes\.env</code> and set:</li>
+      <li>Open this file in Notepad:</li>
     </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>%LOCALAPPDATA%\hermes\.env</span>
+        <span>Env file path</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>%LOCALAPPDATA%\hermes\.env</pre>
+    </div>
+
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Add this line to .env</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
       <pre>OPENROUTER_API_KEY=sk-or-v1-YOUR_KEY_HERE</pre>
     </div>
 
-    <h3>B) Pick the free model in Hermes</h3>
+    <h3>B) Choose the free model</h3>
     <div class="copy-block" data-copy>
       <header>
         <span>PowerShell — model picker</span>
@@ -270,110 +258,130 @@ hermes dashboard --no-open</pre>
       <pre>hermes model</pre>
     </div>
 
-    <p>Or set defaults in <code>%LOCALAPPDATA%\hermes\config.yaml</code>:</p>
+    <p>Or put this in <code>%LOCALAPPDATA%\hermes\config.yaml</code>:</p>
     <div class="copy-block" data-copy>
       <header>
-        <span>config.yaml — Nous + Tencent/Hy free</span>
+        <span>config.yaml — free Nous / Tencent Hy</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
       <pre>model:
   provider: nous
   base_url: https://inference-api.nousresearch.com/v1
-  default: tencent/hy3:free
-
-# If your Hermes build supports fallbacks, add a second free Nous/OpenRouter model, e.g.:
-# fallback_models:
-#   - nousresearch/hermes-3-llama-3.1-405b:free
-#   - openrouter/free</pre>
+  default: tencent/hy3:free</pre>
     </div>
 
     <div class="warn">
-      <strong>Free tiers rotate.</strong> <code>tencent/hy3:free</code> and Nous Hermes free endpoints can disappear.
-      If a model 404s, run <code>hermes model</code> again or pick another live free model from
-      <a href="https://openrouter.ai/collections/free-models" target="_blank" rel="noreferrer">OpenRouter free models</a>.
-      Prefer a fallback chain over hard-wiring one free ID forever.
+      <strong>Free models rotate.</strong> If <code>tencent/hy3:free</code> stops working, run <code>hermes model</code> again and pick another live free model
+      from <a href="https://openrouter.ai/collections/free-models" target="_blank" rel="noreferrer">OpenRouter free models</a>
+      (or another Nous free endpoint). Don’t hard-depend on one free ID forever.
     </div>
 
-    <h3>C) Login to Nous Portal (if using Nous inference)</h3>
+    <p>If you use Nous Portal inference, also run:</p>
     <div class="copy-block" data-copy>
       <header>
-        <span>PowerShell — Nous portal</span>
+        <span>PowerShell — Nous portal login</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>hermes setup --portal
-# or use the dashboard Models / Portal panel after: hermes dashboard</pre>
+      <pre>hermes setup --portal</pre>
     </div>
 
-    <h2 id="cron">4. Create the 1-minute cron</h2>
+    <h2 id="creds">4. Put your Blofin API keys where Hermes can find them</h2>
     <p>
-      Cron jobs run in <strong>fresh sessions</strong>. They do not inherit your current chat memory.
-      That is why the prompt below includes learning read/write blocks at the beginning and end.
+      Create a plain text file with your Blofin Passphrase, API Key, and API Secret.
+      Put it somewhere stable on your PC, then update the path inside the cron prompt in Section 7.
     </p>
 
-    <h3>A) Make sure the gateway / cron scheduler is running</h3>
     <div class="copy-block" data-copy>
       <header>
-        <span>PowerShell — start gateway (keeps cron ticking)</span>
+        <span>Example credentials file contents</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>Passphrase: YOUR_PASSPHRASE
+API Key: YOUR_API_KEY
+API Secret: YOUR_API_SECRET</pre>
+    </div>
+
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Example path (change to yours)</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>C:\Users\YOURNAME\Downloads\My Blofin API Compendium.txt</pre>
+    </div>
+
+    <div class="warn">
+      Never post your real keys in Discord/GitHub/chat. Only put the path in the cron prompt on your own machine.
+    </div>
+
+    <h2 id="gateway">5. Start the gateway (keeps cron alive)</h2>
+    <p>Open a second PowerShell window and keep this running:</p>
+    <div class="copy-block" data-copy>
+      <header>
+        <span>PowerShell — gateway</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
       <pre>hermes gateway</pre>
     </div>
-
     <div class="note">
-      On many installs the gateway is what ticks cron every ~60s. Keep that process alive (or enable auto-start).
-      You can also manage jobs from the dashboard Cron tab at <code>http://127.0.0.1:9119</code>.
+      The gateway is what wakes cron jobs. If you close it, the 1-minute trading loop stops.
     </div>
 
-    <h3>B) Create the job from chat (easiest)</h3>
+    <h2 id="cron">6. Create the 1-minute trading cron</h2>
+    <p>Now Hermes is installed. From here, Hermes itself is the automation.</p>
+
+    <h3>Option A — from Hermes chat (easiest)</h3>
     <ol>
-      <li>Open Hermes chat: <code>hermes</code></li>
-      <li>Paste this create command, then paste the full prompt from section 5 into the cron UI / job prompt field:</li>
+      <li>In a third PowerShell window, run <code>hermes</code>.</li>
+      <li>Copy Section 7’s full prompt into a notepad file so you have it ready.</li>
+      <li>In Hermes chat, paste:</li>
     </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>In Hermes chat — create 1m cron shell</span>
+        <span>Hermes chat — create cron</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>/cron add "every 1m" "PASTE_FULL_PROMPT_FROM_SECTION_5" --name "blofin-equity-vertical" --deliver local</pre>
+      <pre>/cron add "every 1m" "PASTE_THE_FULL_SECTION_7_PROMPT_HERE" --name "blofin-equity-vertical" --deliver local</pre>
     </div>
 
-    <h3>C) Or create from CLI</h3>
-    <p>Save the full prompt to a file first (easiest on Windows), then create:</p>
-    <div class="copy-block" data-copy>
-      <header>
-        <span>PowerShell — write prompt file + create cron</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>$promptPath = "$env:LOCALAPPDATA\hermes\cron\blofin_equity_vertical_prompt.txt"
-New-Item -ItemType Directory -Force -Path (Split-Path $promptPath) | Out-Null
-# Paste the Section 5 prompt into that file, then:
-$prompt = Get-Content -Raw $promptPath
-hermes cron create "every 1m" $prompt --name "blofin-equity-vertical" --deliver local</pre>
-    </div>
+    <h3>Option B — from dashboard</h3>
+    <ol>
+      <li>Open <code>http://127.0.0.1:9119</code></li>
+      <li>Go to the <strong>Cron</strong> tab</li>
+      <li>Create job:
+        <ul>
+          <li>Schedule: <code>every 1m</code></li>
+          <li>Name: <code>blofin-equity-vertical</code></li>
+          <li>Prompt: paste Section 7</li>
+          <li>Deliver: <code>local</code></li>
+        </ul>
+      </li>
+      <li>Save, then run once to test</li>
+    </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>Useful cron commands</span>
+        <span>Useful cron commands (in Hermes chat)</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
       <pre>/cron list
 /cron run &lt;job_id&gt;
 /cron pause &lt;job_id&gt;
-/cron edit &lt;job_id&gt; --schedule "every 1m"
 /cron remove &lt;job_id&gt;</pre>
     </div>
 
     <div class="warn">
-      <strong>1-minute reality check:</strong> if a tick takes longer than 60s, later ticks can be delayed/skipped because Hermes cron is serial.
-      Keep the prompt decisive. Prefer clarity over thrashing. Don’t force entries.
+      <strong>1-minute note:</strong> if one tick takes longer than 60 seconds, the next tick can be delayed.
+      That is normal. Do not force more aggressiveness — forced entries lose money.
     </div>
 
-    <h2 id="prompt">5. Full cron prompt (copy once)</h2>
+    <h2 id="prompt">7. Full trading prompt (copy once)</h2>
     <p>
-      This is the Blofin manual-trading cron prompt with a <strong>learning block at the beginning</strong>
-      and a matching <strong>learning write block at the end</strong>. Replace the credentials path if yours differs.
+      This is the prompt that makes Hermes trade like a persistent Blofin operator:
+      manual decisions each tick, Camoufox / curl_cffi for WAF issues, isolated margin,
+      longs and shorts, and durable learning at the start and end of every tick.
     </p>
+    <p><strong>Before pasting:</strong> replace the credentials path with your real file path.</p>
 
     <div class="copy-block" data-copy>
       <header>
@@ -392,8 +400,8 @@ MISSION
 Scan and manually trade the live Blofin account. You are the trading automation. Take all trades by hand. Zero trading scripts, agents, assistants, and bots are to be used — zero. No order-placing bots, no auto-scanners that submit orders, no “run agent” wrappers that trade for you. You decide, you place, you manage TP/SL, you monitor.
 
 CREDENTIALS
-Use exactly: C:\Users\mknig\Downloads\MK Blo Hermes API compendium.txt
-(Passphrase / API Key / API Secret). Prefer this file over any older IamDaddoo or repo credentials/blofin.txt paths. Confirm which key is loaded before first private call.
+Use exactly: C:\Users\YOURNAME\Downloads\My Blofin API Compendium.txt
+(Passphrase / API Key / API Secret). Prefer this file over any older repo credentials/blofin.txt paths. Confirm which key is loaded before first private call.
 
 SCOREBOARD
 Only scoreboard: take and keep the Blofin equity curve vertical. No rushing. No forced entries. Isolated margin only. Longs and shorts both allowed when the edge is real. Do not deny a good edge just because other positions are open. Never be in a rush to lose money.
@@ -446,34 +454,35 @@ Next tick must be able to load and use those updated lessons with no chat histor
 If nothing material changed, still append a one-line “hold / no edge” note with timestamp so the learning trail stays continuous.</pre>
     </div>
 
-    <h2 id="verify">6. Verify learning is compounding</h2>
+    <h2 id="check">8. Confirm it is actually trading / learning</h2>
     <ol>
-      <li>Run a few cron ticks: <code>/cron run &lt;job_id&gt;</code> or wait for <code>every 1m</code>.</li>
-      <li>Confirm lesson/skill files are growing under <code>%LOCALAPPDATA%\hermes\</code> (memories / skills / your lessons file).</li>
-      <li>On the next tick, confirm Hermes <em>reads</em> those lessons before trading — not just restates the prompt.</li>
+      <li>Run one tick now: <code>/cron run &lt;job_id&gt;</code></li>
+      <li>Confirm Hermes can read account JSON (real USDT equity, not HTML).</li>
+      <li>Watch Blofin for positions / TP-SL after a real entry.</li>
+      <li>Confirm lesson files grow under <code>%LOCALAPPDATA%\hermes\</code>.</li>
     </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>PowerShell — peek Hermes learning dirs</span>
+        <span>PowerShell — peek learning folders</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
       <pre>Get-ChildItem "$env:LOCALAPPDATA\hermes\memories" -ErrorAction SilentlyContinue
-Get-ChildItem "$env:LOCALAPPDATA\hermes\hermes-agent\skills" -ErrorAction SilentlyContinue
 Get-ChildItem "$env:LOCALAPPDATA\hermes\cron" -ErrorAction SilentlyContinue</pre>
     </div>
 
-    <div class="note">
-      <strong>Success look:</strong> dashboard open → free model selected → gateway alive → 1m cron listed → account JSON reads → lessons file updates after ticks.
-      If a tick only chatters “I learned X” without writing a file, learning is not compounding yet.
+    <div class="goal">
+      <strong>You’re done when:</strong> Hermes is installed → dashboard opens → free model works →
+      gateway stays up → 1m cron is listed → account reads as JSON → lessons update after ticks.
+      From that point, Hermes is trading for you. This webpage was only the bootstrap.
     </div>
 
     <footer>
-      Public how-to for Hermes Agent on native Windows.
-      Official docs: <a href="https://hermes-agent.nousresearch.com/docs/user-guide/windows-native" target="_blank" rel="noreferrer">Windows native</a>,
-      <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard" target="_blank" rel="noreferrer">dashboard</a>,
-      <a href="https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron" target="_blank" rel="noreferrer">cron</a>.
-      Trading involves risk. This is operational documentation, not financial advice.
+      Public tutorial. Trading involves risk of loss. This is operational documentation, not financial advice.<br />
+      Official Hermes docs:
+      <a href="https://hermes-agent.nousresearch.com/docs/user-guide/windows-native" target="_blank" rel="noreferrer">Windows install</a> ·
+      <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard" target="_blank" rel="noreferrer">Dashboard</a> ·
+      <a href="https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron" target="_blank" rel="noreferrer">Cron</a>
     </footer>
   </main>
 
