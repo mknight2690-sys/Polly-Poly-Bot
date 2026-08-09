@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Get Hermes Trading for You on Windows (Free Models + 1-Minute Cron)</title>
-  <meta name="description" content="Public no-AI-required tutorial: install Hermes on Windows, open the dashboard, use free Nous/Tencent Hy models, then paste a 1-minute Blofin trading cron with persistent learning." />
+  <title>Get Hermes Trading for You on Windows (Free Nous + 1-Minute Cron)</title>
+  <meta name="description" content="Public tutorial: install Hermes on Windows, open the dashboard, put VPN in a Blofin-accepted country, paste your API key path, set Nous in cron, and start 1-minute trading." />
   <style>
     :root {
       --bg: #0b0d10;
@@ -102,21 +102,72 @@
       border: 1px solid rgba(61,214,140,.35); background: rgba(61,214,140,.08);
     }
     .share code { color: var(--good); border-color: rgba(61,214,140,.35); }
+    .builder {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 16px;
+      margin: 16px 0 20px;
+    }
+    .builder label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #d7e2ef;
+      margin-bottom: 8px;
+    }
+    .builder input[type="text"] {
+      width: 100%;
+      border: 1px solid #3a4a60;
+      background: #0f141b;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: Consolas, "Cascadia Mono", monospace;
+      font-size: 13px;
+    }
+    .builder input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .builder .hint {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .builder .status {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: var(--good);
+      min-height: 1.2em;
+    }
+    .steps-inline {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #10151c;
+      color: #d5deea;
+      font-size: 0.95rem;
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
     <h1>Get Hermes trading for you on Windows</h1>
     <p class="lead">
-      Follow this page by yourself. No Cursor. No ChatGPT. No extra AI helper until Hermes is installed.
-      After Hermes is up, Hermes becomes the trader — you paste one cron prompt and it keeps working the account.
+      Follow this page alone. No Cursor. No ChatGPT.
+      Install Hermes → open the dashboard → set VPN to a Blofin-accepted country → paste your Blofin key path →
+      create a 1-minute cron with <strong>Nous</strong> as the provider → paste the prompt → Hermes trades for you.
     </p>
 
     <div class="pill-row">
-      <span class="pill good">No AI needed for install</span>
-      <span class="pill">Windows PowerShell</span>
-      <span class="pill">Free models</span>
-      <span class="pill">1-minute cron</span>
+      <span class="pill good">No OpenRouter key needed</span>
+      <span class="pill good">Free Nous</span>
+      <span class="pill">Dashboard cron</span>
+      <span class="pill">1-minute loop</span>
     </div>
 
     <div class="share">
@@ -132,41 +183,25 @@
     </div>
 
     <div class="goal">
-      <strong>End state:</strong> Hermes dashboard open → free model selected → gateway running →
-      1-minute cron using the Blofin prompt → Hermes scans, places/manages trades by hand each tick,
-      and writes durable lessons so the next tick starts smarter.
+      <strong>Simple path:</strong> install Hermes → <code>hermes dashboard</code> → VPN accepted country →
+      paste Blofin key path below → create cron → set provider to <strong>Nous</strong> → paste personalized prompt → done.
     </div>
 
     <nav class="toc" aria-label="Table of contents">
       <div><strong style="color:var(--text)">Do these in order</strong></div>
-      <a href="#before">0. What you need before starting</a>
-      <a href="#install">1. Install Hermes (no AI)</a>
-      <a href="#dashboard">2. Open the Hermes dashboard</a>
-      <a href="#models">3. Set free Nous + Tencent/Hy models</a>
-      <a href="#creds">4. Put your Blofin API keys where Hermes can find them</a>
-      <a href="#gateway">5. Start the gateway (keeps cron alive)</a>
-      <a href="#cron">6. Create the 1-minute trading cron</a>
-      <a href="#prompt">7. Full trading prompt (copy once)</a>
-      <a href="#check">8. Confirm it is actually trading / learning</a>
+      <a href="#install">1. Install Hermes</a>
+      <a href="#dashboard">2. Open the dashboard</a>
+      <a href="#vpn">3. Put VPN in a Blofin-accepted country</a>
+      <a href="#path">4. Paste your Blofin key path (builds the prompt)</a>
+      <a href="#cron">5. Create the 1-minute cron with Nous</a>
+      <a href="#prompt">6. Copy your personalized prompt into the cron</a>
+      <a href="#check">7. Confirm it is working</a>
     </nav>
 
-    <h2 id="before">0. What you need before starting</h2>
-    <ul>
-      <li>A Windows PC</li>
-      <li>PowerShell / Windows Terminal</li>
-      <li>A Blofin account + API key file on your machine</li>
-      <li>VPN exit in a Blofin-accepted country (this guide assumes that)</li>
-      <li>Optional but recommended: free OpenRouter key at <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer">openrouter.ai/keys</a></li>
-    </ul>
-    <div class="note">
-      <strong>You do not need Cursor for this tutorial.</strong>
-      Install Hermes with PowerShell, then use Hermes chat/dashboard for everything after that.
-    </div>
-
-    <h2 id="install">1. Install Hermes (no AI)</h2>
+    <h2 id="install">1. Install Hermes</h2>
     <ol>
       <li>Open <strong>PowerShell</strong>.</li>
-      <li>Copy/paste this install command and press Enter:</li>
+      <li>Paste this and press Enter:</li>
     </ol>
 
     <div class="copy-block" data-copy>
@@ -178,8 +213,8 @@
     </div>
 
     <ol start="3">
-      <li>Close PowerShell, open a <strong>new</strong> PowerShell window.</li>
-      <li>Confirm Hermes works:</li>
+      <li>Close PowerShell, open a <strong>new</strong> window.</li>
+      <li>Confirm:</li>
     </ol>
 
     <div class="copy-block" data-copy>
@@ -191,18 +226,12 @@
 hermes doctor</pre>
     </div>
 
-    <p>Optional guided setup:</p>
-    <div class="copy-block" data-copy>
-      <header>
-        <span>PowerShell — setup wizard</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>hermes setup</pre>
+    <div class="note">
+      <strong>No OpenRouter key required</strong> for this guide. You will use free <strong>Nous</strong> as the cron provider.
+      If Hermes asks you to log into Nous Portal during setup/dashboard, do that — that is the free path.
     </div>
 
-    <h2 id="dashboard">2. Open the Hermes dashboard</h2>
-    <p>This is your control panel in the browser.</p>
-
+    <h2 id="dashboard">2. Open the dashboard</h2>
     <div class="copy-block" data-copy>
       <header>
         <span>PowerShell — launch dashboard</span>
@@ -211,7 +240,7 @@ hermes doctor</pre>
       <pre>hermes dashboard</pre>
     </div>
 
-    <p>Browser should open automatically. If not, go here:</p>
+    <p>Browser should open. If not:</p>
     <div class="copy-block" data-copy>
       <header>
         <span>Dashboard URL</span>
@@ -220,75 +249,58 @@ hermes doctor</pre>
       <pre>http://127.0.0.1:9119</pre>
     </div>
 
-    <div class="note">
-      Leave this running. You will use the dashboard Cron tab and/or Hermes chat to create the 1-minute job.
+    <div class="steps-inline">
+      Keep the dashboard open. You will create the cron there.<br />
+      If the dashboard asks you to connect / log into <strong>Nous</strong>, finish that now.
     </div>
 
-    <h2 id="models">3. Set free Nous + Tencent/Hy models</h2>
-    <p>Goal: Hermes should use free models so cron ticks don’t burn paid credits.</p>
+    <h2 id="vpn">3. Put VPN in a Blofin-accepted country</h2>
+    <p>
+      Blofin blocks many jurisdictions. Your VPN exit IP must be in a country Blofin allows.
+      Netherlands and many other EU countries are commonly used accepted exits.
+    </p>
 
-    <h3>A) Add OpenRouter key (recommended)</h3>
+    <h3>Do this before first private API call</h3>
     <ol>
-      <li>Create a key at <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer">openrouter.ai/keys</a>.</li>
-      <li>Open this file in Notepad:</li>
+      <li>Turn your VPN <strong>on</strong>.</li>
+      <li>Choose an exit in a <strong>Blofin-accepted</strong> country (example: Netherlands / NL).</li>
+      <li>Confirm your public IP country matches that exit:</li>
     </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>Env file path</span>
+        <span>Check your IP country in the browser</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>%LOCALAPPDATA%\hermes\.env</pre>
+      <pre>https://ipinfo.io
+https://ifconfig.co/country</pre>
     </div>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>Add this line to .env</span>
+        <span>Optional PowerShell check</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>OPENROUTER_API_KEY=sk-or-v1-YOUR_KEY_HERE</pre>
-    </div>
-
-    <h3>B) Choose the free model</h3>
-    <div class="copy-block" data-copy>
-      <header>
-        <span>PowerShell — model picker</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>hermes model</pre>
-    </div>
-
-    <p>Or put this in <code>%LOCALAPPDATA%\hermes\config.yaml</code>:</p>
-    <div class="copy-block" data-copy>
-      <header>
-        <span>config.yaml — free Nous / Tencent Hy</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>model:
-  provider: nous
-  base_url: https://inference-api.nousresearch.com/v1
-  default: tencent/hy3:free</pre>
+      <pre>curl.exe https://ifconfig.co/country
+curl.exe https://ipinfo.io/country</pre>
     </div>
 
     <div class="warn">
-      <strong>Free models rotate.</strong> If <code>tencent/hy3:free</code> stops working, run <code>hermes model</code> again and pick another live free model
-      from <a href="https://openrouter.ai/collections/free-models" target="_blank" rel="noreferrer">OpenRouter free models</a>
-      (or another Nous free endpoint). Don’t hard-depend on one free ID forever.
+      <strong>Restricted / not accepted examples include:</strong> United States, Canada, China, India, Singapore, UAE,
+      and other locations listed in Blofin’s Terms of Use Restricted Locations.
+      If your VPN lands in a restricted country, Blofin may return an HTML geo/WAF page instead of JSON and trading will fail.
+      Stay on an accepted exit the whole time Hermes is trading.
     </div>
 
-    <p>If you use Nous Portal inference, also run:</p>
-    <div class="copy-block" data-copy>
-      <header>
-        <span>PowerShell — Nous portal login</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>hermes setup --portal</pre>
+    <div class="note">
+      <strong>Why this matters:</strong> when the IP is wrong, Hermes looks “broken” even with perfect API keys.
+      Fix VPN first, then credentials, then trades.
     </div>
 
-    <h2 id="creds">4. Put your Blofin API keys where Hermes can find them</h2>
+    <h2 id="path">4. Paste your Blofin key path (builds the prompt)</h2>
     <p>
-      Create a plain text file with your Blofin Passphrase, API Key, and API Secret.
-      Put it somewhere stable on your PC, then update the path inside the cron prompt in Section 7.
+      Put your Blofin Passphrase / API Key / API Secret in a plain <code>.txt</code> file on your PC.
+      Then paste that full file path below. The prompt updates automatically so you can copy it into cron.
     </p>
 
     <div class="copy-block" data-copy>
@@ -301,96 +313,114 @@ API Key: YOUR_API_KEY
 API Secret: YOUR_API_SECRET</pre>
     </div>
 
-    <div class="copy-block" data-copy>
-      <header>
-        <span>Example path (change to yours)</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>C:\Users\YOURNAME\Downloads\My Blofin API Compendium.txt</pre>
+    <div class="builder">
+      <label for="credPath">Blofin credentials file path</label>
+      <input
+        id="credPath"
+        type="text"
+        spellcheck="false"
+        autocomplete="off"
+        placeholder="C:\Users\YOURNAME\Downloads\My Blofin API Compendium.txt"
+        value=""
+      />
+      <p class="hint">
+        Tip: in File Explorer, hold Shift → right-click the file → <strong>Copy as path</strong>, then paste here
+        (quotes are fine; they get stripped).
+      </p>
+      <div class="status" id="pathStatus">Prompt uses placeholder path until you paste yours.</div>
     </div>
 
-    <div class="warn">
-      Never post your real keys in Discord/GitHub/chat. Only put the path in the cron prompt on your own machine.
-    </div>
-
-    <h2 id="gateway">5. Start the gateway (keeps cron alive)</h2>
-    <p>Open a second PowerShell window and keep this running:</p>
-    <div class="copy-block" data-copy>
-      <header>
-        <span>PowerShell — gateway</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>hermes gateway</pre>
-    </div>
-    <div class="note">
-      The gateway is what wakes cron jobs. If you close it, the 1-minute trading loop stops.
-    </div>
-
-    <h2 id="cron">6. Create the 1-minute trading cron</h2>
-    <p>Now Hermes is installed. From here, Hermes itself is the automation.</p>
-
-    <h3>Option A — from Hermes chat (easiest)</h3>
+    <h2 id="cron">5. Create the 1-minute cron with Nous</h2>
+    <p>In the Hermes dashboard Cron tab:</p>
     <ol>
-      <li>In a third PowerShell window, run <code>hermes</code>.</li>
-      <li>Copy Section 7’s full prompt into a notepad file so you have it ready.</li>
-      <li>In Hermes chat, paste:</li>
-    </ol>
-
-    <div class="copy-block" data-copy>
-      <header>
-        <span>Hermes chat — create cron</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>/cron add "every 1m" "PASTE_THE_FULL_SECTION_7_PROMPT_HERE" --name "blofin-equity-vertical" --deliver local</pre>
-    </div>
-
-    <h3>Option B — from dashboard</h3>
-    <ol>
-      <li>Open <code>http://127.0.0.1:9119</code></li>
-      <li>Go to the <strong>Cron</strong> tab</li>
-      <li>Create job:
-        <ul>
-          <li>Schedule: <code>every 1m</code></li>
-          <li>Name: <code>blofin-equity-vertical</code></li>
-          <li>Prompt: paste Section 7</li>
-          <li>Deliver: <code>local</code></li>
-        </ul>
-      </li>
+      <li>Create a new cron job.</li>
+      <li>Schedule: <code>every 1m</code></li>
+      <li>Name: <code>blofin-equity-vertical</code></li>
+      <li><strong>Provider / model: Nous</strong> (free Nous path — do not require OpenRouter)</li>
+      <li>If there is a free model picker, choose a free Nous / Tencent Hy free model if shown (example: <code>tencent/hy3:free</code>)</li>
+      <li>Delivery: <code>local</code> is fine</li>
+      <li>Prompt field: paste the personalized prompt from Section 6</li>
       <li>Save, then run once to test</li>
     </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>Useful cron commands (in Hermes chat)</span>
+        <span>Cron settings cheat-sheet</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>/cron list
-/cron run &lt;job_id&gt;
-/cron pause &lt;job_id&gt;
-/cron remove &lt;job_id&gt;</pre>
+      <pre>Schedule: every 1m
+Name: blofin-equity-vertical
+Provider: Nous
+Model: free Nous / tencent/hy3:free (if listed)
+Deliver: local
+Prompt: paste Section 6</pre>
+    </div>
+
+    <div class="note">
+      Keep <code>hermes dashboard</code> (and/or gateway, if your install uses it for cron ticks) running.
+      If you close everything, the 1-minute loop stops.
     </div>
 
     <div class="warn">
-      <strong>1-minute note:</strong> if one tick takes longer than 60 seconds, the next tick can be delayed.
-      That is normal. Do not force more aggressiveness — forced entries lose money.
+      If one tick takes longer than 60 seconds, the next tick can be delayed. That is normal.
+      Do not force bad entries just to “stay busy.”
     </div>
 
-    <h2 id="prompt">7. Full trading prompt (copy once)</h2>
+    <h2 id="prompt">6. Copy your personalized prompt into the cron</h2>
     <p>
-      This is the prompt that makes Hermes trade like a persistent Blofin operator:
-      manual decisions each tick, Camoufox / curl_cffi for WAF issues, isolated margin,
-      longs and shorts, and durable learning at the start and end of every tick.
+      After you paste your path in Section 4, this prompt updates.
+      Then hit <strong>Copy</strong> and paste it into the cron Prompt box.
     </p>
-    <p><strong>Before pasting:</strong> replace the credentials path with your real file path.</p>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>Full 1-minute Blofin cron prompt</span>
+        <span>Personalized 1-minute Blofin cron prompt</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>LEARNING ACROSS CRON TICKS (READ FIRST)
+      <pre id="cronPrompt"></pre>
+    </div>
+
+    <h2 id="check">7. Confirm it is working</h2>
+    <ol>
+      <li>VPN still shows an accepted country.</li>
+      <li>Cron job is listed and set to Nous.</li>
+      <li>Run one tick from the dashboard.</li>
+      <li>Hermes reads real USDT equity/available as JSON (not an HTML geo page).</li>
+      <li>When it takes a trade, it shows up on Blofin with TP/SL.</li>
+      <li>Lesson/memory files grow under <code>%LOCALAPPDATA%\hermes\</code> over time.</li>
+    </ol>
+
+    <div class="copy-block" data-copy>
+      <header>
+        <span>PowerShell — peek learning folders</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>Get-ChildItem "$env:LOCALAPPDATA\hermes\memories" -ErrorAction SilentlyContinue
+Get-ChildItem "$env:LOCALAPPDATA\hermes\cron" -ErrorAction SilentlyContinue</pre>
+    </div>
+
+    <div class="goal">
+      <strong>Done when:</strong> Hermes installed → dashboard open → VPN accepted → cron on Nous →
+      personalized prompt pasted → account JSON works → Hermes keeps the equity curve vertical on its own.
+    </div>
+
+    <footer>
+      Public tutorial. Trading involves risk of loss. Follow Blofin’s Terms of Use and your local laws.
+      This is operational documentation, not financial advice.<br />
+      Official Hermes docs:
+      <a href="https://hermes-agent.nousresearch.com/docs/user-guide/windows-native" target="_blank" rel="noreferrer">Windows install</a> ·
+      <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard" target="_blank" rel="noreferrer">Dashboard</a> ·
+      <a href="https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron" target="_blank" rel="noreferrer">Cron</a>
+    </footer>
+  </main>
+
+  <script>
+    const DEFAULT_PATH = String.raw`C:\Users\YOURNAME\Downloads\My Blofin API Compendium.txt`;
+    const PLACEHOLDER = "__BLOFIN_CRED_PATH__";
+
+    const PROMPT_TEMPLATE = `LEARNING ACROSS CRON TICKS (READ FIRST)
 Each cron run is a fresh session. Do not assume chat memory from prior ticks.
-Before trading: read your durable learning artifacts (skills / memory / lessons files under %LOCALAPPDATA%\hermes\ and any project lessons files) and apply them.
+Before trading: read your durable learning artifacts (skills / memory / lessons files under %LOCALAPPDATA%\\hermes\\ and any project lessons files) and apply them.
 If lessons say a setup type loses, respect that. If lessons say a setup type wins, bias toward it only when live structure still confirms.
 Learning that stays only in this turn’s reply is wasted — you must use durable files.
 
@@ -400,7 +430,7 @@ MISSION
 Scan and manually trade the live Blofin account. You are the trading automation. Take all trades by hand. Zero trading scripts, agents, assistants, and bots are to be used — zero. No order-placing bots, no auto-scanners that submit orders, no “run agent” wrappers that trade for you. You decide, you place, you manage TP/SL, you monitor.
 
 CREDENTIALS
-Use exactly: C:\Users\YOURNAME\Downloads\My Blofin API Compendium.txt
+Use exactly: ${PLACEHOLDER}
 (Passphrase / API Key / API Secret). Prefer this file over any older repo credentials/blofin.txt paths. Confirm which key is loaded before first private call.
 
 SCOREBOARD
@@ -413,10 +443,10 @@ SYMPTOM
 Private REST calls return HTML instead of JSON, often a Blofin page saying the IP is from a restricted country/region, or a Cloudflare challenge page. Signed clients then report: Failed to get server time, official SDK not available, empty account, placeOrder never reached. That is a transport / WAF / fingerprint problem, not a strategy problem.
 
 WHY IT HAPPENS
-1) Plain Python `requests` / default User-Agent hits Cloudflare or Blofin edge WAF and gets HTML.
+1) Plain Python \`requests\` / default User-Agent hits Cloudflare or Blofin edge WAF and gets HTML.
 2) Wrong base URL (demo vs live). Live must use https://openapi.blofin.com (and matching WS). Demo host is often CF-blocked from Python even when live works.
 3) Wrong or stale credentials file loaded.
-4) Broken/incompatible PyPI `blofin` package (missing methods, bad AccountAPI). Do not depend on that package as the only path.
+4) Broken/incompatible PyPI \`blofin\` package (missing methods, bad AccountAPI). Do not depend on that package as the only path.
 5) Clock skew on signed requests — sync to Blofin server time when signing.
 6) Missing ACCESS headers / passphrase / brokerId when the key requires them.
 
@@ -431,7 +461,7 @@ B) Prefer Camoufox (browser) for any UI confirmation AND for establishing a real
 C) For API: use curl_cffi (or equivalent) with Chrome impersonation — same idea as chrome110 / safari17 / chrome120 fingerprint rotation. Set Origin/Referer to blofin.com. Retry impersonation profiles on 403 HTML.
 D) Confirm live endpoints and live credentials. Test in this order: public time → public tickers → signed balance → positions → one tiny isolated order with TP/SL only after balance reads as JSON.
 E) If “Failed to get server time”: fix transport first (CF bypass), then re-sync timestamp. Do not keep retrying signed trade calls against HTML.
-F) If package SDK is broken: call REST directly with correct ACCESS-KEY / ACCESS-SIGN / ACCESS-TIMESTAMP / ACCESS-PASSPHRASE (and broker id if required). Parse only JSON. If body starts with &lt;!DOCTYPE html&gt;, treat as transport failure and escalate A–C — never parse HTML as account data.
+F) If package SDK is broken: call REST directly with correct ACCESS-KEY / ACCESS-SIGN / ACCESS-TIMESTAMP / ACCESS-PASSPHRASE (and broker id if required). Parse only JSON. If body starts with <!DOCTYPE html>, treat as transport failure and escalate A–C — never parse HTML as account data.
 G) Never fall back to a fake demo $40 equity when live sync fails. Refuse phantom balances. Fix the pipe, then trade.
 
 SUCCESS CRITERIA FOR “API WORKS”
@@ -451,42 +481,32 @@ LEARNING ACROSS CRON TICKS (WRITE BEFORE YOU FINISH)
 After this cycle: write what worked, what failed, and the exact reusable rule into a durable skill or lessons file (Hermes skills/memory and/or a local lessons markdown/jsonl file).
 Include: symbol/setup type, long or short, why taken or skipped, outcome if known, and the next-tick rule.
 Next tick must be able to load and use those updated lessons with no chat history.
-If nothing material changed, still append a one-line “hold / no edge” note with timestamp so the learning trail stays continuous.</pre>
-    </div>
+If nothing material changed, still append a one-line “hold / no edge” note with timestamp so the learning trail stays continuous.`;
 
-    <h2 id="check">8. Confirm it is actually trading / learning</h2>
-    <ol>
-      <li>Run one tick now: <code>/cron run &lt;job_id&gt;</code></li>
-      <li>Confirm Hermes can read account JSON (real USDT equity, not HTML).</li>
-      <li>Watch Blofin for positions / TP-SL after a real entry.</li>
-      <li>Confirm lesson files grow under <code>%LOCALAPPDATA%\hermes\</code>.</li>
-    </ol>
+    function cleanPath(raw) {
+      let p = (raw || "").trim();
+      if ((p.startsWith('"') && p.endsWith('"')) || (p.startsWith("'") && p.endsWith("'"))) {
+        p = p.slice(1, -1);
+      }
+      return p.trim();
+    }
 
-    <div class="copy-block" data-copy>
-      <header>
-        <span>PowerShell — peek learning folders</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>Get-ChildItem "$env:LOCALAPPDATA\hermes\memories" -ErrorAction SilentlyContinue
-Get-ChildItem "$env:LOCALAPPDATA\hermes\cron" -ErrorAction SilentlyContinue</pre>
-    </div>
+    function renderPrompt() {
+      const input = document.getElementById("credPath");
+      const out = document.getElementById("cronPrompt");
+      const status = document.getElementById("pathStatus");
+      const path = cleanPath(input.value) || DEFAULT_PATH;
+      out.textContent = PROMPT_TEMPLATE.replaceAll(PLACEHOLDER, path);
+      if (cleanPath(input.value)) {
+        status.textContent = "Prompt updated with your path. Copy Section 6 into the cron.";
+      } else {
+        status.textContent = "Prompt uses placeholder path until you paste yours.";
+      }
+    }
 
-    <div class="goal">
-      <strong>You’re done when:</strong> Hermes is installed → dashboard opens → free model works →
-      gateway stays up → 1m cron is listed → account reads as JSON → lessons update after ticks.
-      From that point, Hermes is trading for you. This webpage was only the bootstrap.
-    </div>
+    document.getElementById("credPath").addEventListener("input", renderPrompt);
+    renderPrompt();
 
-    <footer>
-      Public tutorial. Trading involves risk of loss. This is operational documentation, not financial advice.<br />
-      Official Hermes docs:
-      <a href="https://hermes-agent.nousresearch.com/docs/user-guide/windows-native" target="_blank" rel="noreferrer">Windows install</a> ·
-      <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard" target="_blank" rel="noreferrer">Dashboard</a> ·
-      <a href="https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron" target="_blank" rel="noreferrer">Cron</a>
-    </footer>
-  </main>
-
-  <script>
     document.querySelectorAll("[data-copy]").forEach((block) => {
       const btn = block.querySelector(".copy-btn");
       const pre = block.querySelector("pre");
