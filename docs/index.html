@@ -3,15 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Polly / Hermes public docs</title>
+  <title>Setup Guides — Hermes &amp; Polly</title>
+  <meta name="description" content="Digital setup guides: Hermes brokerage/exchange API trader and Polly Polymarket Alert Deck." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: system-ui, sans-serif; background: #0b0d10; color: #e8eef7; padding: 40px; }
-    a { color: #f5c542; }
+    :root {
+      --bg: #07090c; --line: #2a3648; --text: #eef3fa; --muted: #93a0b3;
+      --gold: #f5c542; --mint: #7dd3c0; --good: #3dd68c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; color: var(--text);
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      background:
+        radial-gradient(800px 420px at 15% -5%, rgba(245,197,66,.12), transparent 55%),
+        radial-gradient(700px 400px at 90% 0%, rgba(125,211,192,.10), transparent 50%),
+        var(--bg);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: clamp(36px, 7vw, 72px) 22px 72px; }
+    .brand {
+      font-family: Syne, sans-serif; font-weight: 800; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--gold); margin: 0 0 18px;
+    }
+    h1 {
+      font-family: Syne, sans-serif; font-weight: 800;
+      font-size: clamp(2rem, 5.5vw, 3.2rem); line-height: 1; letter-spacing: -.03em;
+      margin: 0 0 14px; max-width: 14ch;
+    }
+    .lead { color: var(--muted); max-width: 48ch; margin: 0 0 28px; }
+    .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+    a.card {
+      display: block; text-decoration: none; color: inherit;
+      border: 1px solid var(--line); border-radius: 12px; padding: 18px;
+      background: linear-gradient(180deg, rgba(16,21,28,.95), rgba(10,13,18,.98));
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    a.card:hover { transform: translateY(-3px); border-color: #3d4f68; }
+    a.card h2 { font-family: Syne, sans-serif; font-size: 1.15rem; margin: 0 0 8px; }
+    a.card.hermes h2 { color: var(--gold); }
+    a.card.poly h2 { color: var(--mint); }
+    a.card.bundle h2 { color: var(--good); }
+    a.card p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .amt { display: inline-block; margin-top: 12px; color: var(--text); font-weight: 600; }
   </style>
 </head>
 <body>
-  <p>Hermes public docs</p>
-  <p><a href="./hermes-setup-buy.html">Buy Hermes API trading setup — $47</a></p>
-  <p><a href="./hermes-windows-1min-cron.html">Open the guide</a></p>
+  <div class="wrap">
+    <p class="brand">Knight · Digital Setup Guides</p>
+    <h1>Pick a setup. Pay once. Get the guide.</h1>
+    <p class="lead">Instant Stripe checkout. Digital guides for Hermes (broker/exchange API) and Polly (Polymarket Alert Deck).</p>
+    <div class="grid">
+      <a class="card hermes" href="./hermes-setup-buy.html">
+        <h2>Hermes API setup</h2>
+        <p>Connect Hermes to brokerage/exchange APIs so it can trade accounts it can reach.</p>
+        <span class="amt">$47</span>
+      </a>
+      <a class="card poly" href="./poly-setup-buy.html">
+        <h2>Polly Alert Deck</h2>
+        <p>Windows install, deck URL, safe CLOB wiring, dry-run first.</p>
+        <span class="amt">$37</span>
+      </a>
+      <a class="card bundle" href="./bundle-buy.html">
+        <h2>Both guides</h2>
+        <p>Hermes + Polly bundle. Save $17 vs buying separately.</p>
+        <span class="amt">$67</span>
+      </a>
+    </div>
+  </div>
 </body>
 </html>

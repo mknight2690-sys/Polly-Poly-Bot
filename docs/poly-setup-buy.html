@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hermes — Trade Any Stock or Crypto Account via API</title>
-  <meta name="description" content="Get Hermes trading any stock or crypto account using your brokerage/exchange API keys. Setup guide with instant access after checkout." />
-  <meta property="og:title" content="Hermes — Trade Any Brokerage or Exchange via API" />
-  <meta property="og:description" content="Connect Hermes to your brokerage or exchange API so it can trade stocks or crypto for you. Instant digital access." />
+  <title>Polly Poly Bot — Alert Deck Setup Kit</title>
+  <meta name="description" content="Buy the Polly Alert Deck setup guide: install on Windows, open the deck, wire Polymarket safely, stay dry-run until you arm." />
+  <meta property="og:title" content="Polly Poly Bot — Alert Deck Setup Kit" />
+  <meta property="og:description" content="Instant digital access to the Polly Alert Deck Windows setup guide. Dry-run first. Stripe checkout." />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,12 +14,10 @@
   <style>
     :root {
       --bg: #07090c;
-      --panel: #10151c;
       --line: #2a3648;
       --text: #eef3fa;
       --muted: #93a0b3;
-      --accent: #f5c542;
-      --accent-dim: rgba(245, 197, 66, 0.14);
+      --accent: #7dd3c0;
       --good: #3dd68c;
     }
     * { box-sizing: border-box; }
@@ -28,7 +26,7 @@
       font-family: "IBM Plex Mono", ui-monospace, monospace;
       color: var(--text);
       background:
-        radial-gradient(900px 520px at 12% -8%, rgba(245, 197, 66, 0.14), transparent 55%),
+        radial-gradient(900px 520px at 12% -8%, rgba(125, 211, 192, 0.14), transparent 55%),
         radial-gradient(700px 420px at 92% 8%, rgba(61, 214, 140, 0.08), transparent 50%),
         linear-gradient(180deg, #0c1016 0%, var(--bg) 45%, #06080b 100%);
     }
@@ -49,8 +47,8 @@
       width: min(520px, 70vw);
       height: min(520px, 70vw);
       background:
-        repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(245,197,66,.05) 23px),
-        repeating-linear-gradient(90deg, transparent, transparent 22px, rgba(245,197,66,.05) 23px);
+        repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(125,211,192,.05) 23px),
+        repeating-linear-gradient(90deg, transparent, transparent 22px, rgba(125,211,192,.05) 23px);
       mask-image: radial-gradient(circle at center, #000 20%, transparent 70%);
       animation: drift 18s linear infinite;
       pointer-events: none;
@@ -76,18 +74,18 @@
     h1 {
       font-family: Syne, sans-serif;
       font-weight: 800;
-      font-size: clamp(2.1rem, 6.2vw, 3.6rem);
+      font-size: clamp(2.1rem, 6.2vw, 3.4rem);
       line-height: 0.98;
       letter-spacing: -0.03em;
       margin: 0 0 16px;
-      max-width: 14ch;
+      max-width: 16ch;
       animation: rise 0.8s ease 0.05s both;
     }
     .lead {
       margin: 0 0 28px;
       color: var(--muted);
       font-size: clamp(0.95rem, 1.7vw, 1.05rem);
-      max-width: 42ch;
+      max-width: 44ch;
       animation: rise 0.8s ease 0.12s both;
     }
     .cta-row {
@@ -102,21 +100,18 @@
       align-items: center;
       gap: 10px;
       background: var(--accent);
-      color: #111;
+      color: #0b1210;
       text-decoration: none;
       font-family: Syne, sans-serif;
       font-weight: 700;
       font-size: 1.05rem;
       padding: 14px 22px;
       border-radius: 4px;
-      box-shadow: 0 0 0 1px rgba(245,197,66,.35), 0 12px 40px rgba(245,197,66,.18);
+      box-shadow: 0 0 0 1px rgba(125,211,192,.35), 0 12px 40px rgba(125,211,192,.18);
       transition: transform .15s ease, box-shadow .15s ease;
     }
-    .buy:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(245,197,66,.5), 0 16px 48px rgba(245,197,66,.28); }
-    .price {
-      color: var(--text);
-      font-size: 0.95rem;
-    }
+    .buy:hover { transform: translateY(-2px); }
+    .price { color: var(--text); font-size: 0.95rem; }
     .price strong { color: var(--good); }
     .section {
       max-width: 920px;
@@ -146,21 +141,17 @@
       color: var(--accent);
     }
     .card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
-    .fine {
-      margin-top: 28px;
-      color: #6f7c8e;
-      font-size: 0.8rem;
-    }
+    .fine { margin-top: 28px; color: #6f7c8e; font-size: 0.8rem; }
     .fine a { color: var(--accent); }
   </style>
 </head>
 <body>
   <main class="hero">
-    <p class="brand">Hermes · Brokerage &amp; Exchange API</p>
-    <h1>Get Hermes trading any stock or crypto account</h1>
-    <p class="lead">The tutorial shows how to plug your brokerage or exchange API keys into Hermes so it can trade for you — stocks, crypto, whichever account Hermes can reach through that API.</p>
+    <p class="brand">Polly · Polymarket Alert Deck</p>
+    <h1>Run the Alert Deck without guessing</h1>
+    <p class="lead">Windows install → dashboard on port 18112 → safe CLOB wiring → dry-run first. Instant digital guide after Stripe checkout.</p>
     <div class="cta-row">
-      <a class="buy" id="buy" href="https://buy.stripe.com/bJe3cw9QG1pOehhbkoe3e05">Buy instant access — $47</a>
+      <a class="buy" id="buy" href="https://buy.stripe.com/14A14ogf45G4ehhbkoe3e06">Buy instant access — $37</a>
       <span class="price">Secure checkout via <strong>Stripe</strong></span>
     </div>
   </main>
@@ -169,28 +160,26 @@
     <h2>What you get</h2>
     <div class="grid">
       <article class="card">
-        <h3>Your API → Hermes</h3>
-        <p>How to store and point Hermes at your brokerage/exchange API credentials so it can read the account and place trades.</p>
+        <h3>Install path</h3>
+        <p>Clone, venv, deps, desktop Start/Stop shortcuts — copy blocks included.</p>
       </article>
       <article class="card">
-        <h3>Any supported venue</h3>
-        <p>Same pattern for crypto exchanges and stock brokerages: keys in, Hermes loop on, it trades that account.</p>
+        <h3>Deck workflow</h3>
+        <p>One Chrome tab, build tag check, alerts/lag edges, hard-refresh after upgrades.</p>
       </article>
       <article class="card">
-        <h3>Windows walkthrough</h3>
-        <p>Concrete install → dashboard → 1-minute cron path (with a Blofin example) so you can copy the method to your own API.</p>
+        <h3>Safe live later</h3>
+        <p>Credential hygiene and arm-only-when-ready rules so you do not spend by accident.</p>
       </article>
     </div>
     <p class="fine">
-      After payment you’re sent straight to the guide.
+      After payment you’re sent to the guide.
       Preview:
-      <a href="./hermes-windows-1min-cron.html">hermes-windows-1min-cron.html</a>
-      · Also:
-      <a href="./poly-setup-buy.html">Polly Alert Deck ($37)</a>
+      <a href="./poly-alert-deck-setup.html">poly-alert-deck-setup.html</a>
+      · Also available:
+      <a href="./hermes-setup-buy.html">Hermes API setup ($47)</a>
       ·
       <a href="./bundle-buy.html">Hermes + Polly bundle ($67)</a>
-      ·
-      <a href="./index.html">All guides</a>
     </p>
   </section>
 </body>

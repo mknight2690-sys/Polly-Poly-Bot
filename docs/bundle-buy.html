@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hermes + Polly Bundle — Setup Guides</title>
+  <meta name="description" content="Bundle: Hermes brokerage/exchange API trading setup + Polly Polymarket Alert Deck setup. Instant digital access." />
+  <meta property="og:title" content="Hermes + Polly Bundle — $67" />
+  <meta property="og:description" content="Both setup guides: Hermes API trader + Polly Alert Deck. Save vs buying separate." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07090c;
+      --line: #2a3648;
+      --text: #eef3fa;
+      --muted: #93a0b3;
+      --accent: #f5c542;
+      --accent2: #7dd3c0;
+      --good: #3dd68c;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      color: var(--text);
+      background:
+        radial-gradient(900px 520px at 10% -8%, rgba(245, 197, 66, 0.12), transparent 55%),
+        radial-gradient(700px 420px at 95% 10%, rgba(125, 211, 192, 0.10), transparent 50%),
+        linear-gradient(180deg, #0c1016 0%, var(--bg) 45%, #06080b 100%);
+    }
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      align-content: center;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: clamp(32px, 6vw, 72px) 22px 48px;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .brand {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+      color: var(--accent);
+      margin: 0 0 22px;
+      animation: rise 0.7s ease both;
+    }
+    h1 {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.1rem, 6vw, 3.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+      max-width: 16ch;
+      animation: rise 0.8s ease 0.05s both;
+    }
+    .lead {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 1.7vw, 1.05rem);
+      max-width: 46ch;
+      animation: rise 0.8s ease 0.12s both;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      animation: rise 0.85s ease 0.18s both;
+    }
+    .buy {
+      display: inline-flex;
+      background: linear-gradient(90deg, var(--accent), #e8c96a);
+      color: #111;
+      text-decoration: none;
+      font-family: Syne, sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 14px 22px;
+      border-radius: 4px;
+      box-shadow: 0 12px 40px rgba(245,197,66,.18);
+    }
+    .buy:hover { transform: translateY(-2px); }
+    .price strong { color: var(--good); }
+    .section { max-width: 920px; margin: 0 auto; padding: 8px 22px 80px; }
+    .section h2 { font-family: Syne, sans-serif; font-size: 1.45rem; margin: 0 0 14px; }
+    .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(16,21,28,.95), rgba(10,13,18,.98));
+      border-radius: 10px;
+      padding: 16px 16px 18px;
+    }
+    .card h3 { font-family: Syne, sans-serif; font-size: 1rem; margin: 0 0 8px; }
+    .card.hermes h3 { color: var(--accent); }
+    .card.poly h3 { color: var(--accent2); }
+    .card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .fine { margin-top: 28px; color: #6f7c8e; font-size: 0.8rem; }
+    .fine a { color: var(--accent); }
+    .save {
+      display: inline-block;
+      margin-top: 10px;
+      color: var(--good);
+      font-size: 0.85rem;
+      animation: rise 0.9s ease 0.22s both;
+    }
+  </style>
+</head>
+<body>
+  <main class="hero">
+    <p class="brand">Hermes + Polly · Bundle</p>
+    <h1>Both setup guides. One checkout.</h1>
+    <p class="lead">Hermes for brokerage/exchange API trading + Polly Alert Deck for Polymarket. Instant access to both digital guides after payment.</p>
+    <div class="cta-row">
+      <a class="buy" id="buy" href="https://buy.stripe.com/eVqeVe8MC8Sg3CDbkoe3e07">Buy bundle — $67</a>
+      <span class="price">Separate would be <strong>$84</strong></span>
+    </div>
+    <p class="save">You save $17 vs Hermes ($47) + Polly ($37)</p>
+  </main>
+
+  <section class="section">
+    <h2>Included</h2>
+    <div class="grid">
+      <article class="card hermes">
+        <h3>Hermes Windows / API setup</h3>
+        <p>Keys → loop → 1-minute cron path so Hermes can trade accounts Hermes can reach.</p>
+      </article>
+      <article class="card poly">
+        <h3>Polly Alert Deck setup</h3>
+        <p>Install, deck URL, credential hygiene, dry-run first, arm only when ready.</p>
+      </article>
+    </div>
+    <p class="fine">
+      After payment you land on the bundle unlock page with both guide links.
+      Singles:
+      <a href="./hermes-setup-buy.html">Hermes $47</a>
+      ·
+      <a href="./poly-setup-buy.html">Polly $37</a>
+    </p>
+  </section>
+</body>
+</html>

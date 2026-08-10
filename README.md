@@ -4,6 +4,16 @@ Polymarket **Alert Deck** — paper trading, live dry-run / armed CLOB execution
 
 Dashboard: `http://127.0.0.1:18112`
 
+## Storefront (GitHub Pages)
+
+**https://mknight2690-sys.github.io/Polly-Poly-Bot/**
+
+| Product | Price | Buy | Guide |
+|---------|-------|-----|-------|
+| Hermes API / Windows setup | $47 | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-setup-buy.html) | [Guide](https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html) |
+| Polly Alert Deck setup | $37 | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/poly-setup-buy.html) | [Guide](https://mknight2690-sys.github.io/Polly-Poly-Bot/poly-alert-deck-setup.html) |
+| Hermes + Polly bundle | $67 | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/bundle-buy.html) | [Unlock](https://mknight2690-sys.github.io/Polly-Poly-Bot/bundle-unlock.html) |
+
 ## Hermes Windows how-to (public)
 
 Anyone can open this with no GitHub login:
