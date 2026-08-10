@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hermes on Windows — Get the 1-Minute Setup</title>
+  <meta name="description" content="Buy the Hermes Windows setup guide: install Hermes, connect Blofin, set Nous free model, and run a 1-minute cron so Hermes trades for you." />
+  <meta property="og:title" content="Hermes on Windows — 1-Minute Auto-Trader Setup" />
+  <meta property="og:description" content="Step-by-step Windows path: Hermes dashboard + Blofin + free Nous cron. Instant access after checkout." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07090c;
+      --panel: #10151c;
+      --line: #2a3648;
+      --text: #eef3fa;
+      --muted: #93a0b3;
+      --accent: #f5c542;
+      --accent-dim: rgba(245, 197, 66, 0.14);
+      --good: #3dd68c;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      color: var(--text);
+      background:
+        radial-gradient(900px 520px at 12% -8%, rgba(245, 197, 66, 0.14), transparent 55%),
+        radial-gradient(700px 420px at 92% 8%, rgba(61, 214, 140, 0.08), transparent 50%),
+        linear-gradient(180deg, #0c1016 0%, var(--bg) 45%, #06080b 100%);
+    }
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      align-content: center;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: clamp(32px, 6vw, 72px) 22px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 8% -10% auto auto;
+      width: min(520px, 70vw);
+      height: min(520px, 70vw);
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(245,197,66,.05) 23px),
+        repeating-linear-gradient(90deg, transparent, transparent 22px, rgba(245,197,66,.05) 23px);
+      mask-image: radial-gradient(circle at center, #000 20%, transparent 70%);
+      animation: drift 18s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes drift {
+      from { transform: translate3d(0,0,0) rotate(0deg); }
+      to { transform: translate3d(-18px, 24px, 0) rotate(4deg); }
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .brand {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+      color: var(--accent);
+      margin: 0 0 22px;
+      animation: rise 0.7s ease both;
+    }
+    h1 {
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.1rem, 6.2vw, 3.6rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+      max-width: 14ch;
+      animation: rise 0.8s ease 0.05s both;
+    }
+    .lead {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 1.7vw, 1.05rem);
+      max-width: 42ch;
+      animation: rise 0.8s ease 0.12s both;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      animation: rise 0.85s ease 0.18s both;
+    }
+    .buy {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: #111;
+      text-decoration: none;
+      font-family: Syne, sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 14px 22px;
+      border-radius: 4px;
+      box-shadow: 0 0 0 1px rgba(245,197,66,.35), 0 12px 40px rgba(245,197,66,.18);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .buy:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(245,197,66,.5), 0 16px 48px rgba(245,197,66,.28); }
+    .price {
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .price strong { color: var(--good); }
+    .section {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 8px 22px 80px;
+    }
+    .section h2 {
+      font-family: Syne, sans-serif;
+      font-size: 1.45rem;
+      margin: 0 0 14px;
+    }
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(16,21,28,.95), rgba(10,13,18,.98));
+      border-radius: 10px;
+      padding: 16px 16px 18px;
+    }
+    .card h3 {
+      font-family: Syne, sans-serif;
+      font-size: 1rem;
+      margin: 0 0 8px;
+      color: var(--accent);
+    }
+    .card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .fine {
+      margin-top: 28px;
+      color: #6f7c8e;
+      font-size: 0.8rem;
+    }
+    .fine a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main class="hero">
+    <p class="brand">Hermes · Windows Setup</p>
+    <h1>Get Hermes trading for you in minutes</h1>
+    <p class="lead">One paid guide: install Hermes on Windows, wire Blofin, lock VPN to an accepted country, and run a 1-minute Nous cron — no Cursor, no ChatGPT, no OpenRouter bill.</p>
+    <div class="cta-row">
+      <a class="buy" id="buy" href="https://buy.stripe.com/bJe3cw9QG1pOehhbkoe3e05">Buy instant access — $47</a>
+      <span class="price">Secure checkout via <strong>Stripe</strong></span>
+    </div>
+  </main>
+
+  <section class="section">
+    <h2>What you get</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Full Windows path</h3>
+        <p>Install script, dashboard, Cron section, and the exact Nous + tencent/hy free model picks.</p>
+      </article>
+      <article class="card">
+        <h3>Blofin + VPN checklist</h3>
+        <p>Key file format, accepted-country exits, and how to spot geo/WAF failures before you waste ticks.</p>
+      </article>
+      <article class="card">
+        <h3>Personalized cron prompt</h3>
+        <p>Paste your key path once — copy the ready prompt into the dashboard Cron job.</p>
+      </article>
+    </div>
+    <p class="fine">
+      After payment you’re sent straight to the guide.
+      Preview the same tutorial page:
+      <a href="./hermes-windows-1min-cron.html">hermes-windows-1min-cron.html</a>
+    </p>
+  </section>
+</body>
+</html>
