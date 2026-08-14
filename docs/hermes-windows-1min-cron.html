@@ -189,7 +189,7 @@
     <h1>Get Hermes trading for you on Windows</h1>
     <p class="lead">
       Follow this page alone. No Cursor. No ChatGPT. No OpenRouter.
-      Install Hermes → open the browser dashboard → Proton VPN to a Blofin-accepted country → paste your Blofin key path →
+      Install Hermes → open the browser dashboard → Proton VPN to a Blofin-accepted country → create Blofin API (Compendium) → paste key path →
       create the cron in the dashboard <strong>Cron</strong> section → set Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong> →
       paste the prompt → Hermes trades for you.
     </p>
@@ -215,7 +215,8 @@
 
     <div class="goal">
       <strong>Simple path:</strong> install Hermes → <code>hermes dashboard</code> → free Proton Connect / Change server until Blofin-allowed →
-      paste Blofin key path below → open dashboard <strong>Cron</strong> section → Provider <strong>Nous</strong> + Model <strong>tencent/hy free</strong> →
+      create Blofin API with Application Name <strong>Compendium</strong> + Trading + Transfer → paste key path below →
+      open dashboard <strong>Cron</strong> section → Provider <strong>Nous</strong> + Model <strong>tencent/hy free</strong> →
       paste personalized prompt → save → done.
     </div>
 
@@ -224,10 +225,11 @@
       <a href="#install">1. Install Hermes</a>
       <a href="#dashboard">2. Open the browser dashboard</a>
       <a href="#vpn">3. Proton VPN → Blofin-accepted country</a>
-      <a href="#path">4. Paste your Blofin key path (builds the prompt)</a>
-      <a href="#cron">5. Create the cron in the dashboard Cron section</a>
-      <a href="#prompt">6. Copy your personalized prompt into that cron</a>
-      <a href="#check">7. Confirm it is working</a>
+      <a href="#api">4. Create your Blofin API key (Compendium)</a>
+      <a href="#path">5. Paste your Blofin key path (builds the prompt)</a>
+      <a href="#cron">6. Create the cron in the dashboard Cron section</a>
+      <a href="#prompt">7. Copy your personalized prompt into that cron</a>
+      <a href="#check">8. Confirm it is working</a>
     </nav>
 
     <h2 id="install">1. Install Hermes</h2>
@@ -418,9 +420,77 @@ curl.exe https://ipinfo.io/country</pre>
       and Hermes will look broken even with perfect API keys. Fix VPN first, then credentials, then trades.
     </div>
 
-    <h2 id="path">4. Paste your Blofin key path (builds the prompt)</h2>
+    <h2 id="api">4. Create your Blofin API key (Compendium)</h2>
     <p>
-      Put your Blofin Passphrase / API Key / API Secret in a plain <code>.txt</code> file on your PC.
+      Do this while your Proton VPN is already on a <strong>Blofin-allowed</strong> country (Section 3).
+      You need three values later: <strong>Passphrase</strong>, <strong>API Key</strong>, and <strong>API Secret</strong>.
+    </p>
+
+    <ol>
+      <li>Open Blofin (browser) and log in.</li>
+    </ol>
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Blofin site</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>https://blofin.com</pre>
+    </div>
+
+    <ol start="2">
+      <li>Click your profile / account menu (top right) → <strong>API</strong> / <strong>API Management</strong>.</li>
+      <li>Click <strong>Create API Key</strong> (or <strong>+ Create API Key</strong>).</li>
+      <li>Choose <strong>Connect to Third-Party Applications</strong> (not the generic “API Transaction” option).</li>
+      <li>
+        <strong>Application Name</strong> dropdown: select <strong>Compendium</strong>
+        (type <code>compendium</code> if the list is long — pick that exact app name).
+      </li>
+      <li>API Key Name: anything you’ll recognize later (example: <code>Hermes</code>).</li>
+      <li>
+        Permissions — check these boxes:
+        <ul>
+          <li><strong>Trading</strong> (Trade) — required so Hermes can place / manage orders</li>
+          <li><strong>Transfer</strong> — required for this setup (check it)</li>
+          <li>Read is usually on by default — leave it on</li>
+        </ul>
+      </li>
+      <li>Set a <strong>Passphrase</strong> you will save (Blofin will not show it again later — you choose it now).</li>
+      <li>Leave IP whitelist empty unless you know you need one (local Hermes on your PC usually needs no fixed IP list).</li>
+      <li>Click Next / Confirm and finish email + 2FA verification.</li>
+      <li>
+        Copy <strong>API Key</strong> and <strong>API Secret</strong> immediately (Secret is shown once).
+        Put them in a <code>.txt</code> file with your Passphrase (Section 5).
+      </li>
+    </ol>
+
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Blofin API create checklist</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>Blofin → Profile → API Management → Create API Key
+Type: Connect to Third-Party Applications
+Application Name: Compendium
+API Key Name: Hermes (or any label)
+Permissions: Trading (checked) + Transfer (checked) + Read
+Passphrase: choose one and save it
+Save API Key + API Secret + Passphrase into a .txt file</pre>
+    </div>
+
+    <div class="warn">
+      <strong>Must be checked:</strong> <strong>Trading</strong> and <strong>Transfer</strong>.
+      If Trading is off, Hermes cannot place orders. If Transfer is off, this setup can fail when Hermes needs transfer permission.
+      Do <strong>not</strong> enable Withdraw unless you deliberately want withdrawal rights (this guide does not need Withdraw).
+    </div>
+
+    <div class="note">
+      Application Name must be <strong>Compendium</strong> from the dropdown — not a custom typed broker name,
+      and not “API Transaction” alone. Wrong application selection can break partner tagging / expected broker behavior.
+    </div>
+
+    <h2 id="path">5. Paste your Blofin key path (builds the prompt)</h2>
+    <p>
+      Put the Passphrase / API Key / API Secret you just created into a plain <code>.txt</code> file on your PC.
       Then paste that full file path below. The prompt updates automatically so you can copy it into cron.
     </p>
 
@@ -451,7 +521,7 @@ API Secret: YOUR_API_SECRET</pre>
       <div class="status" id="pathStatus">Prompt uses placeholder path until you paste yours.</div>
     </div>
 
-    <h2 id="cron">5. Create the cron in the dashboard Cron section</h2>
+    <h2 id="cron">6. Create the cron in the dashboard Cron section</h2>
     <p>
       Do this in the browser dashboard only — the <strong>Cron</strong> section/tab at
       <code>http://127.0.0.1:9119</code>. Do <strong>not</strong> create it from Hermes chat.
@@ -464,7 +534,7 @@ API Secret: YOUR_API_SECRET</pre>
       <li>Provider dropdown: <strong>Nous</strong></li>
       <li>Model dropdown: <strong>tencent/hy free</strong> (same free Tencent Hy option shown in the UI)</li>
       <li>Delivery: <code>local</code> is fine</li>
-      <li>Prompt field: paste the personalized prompt from Section 6</li>
+      <li>Prompt field: paste the personalized prompt from Section 7</li>
       <li>Save, then run once from the Cron section to test</li>
     </ol>
 
@@ -479,7 +549,7 @@ Name: blofin-equity-vertical
 Provider: Nous
 Model: tencent/hy free
 Deliver: local
-Prompt: paste Section 6</pre>
+Prompt: paste Section 7</pre>
     </div>
 
     <div class="note">
@@ -492,9 +562,9 @@ Prompt: paste Section 6</pre>
       Do not force bad entries just to “stay busy.”
     </div>
 
-    <h2 id="prompt">6. Copy your personalized prompt into that cron</h2>
+    <h2 id="prompt">7. Copy your personalized prompt into that cron</h2>
     <p>
-      After you paste your path in Section 4, this prompt updates.
+      After you paste your path in Section 5, this prompt updates.
       Hit <strong>Copy</strong>, then paste it into the Prompt box in the dashboard Cron create/edit form.
     </p>
 
@@ -506,9 +576,10 @@ Prompt: paste Section 6</pre>
       <pre id="cronPrompt"></pre>
     </div>
 
-    <h2 id="check">7. Confirm it is working</h2>
+    <h2 id="check">8. Confirm it is working</h2>
     <ol>
       <li>VPN still shows an accepted country.</li>
+      <li>Blofin API was created with Application Name <strong>Compendium</strong> and <strong>Trading + Transfer</strong> checked.</li>
       <li>In dashboard <strong>Cron</strong>, the job is listed with Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong>.</li>
       <li>Run one tick from the Cron section.</li>
       <li>Hermes reads real USDT equity/available as JSON (not an HTML geo page).</li>
@@ -527,6 +598,7 @@ Get-ChildItem "$env:LOCALAPPDATA\hermes\cron" -ErrorAction SilentlyContinue</pre
 
     <div class="goal">
       <strong>Done when:</strong> Hermes installed → browser dashboard open → VPN accepted →
+      Blofin API on <strong>Compendium</strong> with Trading + Transfer →
       Cron section job on <strong>Nous + tencent/hy free</strong> → personalized prompt pasted →
       account JSON works → Hermes keeps the equity curve vertical on its own.
     </div>
@@ -625,7 +697,7 @@ If nothing material changed, still append a one-line “hold / no edge” note w
       const path = cleanPath(input.value) || DEFAULT_PATH;
       out.textContent = PROMPT_TEMPLATE.replaceAll(PLACEHOLDER, path);
       if (cleanPath(input.value)) {
-        status.textContent = "Prompt updated with your path. Copy Section 6 into the cron.";
+        status.textContent = "Prompt updated with your path. Copy Section 7 into the cron.";
       } else {
         status.textContent = "Prompt uses placeholder path until you paste yours.";
       }
