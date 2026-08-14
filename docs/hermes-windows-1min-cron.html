@@ -260,7 +260,7 @@
     </div>
 
     <div class="goal">
-      <strong>Finish line:</strong> VPN on an allowed country → Blofin has USDT in Futures → Hermes installed →
+      <strong>Finish line:</strong> computer never sleeps → VPN on an allowed country → Blofin has USDT in Futures → Hermes installed →
       1-minute job running → you see Hermes take at least one trade on Blofin.
     </div>
 
@@ -271,23 +271,29 @@
 
     <nav class="toc" aria-label="Table of contents">
       <div><strong style="color:var(--text)">Do these in order — do not skip</strong></div>
-      <a href="#words">0. Tiny word list (30 seconds)</a>
-      <a href="#vpn">1. Free Proton VPN → Blofin-allowed country</a>
-      <a href="#blofin">2. Create a Blofin account</a>
-      <a href="#buy">3. Put ~$50 on Blofin with your debit card (buy USDT)</a>
-      <a href="#transfer">4. Move USDT into Futures (so Hermes can trade)</a>
-      <a href="#api">5. Create Blofin API key (Compendium + Trading + Transfer)</a>
-      <a href="#savekeys">6. Save keys in a text file on your computer</a>
-      <a href="#install">7. Install Hermes (Windows or Mac)</a>
-      <a href="#dashboard">8. Open the Hermes dashboard in your browser</a>
-      <a href="#path">9. Paste your key-file path (builds the prompt)</a>
-      <a href="#cron">10. Create the 1-minute cron job</a>
-      <a href="#prompt">11. Copy the prompt into that cron job</a>
-      <a href="#check">12. Confirm Hermes takes a trade or two</a>
+      <a href="#words">0. Tiny word list + first-computer basics</a>
+      <a href="#awake">1. Stop your computer from sleeping (required)</a>
+      <a href="#vpn">2. Free Proton VPN → Blofin-allowed country</a>
+      <a href="#blofin">3. Create a Blofin account</a>
+      <a href="#buy">4. Put ~$50 on Blofin with your debit card (buy USDT)</a>
+      <a href="#transfer">5. Move USDT into Futures (so Hermes can trade)</a>
+      <a href="#api">6. Create Blofin API key (Compendium + Trading + Transfer)</a>
+      <a href="#savekeys">7. Save keys in a text file on your computer</a>
+      <a href="#install">8. Install Hermes (Windows or Mac)</a>
+      <a href="#dashboard">9. Open the Hermes dashboard in your browser</a>
+      <a href="#path">10. Paste your key-file path (builds the prompt)</a>
+      <a href="#cron">11. Create the 1-minute cron job</a>
+      <a href="#prompt">12. Copy the prompt into that cron job</a>
+      <a href="#check">13. Confirm Hermes takes a trade or two</a>
     </nav>
 
-    <h2 id="words">0. Tiny word list (30 seconds)</h2>
+    <h2 id="words">0. Tiny word list + first-computer basics</h2>
     <ul>
+      <li><strong>Browser</strong> — the app for websites. Windows usually has <strong>Edge</strong>. Mac has <strong>Safari</strong>. Chrome is fine too. You are reading this page inside a browser right now.</li>
+      <li><strong>Address bar</strong> — the long box at the top of the browser where websites like <code>https://...</code> go. Click it, paste a link, press Enter.</li>
+      <li><strong>Copy / Paste</strong> — Windows: <strong>Ctrl+C</strong> copy, <strong>Ctrl+V</strong> paste. Mac: <strong>Cmd+C</strong> / <strong>Cmd+V</strong>. In PowerShell, <strong>right-click</strong> often pastes.</li>
+      <li><strong>Start menu</strong> (Windows) — key with the Windows logo, or the Start button. Type an app name.</li>
+      <li><strong>Spotlight</strong> (Mac) — press <strong>Cmd+Space</strong>, type the app name, press Enter.</li>
       <li><strong>Blofin</strong> — the exchange website where your money and trades live.</li>
       <li><strong>USDT</strong> — “digital dollars” on Blofin. Roughly 1 USDT ≈ $1.</li>
       <li><strong>VPN</strong> — app that changes which country the internet thinks you are in. Required.</li>
@@ -295,10 +301,82 @@
       <li><strong>Hermes</strong> — the free program on your computer that thinks and places trades.</li>
       <li><strong>Dashboard</strong> — Hermes’ control page in your web browser.</li>
       <li><strong>Cron</strong> — a repeating timer. Ours runs Hermes every 1 minute.</li>
-      <li><strong>PowerShell</strong> (Windows) / <strong>Terminal</strong> (Mac) — the black/white text window where you paste install commands. You open it from the Start menu (Windows) or Spotlight (Mac).</li>
+      <li><strong>PowerShell</strong> (Windows) / <strong>Terminal</strong> (Mac) — the text window where you paste install commands.</li>
     </ul>
+    <div class="steps-inline">
+      Before anything else: plug the laptop into power if you can.
+      Keep this tutorial tab open. When a step says Copy, click the <strong>Copy</strong> button on this page, then paste where the step says.
+    </div>
 
-    <h2 id="vpn">1. Free Proton VPN → Blofin-allowed country</h2>
+    <h2 id="awake">1. Stop your computer from sleeping (required)</h2>
+    <p>
+      If the computer sleeps, Hermes’ 1-minute loop stops and you miss trades.
+      Do this once now. Leave the laptop <strong>open</strong> and preferably <strong>plugged in</strong> while Hermes runs.
+    </p>
+
+    <div class="os-tabs" role="tablist" aria-label="Never sleep OS">
+      <button type="button" class="active" data-os="win">Windows — never sleep</button>
+      <button type="button" data-os="mac">Mac — never sleep</button>
+    </div>
+
+    <div class="os-panel active" data-os-panel="win">
+      <h3>Windows (click path)</h3>
+      <ol>
+        <li>Click <strong>Start</strong> → type <strong>Power and sleep</strong> or <strong>Power &amp; battery</strong> → open it.
+          (Windows 11 is often: <strong>Settings → System → Power &amp; battery → Screen and sleep</strong>.)</li>
+        <li>When plugged in: set <strong>Turn off my screen after</strong> to <strong>Never</strong> (or a very long time).</li>
+        <li>When plugged in: set <strong>Put my device to sleep after</strong> to <strong>Never</strong>.</li>
+        <li>On battery: also set sleep to <strong>Never</strong> while you are learning (or keep it plugged in).</li>
+        <li>Optional but recommended — lid: Start → type <strong>Choose what closing the lid does</strong> → open → for “When I close the lid” set <strong>Do nothing</strong> (at least while plugged in) → Save changes.</li>
+      </ol>
+      <p>Optional fast PowerShell method (Start → type PowerShell → open → paste with right-click → Enter):</p>
+      <div class="copy-block" data-copy>
+        <header>
+          <span>Windows — never sleep (plugged in + battery)</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>powercfg /change standby-timeout-ac 0
+powercfg /change standby-timeout-dc 0
+powercfg /change monitor-timeout-ac 0
+powercfg /change monitor-timeout-dc 0
+powercfg /change hibernate-timeout-ac 0
+powercfg /change hibernate-timeout-dc 0</pre>
+      </div>
+      <div class="note">
+        <code>0</code> means Never. Screen staying on uses more power — leave the charger connected when Hermes runs overnight.
+      </div>
+    </div>
+
+    <div class="os-panel" data-os-panel="mac">
+      <h3>Mac (click path)</h3>
+      <ol>
+        <li>Click the Apple menu () → <strong>System Settings</strong>.</li>
+        <li>Open <strong>Lock Screen</strong> (newer macOS) or <strong>Battery</strong> / <strong>Energy Saver</strong> (older).</li>
+        <li>Set “Turn display off on battery when inactive” to <strong>Never</strong> (or the longest option) while learning.</li>
+        <li>Set “Turn display off on power adapter when inactive” to <strong>Never</strong>.</li>
+        <li>If you see <strong>Prevent automatic sleeping when the display is off</strong> (power adapter), turn it <strong>ON</strong>.</li>
+        <li>Keep the MacBook lid <strong>open</strong> while Hermes runs (simplest). Plug into power.</li>
+      </ol>
+      <p>Optional Terminal stay-awake helper (leave this Terminal window open in addition to Hermes):</p>
+      <div class="copy-block" data-copy>
+        <header>
+          <span>Mac — keep awake while this runs</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>caffeinate -dimsu</pre>
+      </div>
+      <div class="note">
+        <code>caffeinate</code> keeps the Mac awake until you press Ctrl+C in that Terminal or close the window.
+        Run it in a <strong>second</strong> Terminal while Hermes runs in the first.
+      </div>
+    </div>
+
+    <div class="warn">
+      Do Section 1 before you leave the computer alone overnight.
+      Sleep = Hermes pauses. Never-sleep + open lid + charger = the 1-minute loop can keep living.
+    </div>
+
+    <h2 id="vpn">2. Free Proton VPN → Blofin-allowed country</h2>
     <p>
       Do this <strong>before</strong> you sign up for Blofin or buy crypto.
       Blofin blocks some countries (including the United States, Canada, and Singapore).
@@ -307,7 +385,7 @@
 
     <h3>Install Proton VPN</h3>
     <ol>
-      <li>Open this link and download Proton VPN for your computer (Windows or Mac):</li>
+      <li>Copy this link, paste it into your browser address bar, press Enter:</li>
     </ol>
     <div class="copy-block" data-copy>
       <header>
@@ -317,8 +395,11 @@
       <pre>https://protonvpn.com/download</pre>
     </div>
     <ol start="2">
-      <li>Install it. Create a free Proton account if asked. Stay on the <strong>Free</strong> plan.</li>
-      <li>Open Proton VPN. On free, you cannot pick a country. You use <strong>Connect</strong> and <strong>Change server</strong>.</li>
+      <li>Click the download button for <strong>Windows</strong> or <strong>macOS</strong> (match your computer).</li>
+      <li>Open your <strong>Downloads</strong> folder and double-click the installer (Windows: <code>.exe</code>, Mac: <code>.dmg</code>). Click through Next / Install / Open.</li>
+      <li>If Windows asks “Do you want to allow this app…?”, click <strong>Yes</strong>. If Mac says the app can’t be opened, go to System Settings → Privacy &amp; Security → Open Anyway.</li>
+      <li>Create a free Proton account if asked (email + password). Stay on the <strong>Free</strong> plan — do not pay for Plus unless you want to.</li>
+      <li>Open the Proton VPN app. On free, you cannot pick a country. You use the big <strong>Connect</strong> button, then <strong>Change server</strong>.</li>
     </ol>
 
     <h3>Countries free Proton can land on</h3>
@@ -366,6 +447,13 @@
       </ol>
     </div>
 
+    <div class="note">
+      <strong>Where is Change server?</strong> In the Proton VPN app, after you are connected, look on the main/home screen
+      for <strong>Change server</strong> (sometimes under Countries). You are not picking a country from a map on free —
+      Proton picks randomly after each Change server.
+      The connected country name is shown in the app near the Connect button (example: Netherlands, Mexico, Japan).
+    </div>
+
     <div class="copy-block" data-copy>
       <header>
         <span>Prove your country (open in browser while VPN is on)</span>
@@ -374,14 +462,18 @@
       <pre>https://ipinfo.io
 https://ifconfig.co/country</pre>
     </div>
+    <p>
+      Paste one of those links in the browser address bar. The page should show the same country Proton shows.
+      If the browser still says United States, Change server again using the timing above.
+    </p>
 
     <div class="warn">
       Leave Proton VPN <strong>connected</strong> for the rest of this tutorial and whenever Hermes is trading.
       If it drops back to US / Canada / Singapore, Blofin will look “broken.”
-      Also: keep your laptop <strong>awake</strong> (plugged in helps). If the computer sleeps, the 1-minute loop pauses.
+      Confirm Section 1 (never sleep) is done. Lid open. Charger in. Loop dies if the PC sleeps.
     </div>
 
-    <h2 id="blofin">2. Create a Blofin account</h2>
+    <h2 id="blofin">3. Create a Blofin account</h2>
     <ol>
       <li>VPN still on an allowed country? Good.</li>
       <li>Open Blofin:</li>
@@ -404,7 +496,7 @@ https://ifconfig.co/country</pre>
       You do <strong>not</strong> need to understand charts yet. You only need an account, USDT balance, and an API key.
     </div>
 
-    <h2 id="buy">3. Put ~$50 on Blofin with your debit card (buy USDT)</h2>
+    <h2 id="buy">4. Put ~$50 on Blofin with your debit card (buy USDT)</h2>
     <p>
       This turns your remaining cash into USDT on Blofin using your debit card.
       Aim for about <strong>$50</strong> (or whatever you have left after the $47 guide).
@@ -448,7 +540,7 @@ Wait until USDT appears in Funding</pre>
       If Buy Crypto is greyed out or blocked, your VPN is probably still on a blocked country — go back to Section 1.
     </div>
 
-    <h2 id="transfer">4. Move USDT into Futures (so Hermes can trade)</h2>
+    <h2 id="transfer">5. Move USDT into Futures (so Hermes can trade)</h2>
     <p>
       Card buys land in <strong>Funding</strong>. Hermes trading needs USDT in the <strong>Futures</strong> / <strong>USDT-M</strong> account.
       Moving money between them is free and instant.
@@ -477,7 +569,7 @@ Amount: Max (or almost all)
 Confirm → verify Futures balance shows USDT</pre>
     </div>
 
-    <h2 id="api">5. Create Blofin API key (Compendium + Trading + Transfer)</h2>
+    <h2 id="api">6. Create Blofin API key (Compendium + Trading + Transfer)</h2>
     <p>This is how Hermes gets permission to trade your account. VPN must still be on.</p>
     <ol>
       <li>Blofin → profile / account menu (top right) → <strong>API</strong> / <strong>API Management</strong>.</li>
@@ -499,8 +591,8 @@ Confirm → verify Futures balance shows USDT</pre>
       </li>
       <li>Create a <strong>Passphrase</strong> (like a mini-password). Write it down — you need it in the next step.</li>
       <li>Leave IP whitelist empty unless you know you need one.</li>
-      <li>Confirm with email / 2FA codes.</li>
-      <li>Copy <strong>API Key</strong> and <strong>API Secret</strong> right away (Secret is shown once).</li>
+      <li>Confirm with email code and/or authenticator (2FA) if Blofin asks. If you have not set up 2FA yet, Blofin will walk you through it — finish that, then come back to create the key.</li>
+      <li>Copy <strong>API Key</strong> and <strong>API Secret</strong> right away (Secret is shown once). Paste them into Notepad/TextEdit immediately so you do not lose them.</li>
     </ol>
 
     <div class="copy-block" data-copy>
@@ -517,7 +609,7 @@ Withdraw: OFF
 Save Passphrase + API Key + API Secret now</pre>
     </div>
 
-    <h2 id="savekeys">6. Save keys in a text file on your computer</h2>
+    <h2 id="savekeys">7. Save keys in a text file on your computer</h2>
     <p>Hermes will read this file. Do not email it. Do not put it in cloud chat.</p>
 
     <div class="os-tabs" role="tablist" aria-label="Choose your computer">
@@ -545,7 +637,9 @@ API Secret: YOUR_API_SECRET</pre>
         <li>File name: <code>My Blofin API Compendium.txt</code></li>
         <li>Save as type: <strong>All files</strong> (important) so it stays a <code>.txt</code>.</li>
         <li>Save.</li>
-        <li>In File Explorer, open Downloads, hold <strong>Shift</strong>, right-click the file → <strong>Copy as path</strong>. You’ll paste that path in Section 9.</li>
+        <li>Open <strong>File Explorer</strong> (yellow folder icon on the taskbar, or Start → type File Explorer).</li>
+        <li>Click <strong>Downloads</strong> on the left.</li>
+        <li>Hold <strong>Shift</strong>, right-click <code>My Blofin API Compendium.txt</code> → <strong>Copy as path</strong>. You’ll paste that path in Section 10.</li>
       </ol>
     </div>
 
@@ -568,11 +662,11 @@ API Secret: YOUR_API_SECRET</pre>
         <li>File → Save.</li>
         <li>Save to <strong>Downloads</strong>.</li>
         <li>Name: <code>My Blofin API Compendium.txt</code></li>
-        <li>In Finder → Downloads, right-click the file → hold <strong>Option</strong> → <strong>Copy … as Pathname</strong>. You’ll paste that path in Section 9.</li>
+        <li>In Finder → Downloads, right-click the file → hold <strong>Option</strong> → <strong>Copy … as Pathname</strong>. You’ll paste that path in Section 10.</li>
       </ol>
     </div>
 
-    <h2 id="install">7. Install Hermes (Windows or Mac)</h2>
+    <h2 id="install">8. Install Hermes (Windows or Mac)</h2>
     <p>Hermes is free. Pick your computer type and follow only that column.</p>
 
     <div class="os-tabs" role="tablist" aria-label="Install OS">
@@ -583,8 +677,8 @@ API Secret: YOUR_API_SECRET</pre>
     <div class="os-panel active" data-os-panel="win">
       <h3>Windows</h3>
       <ol>
-        <li>Click Start → type <strong>PowerShell</strong> → open <strong>Windows PowerShell</strong>.</li>
-        <li>Copy-paste this line and press Enter:</li>
+        <li>Click Start → type <strong>PowerShell</strong> → open <strong>Windows PowerShell</strong> (blue or black text window).</li>
+        <li>Click the <strong>Copy</strong> button below. Click inside the PowerShell window. <strong>Right-click</strong> once to paste (or Ctrl+V). Press Enter.</li>
       </ol>
       <div class="copy-block" data-copy>
         <header>
@@ -615,8 +709,8 @@ hermes doctor</pre>
       <h3>Mac</h3>
       <ol>
         <li>Open <strong>Terminal</strong> (Cmd+Space, type Terminal, Enter).</li>
-        <li>If Mac asks to install developer tools / git the first time you run install commands, click Install and wait.</li>
-        <li>Copy-paste this line and press Enter:</li>
+        <li>If Mac asks to install developer tools / git the first time you run install commands, click Install / Agree and wait until it finishes.</li>
+        <li>Click <strong>Copy</strong> below. Click inside Terminal. Paste with <strong>Cmd+V</strong>. Press Enter.</li>
       </ol>
       <div class="copy-block" data-copy>
         <header>
@@ -645,10 +739,11 @@ hermes doctor</pre>
     <div class="steps-inline">
       You do <strong>not</strong> need OpenRouter. You do <strong>not</strong> need ChatGPT paid.
       In the dashboard cron setup you will pick Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong>.
-      If Hermes asks you to log into <strong>Nous Portal</strong>, finish that once — it is free.
+      If Hermes or the dashboard asks you to log into <strong>Nous Portal</strong> / sign in with a browser, finish that once — it is free.
+      Use the same browser, click Allow / Continue, then return to the dashboard.
     </div>
 
-    <h2 id="dashboard">8. Open the Hermes dashboard in your browser</h2>
+    <h2 id="dashboard">9. Open the Hermes dashboard in your browser</h2>
     <p>In the same PowerShell (Windows) or Terminal (Mac):</p>
     <div class="copy-block" data-copy>
       <header>
@@ -666,13 +761,14 @@ hermes doctor</pre>
       <pre>http://127.0.0.1:9119</pre>
     </div>
     <div class="warn">
-      Leave that terminal window open. If you close it, the dashboard / cron loop can stop.
+      Leave that PowerShell/Terminal window <strong>open</strong>. If you close it, the dashboard / cron loop can stop.
+      Also leave Proton connected, Section 1 never-sleep on, lid open, charger in.
     </div>
 
-    <h2 id="path">9. Paste your key-file path (builds the prompt)</h2>
+    <h2 id="path">10. Paste your key-file path (builds the prompt)</h2>
     <p>
-      Paste the full path to the text file from Section 6.
-      The big prompt in Section 11 updates automatically.
+      Paste the full path to the text file from Section 7 into the box below (click the box, Ctrl+V or Cmd+V).
+      The big prompt in Section 12 updates automatically.
     </p>
 
     <div class="builder">
@@ -696,20 +792,20 @@ hermes doctor</pre>
       <div class="status" id="pathStatus">Prompt uses placeholder path until you paste yours.</div>
     </div>
 
-    <h2 id="cron">10. Create the 1-minute cron job</h2>
+    <h2 id="cron">11. Create the 1-minute cron job</h2>
     <p>
       Do this in the browser dashboard only — the <strong>Cron</strong> section at
       <code>http://127.0.0.1:9119</code>. Not from chat.
     </p>
     <ol>
-      <li>In the dashboard, open <strong>Cron</strong>.</li>
-      <li>Click create / new job.</li>
+      <li>In the dashboard, look along the top or side menu for <strong>Cron</strong> (sometimes “Jobs” / “Scheduled”). Open it.</li>
+      <li>Click <strong>Create</strong> / <strong>New</strong> / <strong>+</strong> (wording varies — you want a new scheduled job).</li>
       <li>Schedule: type or pick <code>every 1m</code> (every 1 minute).</li>
       <li>Name: <code>blofin-equity-vertical</code></li>
       <li>Provider dropdown: <strong>Nous</strong></li>
       <li>Model dropdown: <strong>tencent/hy free</strong></li>
       <li>Delivery: <code>local</code> is fine</li>
-      <li>Now go to Section 11, hit <strong>Copy</strong> on the big prompt, come back, paste it into the Prompt box, then <strong>Save</strong>.</li>
+      <li>Now go to Section 12, hit <strong>Copy</strong> on the big prompt, come back, paste it into the Prompt box, then <strong>Save</strong>.</li>
       <li>Click <strong>Run</strong> / run once if the dashboard shows that button.</li>
     </ol>
 
@@ -724,12 +820,12 @@ Name: blofin-equity-vertical
 Provider: Nous
 Model: tencent/hy free
 Deliver: local
-Prompt: paste Section 11</pre>
+Prompt: paste Section 12</pre>
     </div>
 
-    <h2 id="prompt">11. Copy the prompt into that cron job</h2>
+    <h2 id="prompt">12. Copy the prompt into that cron job</h2>
     <p>
-      After your path is in Section 9, hit <strong>Copy</strong> below, then paste into the Cron Prompt box and save.
+      After your path is in Section 10, hit <strong>Copy</strong> below, then paste into the Cron Prompt box and save.
       Then use the dashboard’s <strong>Run once</strong> / run button if you see one.
     </p>
 
@@ -741,10 +837,11 @@ Prompt: paste Section 11</pre>
       <pre id="cronPrompt"></pre>
     </div>
 
-    <h2 id="check">12. Confirm Hermes takes a trade or two</h2>
+    <h2 id="check">13. Confirm Hermes takes a trade or two</h2>
     <p>Stay calm. The first minute may only “look around.” Keep VPN on and the dashboard/terminal open.</p>
 
     <ul class="checkdone">
+      <li>Computer will not sleep (Section 1). Lid open. Charger in. Hermes terminal still open.</li>
       <li>Proton still shows an allowed country (not US / Canada / Singapore).</li>
       <li>Blofin Futures shows your USDT.</li>
       <li>Cron job exists with Nous + tencent/hy free.</li>
@@ -761,8 +858,8 @@ Prompt: paste Section 11</pre>
 
     <div class="note">
       <strong>If nothing trades for a while:</strong> that can be normal — the prompt tells Hermes not to force bad entries.
-      Check the Cron run log/output in the dashboard. If you see “restricted country” or HTML errors, fix VPN first (Section 1), then re-run.
-      If balance is 0, redo Sections 3–4 (buy + transfer to Futures).
+      Check the Cron run log/output in the dashboard. If you see “restricted country” or HTML errors, fix VPN first (Section 2), then re-run.
+      If balance is 0, redo Sections 4–5 (buy + transfer to Futures).
     </div>
 
     <div class="os-tabs" role="tablist" aria-label="Optional peek folders">
@@ -890,7 +987,7 @@ If nothing material changed, still append a one-line “hold / no edge” note w
       const path = cleanPath(input.value) || defaultPath;
       out.textContent = PROMPT_TEMPLATE.replaceAll(PLACEHOLDER, path);
       if (cleanPath(input.value)) {
-        status.textContent = "Prompt updated with your path. Copy Section 11 into the cron.";
+        status.textContent = "Prompt updated with your path. Copy Section 12 into the cron.";
       } else {
         status.textContent = "Prompt uses placeholder path until you paste yours.";
       }
