@@ -285,6 +285,7 @@
       <a href="#cron">11. Create the 1-minute cron job</a>
       <a href="#prompt">12. Copy the prompt into that cron job</a>
       <a href="#check">13. Confirm Hermes takes a trade or two</a>
+      <a href="#cron-alive" style="padding-left:1rem">↳ Prove cron via Chats refresh (rubber to the road)</a>
     </nav>
 
     <h2 id="words">0. Tiny word list + first-computer basics</h2>
@@ -823,6 +824,11 @@ Deliver: local
 Prompt: paste Section 12</pre>
     </div>
 
+    <div class="note">
+      After it has been running a couple minutes, jump to Section 13 → <strong>Prove the cron is actually running</strong>
+      (Dashboard → <strong>Chats</strong> → refresh wheel). Cron “active” without new Chats means you are dead in the water.
+    </div>
+
     <h2 id="prompt">12. Copy the prompt into that cron job</h2>
     <p>
       After your path is in Section 10, hit <strong>Copy</strong> below, then paste into the Cron Prompt box and save.
@@ -837,8 +843,49 @@ Prompt: paste Section 12</pre>
       <pre id="cronPrompt"></pre>
     </div>
 
-    <h2 id="check">13. Confirm Hermes takes a trade or two</h2>
+        <h2 id="check">13. Confirm Hermes takes a trade or two</h2>
     <p>Stay calm. The first minute may only “look around.” Keep VPN on and the dashboard/terminal open.</p>
+
+    <h3 id="cron-alive">Prove the cron is actually running (rubber to the road)</h3>
+    <p>
+      Cron can look “active” in the Cron tab while nothing is really firing.
+      The doubt-killer is <strong>Chats</strong>: if new cron chats keep appearing, Hermes is working.
+      If Cron says active but Chats stays frozen, you are dead in the water.
+    </p>
+    <div class="flow-box">
+      <strong style="color:var(--text)">Do this anytime you want proof — especially after you walk away and come back:</strong>
+      <ol>
+        <li>In the Hermes dashboard, open <strong>Chats</strong> (not only Cron).</li>
+        <li>Hit the <strong>refresh</strong> control — the circular arrow / refresh wheel.</li>
+        <li>Look at the <strong>top</strong> chat in the list.</li>
+        <li>
+          That top chat’s title should start with the beginning of your cron prompt
+          (example: it starts like <code>LEARNING ACROSS CRON TICKS</code> or the first words of what you pasted).
+        </li>
+        <li>
+          The timestamp should say <strong>just now</strong> or about a <strong>couple minutes ago</strong>.
+          “Just now” often means a cycle is mid-run or just finished. A couple minutes ago means the last completed tick is recent — still healthy for a 1-minute job.
+        </li>
+        <li>
+          Refresh again after another minute or two. A <strong>new</strong> top chat (or a newer timestamp) means rubber is still on the road.
+        </li>
+      </ol>
+    </div>
+    <div class="warn">
+      <strong>Dead in the water:</strong> Cron tab still shows the job as on/active, but Chats never gets a fresh top entry after refresh —
+      no new cron-titled chat, timestamp stuck hours ago. Fix sleep/VPN/terminal first, then run the job once from Cron, then re-check Chats.
+    </div>
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Cron alive checklist</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>Dashboard → Chats → hit refresh wheel
+Top chat title starts with your cron prompt
+Timestamp: just now OR a couple minutes ago
+Refresh again later → newer top chat / newer time = still running
+Cron “active” alone is NOT enough if Chats is silent</pre>
+    </div>
 
     <ul class="checkdone">
       <li>Computer will not sleep (Section 1). Lid open. Charger in. Hermes terminal still open.</li>
@@ -846,19 +893,21 @@ Prompt: paste Section 12</pre>
       <li>Blofin Futures shows your USDT.</li>
       <li>Cron job exists with Nous + tencent/hy free.</li>
       <li>You ran the job at least once from the Cron section.</li>
+      <li>Chats refresh proof: top chat is your cron prompt + just now / a couple minutes ago (see above).</li>
       <li>Hermes can read your balance (real numbers — not a blocked HTML page).</li>
       <li>Within a few cycles, open Blofin → Futures / Orders / Positions and look for Hermes activity (open position or filled order with TP/SL).</li>
     </ul>
 
     <div class="goal">
-      <strong>You are done when:</strong> you can open Blofin → Futures and see that Hermes opened at least one position
+      <strong>You are done when:</strong> Chats keeps showing fresh cron ticks after refresh, and you can open Blofin → Futures and see that Hermes opened at least one position
       or filled at least one order (often with take-profit / stop-loss attached), while the 1-minute cron keeps running.
-      “Looking around / no edge this minute” in the log is OK — wait a few more minutes before panicking.
+      “Looking around / no edge this minute” in a cron chat is OK — wait a few more minutes before panicking.
     </div>
 
     <div class="note">
       <strong>If nothing trades for a while:</strong> that can be normal — the prompt tells Hermes not to force bad entries.
-      Check the Cron run log/output in the dashboard. If you see “restricted country” or HTML errors, fix VPN first (Section 2), then re-run.
+      First confirm Chats is still getting new cron entries (refresh wheel). If Chats is silent, you are not “waiting on edge” — the loop is dead.
+      If Chats is healthy but no trades yet, check the cron chat text for “restricted country” / HTML errors — fix VPN first (Section 2), then re-run.
       If balance is 0, redo Sections 4–5 (buy + transfer to Futures).
     </div>
 
