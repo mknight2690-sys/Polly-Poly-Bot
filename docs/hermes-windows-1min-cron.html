@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hermes + Blofin Setup — Complete Beginner Guide (Windows &amp; Mac)</title>
-  <meta name="description" content="Start with ~$50 after the setup guide: free Proton VPN, Blofin account, debit-card USDT buy, API keys, install Hermes on Windows or Mac, 1-minute cron — Hermes takes trades for you." />
+  <meta name="description" content="Start with ~$50 after the setup guide: free Proton VPN, buy USDT on Coinbase, send it to Blofin, API keys, install Hermes on Windows or Mac, 1-minute cron — Hermes takes trades for you." />
   <style>
     :root {
       --bg: #0b0d10;
@@ -225,14 +225,14 @@
     <p class="lead">
       This page is for someone who has <strong>never used crypto</strong> and is not a computer person.
       You already bought this setup guide (~$47). You should still have about <strong>$50</strong> left.
-      Follow every step in order. Tap every <strong>Copy</strong> button. By the end, Hermes should place
-      a trade or two on Blofin for you.
+      Buy USDT on <strong>Coinbase</strong> with your card, send it to Blofin, then set Hermes loose.
+      Follow every step in order. Tap every <strong>Copy</strong> button.
     </p>
 
     <div class="pill-row">
       <span class="pill good">Complete beginner</span>
       <span class="pill good">Windows + Mac</span>
-      <span class="pill">Debit card → USDT</span>
+      <span class="pill">Coinbase → Blofin</span>
       <span class="pill">1-minute Hermes loop</span>
     </div>
 
@@ -248,19 +248,25 @@
       </div>
     </div>
 
-    <div class="money">
+        <div class="money">
       <strong style="color:var(--text)">Your money plan (example)</strong>
       <ol>
         <li>You started with about <strong>$100</strong>.</li>
         <li>You paid about <strong>$47</strong> for this setup guide.</li>
-        <li>Keep about <strong>$50</strong> to put onto Blofin with your <strong>debit card</strong>.</li>
-        <li>That ~$50 becomes <strong>USDT</strong> (digital dollars Hermes trades with).</li>
-        <li>Fees exist — you might receive a little less than $50 in USDT. That is normal. Still continue.</li>
+        <li>Keep about <strong>$50</strong> to buy <strong>USDT on Coinbase</strong> (debit/credit card, Apple Pay, Google Pay, or bank — whatever Coinbase offers you).</li>
+        <li>Send that USDT from Coinbase → <strong>Blofin</strong> deposit address (same network both sides).</li>
+        <li>Fees exist (Coinbase + network). You might land with a little less than $50 on Blofin. That is normal. Still continue.</li>
       </ol>
     </div>
 
+    <div class="warn">
+      <strong>Honest residency note:</strong> Blofin’s Terms list some places (including the United States) as Restricted Locations for residents/domiciled users.
+      Coinbase is the sane place to buy with a normal card. Sending crypto to Blofin does <em>not</em> rewrite Blofin’s rules.
+      Follow Blofin’s Terms and your local laws. This guide is operational how-to, not legal advice. Account freezes / loss of access are real risks if you are not allowed to use Blofin.
+    </div>
+
     <div class="goal">
-      <strong>Finish line:</strong> computer never sleeps → VPN on an allowed country → Blofin has USDT in Futures → Hermes installed →
+      <strong>Finish line:</strong> computer never sleeps → VPN on an allowed country → USDT bought on Coinbase → arrived on Blofin Futures → Hermes installed →
       1-minute job running → you see Hermes take at least one trade on Blofin.
     </div>
 
@@ -274,17 +280,19 @@
       <a href="#words">0. Tiny word list + first-computer basics</a>
       <a href="#awake">1. Stop your computer from sleeping (required)</a>
       <a href="#vpn">2. Free Proton VPN → Blofin-allowed country</a>
-      <a href="#blofin">3. Create a Blofin account</a>
-      <a href="#buy">4. Put ~$50 on Blofin with your debit card (buy USDT)</a>
-      <a href="#transfer">5. Move USDT into Futures (so Hermes can trade)</a>
-      <a href="#api">6. Create Blofin API key (Compendium + Trading + Transfer)</a>
-      <a href="#savekeys">7. Save keys in a text file on your computer</a>
-      <a href="#install">8. Install Hermes (Windows or Mac)</a>
-      <a href="#dashboard">9. Open the Hermes dashboard in your browser</a>
-      <a href="#path">10. Paste your key-file path (builds the prompt)</a>
-      <a href="#cron">11. Create the 1-minute cron job</a>
-      <a href="#prompt">12. Copy the prompt into that cron job</a>
-      <a href="#check">13. Confirm Hermes takes a trade or two</a>
+      <a href="#coinbase">3. Create Coinbase + buy ~$50 USDT</a>
+      <a href="#blofin">4. Create a Blofin account (VPN still on)</a>
+      <a href="#send">5. Send USDT from Coinbase → Blofin</a>
+      <a href="#transfer">6. Move USDT into Futures (so Hermes can trade)</a>
+      <a href="#api">7. Create Blofin API key (Compendium + Trading + Transfer)</a>
+      <a href="#savekeys">8. Save keys in a text file on your computer</a>
+      <a href="#install">9. Install Hermes (Windows or Mac)</a>
+      <a href="#dashboard">10. Open the Hermes dashboard in your browser</a>
+      <a href="#path">11. Paste your key-file path (builds the prompt)</a>
+      <a href="#cron">12. Create the 1-minute cron job</a>
+      <a href="#prompt">13. Copy the prompt into that cron job</a>
+      <a href="#check">14. Confirm Hermes takes a trade or two</a>
+      <a href="#cron-alive" style="padding-left:1rem">↳ Prove cron via Chats refresh (rubber to the road)</a>
       <a href="#cron-alive" style="padding-left:1rem">↳ Prove cron via Chats refresh (rubber to the road)</a>
     </nav>
 
@@ -474,9 +482,53 @@ https://ifconfig.co/country</pre>
       Confirm Section 1 (never sleep) is done. Lid open. Charger in. Loop dies if the PC sleeps.
     </div>
 
-    <h2 id="blofin">3. Create a Blofin account</h2>
+        <h2 id="coinbase">3. Create Coinbase + buy ~$50 USDT</h2>
+    <p>
+      Use <strong>Coinbase</strong> to turn your leftover cash into USDT with a normal card / Apple Pay / Google Pay / bank method.
+      Do <strong>not</strong> try to force a US debit card straight onto Blofin — that path fails or flags often.
+    </p>
     <ol>
-      <li>VPN still on an allowed country? Good.</li>
+      <li>Open Coinbase:</li>
+    </ol>
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Coinbase</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>https://www.coinbase.com</pre>
+    </div>
+    <ol start="2">
+      <li>Click <strong>Sign up</strong> / Get started. Use a real email + strong password.</li>
+      <li>Verify email / phone when Coinbase asks.</li>
+      <li>Complete Coinbase identity verification (photo ID). This is normal for buying with a card.</li>
+      <li>Add a payment method: debit/credit card, Apple Pay, Google Pay, or bank — whatever Coinbase shows for your account.</li>
+      <li>Tap <strong>Buy</strong> / Trade → choose <strong>USDT</strong> (Tether).</li>
+      <li>Spend about <strong>$50</strong> (or whatever you have left). Review the fee preview. Confirm the buy.</li>
+      <li>Wait until your Coinbase portfolio shows USDT available (not pending).</li>
+    </ol>
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Coinbase buy checklist</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>coinbase.com → Sign up → verify ID
+Add card / Apple Pay / Google Pay / bank
+Buy → USDT → about $50
+Confirm fees → wait until USDT is available</pre>
+    </div>
+    <div class="note">
+      Coinbase fees and bank holds are real. If the buy is pending, wait until USDT is fully available before sending to Blofin.
+      Official fees overview:
+      <a href="https://help.coinbase.com/coinbase/trading-and-funding/pricing-and-fees/fees" target="_blank" rel="noreferrer">Coinbase fees</a>.
+    </div>
+    <div class="warn">
+      Keep a little fiat buffer if you can — network send fees come out of the USDT you move next.
+      A ~$50 buy might arrive on Blofin as less after Coinbase + network fees. Still continue.
+    </div>
+
+    <h2 id="blofin">4. Create a Blofin account (VPN still on)</h2>
+    <ol>
+      <li>Section 2 VPN still on an <strong>allowed</strong> country? Good. Keep it on.</li>
       <li>Open Blofin:</li>
     </ol>
     <div class="copy-block" data-copy>
@@ -490,73 +542,70 @@ https://ifconfig.co/country</pre>
       <li>Click <strong>Sign Up</strong>. Use email + password you will remember.</li>
       <li>Verify your email if asked.</li>
       <li>Log in. You should see the Blofin home / assets area.</li>
-      <li>If Blofin asks for identity verification (KYC) later when buying with a card, complete it — that is normal for debit-card buys.</li>
+      <li>If Blofin asks for identity verification later, complete what it asks — or stop if you are not allowed under their Terms.</li>
     </ol>
-
     <div class="note">
-      You do <strong>not</strong> need to understand charts yet. You only need an account, USDT balance, and an API key.
+      You do <strong>not</strong> need to understand charts yet. You need USDT on Blofin Futures and an API key.
     </div>
 
-    <h2 id="buy">4. Put ~$50 on Blofin with your debit card (buy USDT)</h2>
+    <h2 id="send">5. Send USDT from Coinbase → Blofin</h2>
     <p>
-      This turns your remaining cash into USDT on Blofin using your debit card.
-      Aim for about <strong>$50</strong> (or whatever you have left after the $47 guide).
+      This moves your USDT off Coinbase onto Blofin.
+      <strong>Network must match on both sides</strong> or the money can be lost.
     </p>
+    <div class="warn">
+      <strong>Read twice:</strong> The network you pick on Blofin Deposit must be the <em>exact same</em> network you pick on Coinbase Send
+      (example: both <strong>Solana</strong>, or both <strong>Arbitrum</strong>, or both <strong>Polygon</strong>, or both <strong>Ethereum (ERC-20)</strong>).
+      Coinbase does <strong>not</strong> use Tron/TRC-20 for USDT. Do not pick TRC-20 on Blofin if Coinbase cannot send on that network.
+      Prefer a cheaper network Coinbase and Blofin both list (often Solana / Arbitrum / Polygon — check both UIs the day you send).
+      Ethereum mainnet works but fees can eat a painful chunk of a $50 stack.
+    </div>
+    <h3>A) Get the Blofin deposit address first</h3>
     <ol>
-      <li>On Blofin (web), click <strong>Buy Crypto</strong>.</li>
-      <li>Spend currency: pick your fiat (example: <strong>USD</strong>).</li>
-      <li>Receive crypto: choose <strong>USDT</strong>.</li>
-      <li>Enter about <strong>50</strong> (or your leftover amount).</li>
-      <li>Payment method: <strong>Card (VISA/Mastercard)</strong>.</li>
-      <li>Click <strong>Buy</strong>.</li>
-      <li>If asked, click <strong>Add New Card</strong>, enter your debit card, confirm.</li>
-      <li>If Blofin asks for identity verification, finish it, then return to Buy Crypto.</li>
-      <li>Review fees and amount → <strong>Buy Now</strong>.</li>
-      <li>Approve the bank / card text message or one-time password if your bank asks.</li>
-      <li>Wait until USDT shows in your Blofin account (Funding).</li>
+      <li>On Blofin (VPN on): open <strong>Assets</strong> / <strong>Deposit</strong>.</li>
+      <li>Select coin: <strong>USDT</strong>.</li>
+      <li>Select a <strong>network</strong> that Coinbase also supports for USDT sends. Write that network name down.</li>
+      <li>Copy the <strong>deposit address</strong> Blofin shows. If Blofin shows a memo/tag, copy that too (USDT often has none — still check).</li>
     </ol>
-
+    <h3>B) Send from Coinbase</h3>
+    <ol>
+      <li>In Coinbase: open your <strong>USDT</strong> → <strong>Send</strong> / Withdraw.</li>
+      <li>Paste the Blofin deposit address exactly.</li>
+      <li>Select the <strong>same network</strong> you chose on Blofin.</li>
+      <li>Enter the amount (leave a tiny bit if Coinbase needs fee headroom, or send max if the UI shows fees separately).</li>
+      <li>Review address + network + fees. Confirm. Complete 2FA / email approve if asked.</li>
+      <li>Wait. Transfers can take minutes (sometimes longer). Refresh Blofin Assets until USDT shows in <strong>Funding</strong>.</li>
+    </ol>
     <div class="copy-block" data-copy>
       <header>
-        <span>Debit-card onramp checklist</span>
+        <span>Coinbase → Blofin send checklist</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>Blofin → Buy Crypto
-Spend: ~50 (your leftover cash)
-Receive: USDT
-Pay with: Card (VISA/Mastercard)
-Add debit card → verify KYC if asked → Buy Now
-Wait until USDT appears in Funding</pre>
+      <pre>Blofin → Deposit → USDT → pick network → copy address
+Coinbase → USDT → Send → paste address
+SAME network both sides (no TRC-20 unless Coinbase offers it)
+Confirm → wait until Blofin Funding shows USDT</pre>
     </div>
-
     <div class="note">
-      Official Blofin card-buy help:
-      <a href="https://blofin.com/en/support/FAQ/Buy-Crypto/12016051211023-How-to-Buy-Crypto-with-CreditDebit-Card-Web" target="_blank" rel="noreferrer">Buy with card (web)</a>.
-      Fiat buys can have a 24–48h hold before <em>withdrawals</em>. Trading can still work after USDT arrives — you are funding Hermes, not withdrawing yet.
+      First time: send a tiny test amount if you are nervous, then send the rest the same way.
+      Wrong network / wrong address = likely gone. Triple-check before you hit confirm.
     </div>
 
-    <div class="warn">
-      If your card is declined, try again after KYC, try another card, or pick another payment method Blofin shows on the Buy Crypto screen.
-      Do not continue to Hermes until you can see a USDT balance under Assets.
-      If Buy Crypto is greyed out or blocked, your VPN is probably still on a blocked country — go back to Section 1.
-    </div>
-
-    <h2 id="transfer">5. Move USDT into Futures (so Hermes can trade)</h2>
+    <h2 id="transfer">6. Move USDT into Futures (so Hermes can trade)</h2>
     <p>
-      Card buys land in <strong>Funding</strong>. Hermes trading needs USDT in the <strong>Futures</strong> / <strong>USDT-M</strong> account.
+      Deposits land in <strong>Funding</strong>. Hermes trading needs USDT in the <strong>Futures</strong> / <strong>USDT-M</strong> account.
       Moving money between them is free and instant.
     </p>
     <ol>
       <li>On Blofin, open <strong>Assets</strong> (or Wallet).</li>
       <li>Click <strong>Transfer</strong>.</li>
       <li>From: <strong>Funding</strong></li>
-      <li>To: <strong>Futures</strong> / <strong>USDT-M</strong> (same idea — futures trading wallet)</li>
+      <li>To: <strong>Futures</strong> / <strong>USDT-M</strong></li>
       <li>Coin: <strong>USDT</strong></li>
-      <li>Amount: almost all of it (leave a tiny bit in Funding if the screen wants a minimum — otherwise Max is fine)</li>
+      <li>Amount: almost all of it (Max is fine unless the screen forces a dust remainder)</li>
       <li>Confirm.</li>
       <li>Check Assets → Futures and confirm you see USDT there.</li>
     </ol>
-
     <div class="copy-block" data-copy>
       <header>
         <span>Funding → Futures transfer</span>
@@ -570,7 +619,7 @@ Amount: Max (or almost all)
 Confirm → verify Futures balance shows USDT</pre>
     </div>
 
-    <h2 id="api">6. Create Blofin API key (Compendium + Trading + Transfer)</h2>
+    <h2 id="api">7. Create Blofin API key (Compendium + Trading + Transfer)</h2>
     <p>This is how Hermes gets permission to trade your account. VPN must still be on.</p>
     <ol>
       <li>Blofin → profile / account menu (top right) → <strong>API</strong> / <strong>API Management</strong>.</li>
@@ -610,7 +659,7 @@ Withdraw: OFF
 Save Passphrase + API Key + API Secret now</pre>
     </div>
 
-    <h2 id="savekeys">7. Save keys in a text file on your computer</h2>
+    <h2 id="savekeys">8. Save keys in a text file on your computer</h2>
     <p>Hermes will read this file. Do not email it. Do not put it in cloud chat.</p>
 
     <div class="os-tabs" role="tablist" aria-label="Choose your computer">
@@ -640,7 +689,7 @@ API Secret: YOUR_API_SECRET</pre>
         <li>Save.</li>
         <li>Open <strong>File Explorer</strong> (yellow folder icon on the taskbar, or Start → type File Explorer).</li>
         <li>Click <strong>Downloads</strong> on the left.</li>
-        <li>Hold <strong>Shift</strong>, right-click <code>My Blofin API Compendium.txt</code> → <strong>Copy as path</strong>. You’ll paste that path in Section 10.</li>
+        <li>Hold <strong>Shift</strong>, right-click <code>My Blofin API Compendium.txt</code> → <strong>Copy as path</strong>. You’ll paste that path in Section 11.</li>
       </ol>
     </div>
 
@@ -663,11 +712,11 @@ API Secret: YOUR_API_SECRET</pre>
         <li>File → Save.</li>
         <li>Save to <strong>Downloads</strong>.</li>
         <li>Name: <code>My Blofin API Compendium.txt</code></li>
-        <li>In Finder → Downloads, right-click the file → hold <strong>Option</strong> → <strong>Copy … as Pathname</strong>. You’ll paste that path in Section 10.</li>
+        <li>In Finder → Downloads, right-click the file → hold <strong>Option</strong> → <strong>Copy … as Pathname</strong>. You’ll paste that path in Section 11.</li>
       </ol>
     </div>
 
-    <h2 id="install">8. Install Hermes (Windows or Mac)</h2>
+    <h2 id="install">9. Install Hermes (Windows or Mac)</h2>
     <p>Hermes is free. Pick your computer type and follow only that column.</p>
 
     <div class="os-tabs" role="tablist" aria-label="Install OS">
@@ -744,7 +793,7 @@ hermes doctor</pre>
       Use the same browser, click Allow / Continue, then return to the dashboard.
     </div>
 
-    <h2 id="dashboard">9. Open the Hermes dashboard in your browser</h2>
+    <h2 id="dashboard">10. Open the Hermes dashboard in your browser</h2>
     <p>In the same PowerShell (Windows) or Terminal (Mac):</p>
     <div class="copy-block" data-copy>
       <header>
@@ -766,10 +815,10 @@ hermes doctor</pre>
       Also leave Proton connected, Section 1 never-sleep on, lid open, charger in.
     </div>
 
-    <h2 id="path">10. Paste your key-file path (builds the prompt)</h2>
+    <h2 id="path">11. Paste your key-file path (builds the prompt)</h2>
     <p>
       Paste the full path to the text file from Section 7 into the box below (click the box, Ctrl+V or Cmd+V).
-      The big prompt in Section 12 updates automatically.
+      The big prompt in Section 13 updates automatically.
     </p>
 
     <div class="builder">
@@ -793,7 +842,7 @@ hermes doctor</pre>
       <div class="status" id="pathStatus">Prompt uses placeholder path until you paste yours.</div>
     </div>
 
-    <h2 id="cron">11. Create the 1-minute cron job</h2>
+    <h2 id="cron">12. Create the 1-minute cron job</h2>
     <p>
       Do this in the browser dashboard only — the <strong>Cron</strong> section at
       <code>http://127.0.0.1:9119</code>. Not from chat.
@@ -806,7 +855,7 @@ hermes doctor</pre>
       <li>Provider dropdown: <strong>Nous</strong></li>
       <li>Model dropdown: <strong>tencent/hy free</strong></li>
       <li>Delivery: <code>local</code> is fine</li>
-      <li>Now go to Section 12, hit <strong>Copy</strong> on the big prompt, come back, paste it into the Prompt box, then <strong>Save</strong>.</li>
+      <li>Now go to Section 13, hit <strong>Copy</strong> on the big prompt, come back, paste it into the Prompt box, then <strong>Save</strong>.</li>
       <li>Click <strong>Run</strong> / run once if the dashboard shows that button.</li>
     </ol>
 
@@ -821,17 +870,17 @@ Name: blofin-equity-vertical
 Provider: Nous
 Model: tencent/hy free
 Deliver: local
-Prompt: paste Section 12</pre>
+Prompt: paste Section 13</pre>
     </div>
 
     <div class="note">
-      After it has been running a couple minutes, jump to Section 13 → <strong>Prove the cron is actually running</strong>
+      After it has been running a couple minutes, jump to Section 14 → <strong>Prove the cron is actually running</strong>
       (Dashboard → <strong>Chats</strong> → refresh wheel). Cron “active” without new Chats means you are dead in the water.
     </div>
 
-    <h2 id="prompt">12. Copy the prompt into that cron job</h2>
+    <h2 id="prompt">13. Copy the prompt into that cron job</h2>
     <p>
-      After your path is in Section 10, hit <strong>Copy</strong> below, then paste into the Cron Prompt box and save.
+      After your path is in Section 11, hit <strong>Copy</strong> below, then paste into the Cron Prompt box and save.
       Then use the dashboard’s <strong>Run once</strong> / run button if you see one.
     </p>
 
@@ -843,7 +892,7 @@ Prompt: paste Section 12</pre>
       <pre id="cronPrompt"></pre>
     </div>
 
-        <h2 id="check">13. Confirm Hermes takes a trade or two</h2>
+        <h2 id="check">14. Confirm Hermes takes a trade or two</h2>
     <p>Stay calm. The first minute may only “look around.” Keep VPN on and the dashboard/terminal open.</p>
 
     <h3 id="cron-alive">Prove the cron is actually running (rubber to the road)</h3>
@@ -908,7 +957,7 @@ Cron “active” alone is NOT enough if Chats is silent</pre>
       <strong>If nothing trades for a while:</strong> that can be normal — the prompt tells Hermes not to force bad entries.
       First confirm Chats is still getting new cron entries (refresh wheel). If Chats is silent, you are not “waiting on edge” — the loop is dead.
       If Chats is healthy but no trades yet, check the cron chat text for “restricted country” / HTML errors — fix VPN first (Section 2), then re-run.
-      If balance is 0, redo Sections 4–5 (buy + transfer to Futures).
+      If balance is 0, redo Sections 3–6 (Coinbase buy → send → Futures transfer).
     </div>
 
     <div class="os-tabs" role="tablist" aria-label="Optional peek folders">
@@ -1036,7 +1085,7 @@ If nothing material changed, still append a one-line “hold / no edge” note w
       const path = cleanPath(input.value) || defaultPath;
       out.textContent = PROMPT_TEMPLATE.replaceAll(PLACEHOLDER, path);
       if (cleanPath(input.value)) {
-        status.textContent = "Prompt updated with your path. Copy Section 12 into the cron.";
+        status.textContent = "Prompt updated with your path. Copy Section 13 into the cron.";
       } else {
         status.textContent = "Prompt uses placeholder path until you paste yours.";
       }
