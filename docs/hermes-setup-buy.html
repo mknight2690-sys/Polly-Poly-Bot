@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hermes — Trade Any Stock or Crypto Account via API</title>
-  <meta name="description" content="Get Hermes trading any stock or crypto account using your brokerage/exchange API keys. Setup guide with instant access after checkout." />
-  <meta property="og:title" content="Hermes — Trade Any Brokerage or Exchange via API" />
-  <meta property="og:description" content="Connect Hermes to your brokerage or exchange API so it can trade stocks or crypto for you. Instant digital access." />
+  <title>Hermes Setup — $47/mo | Get Hermes Trading Your Blofin Account</title>
+  <meta name="description" content="Never used crypto? Keep ~$50 for Blofin. $47/month unlocks the step-by-step Hermes setup: debit card onramp, VPN, API keys, Windows or Mac — Hermes trades for you." />
+  <meta property="og:title" content="Hermes Setup — $47/month" />
+  <meta property="og:description" content="Start with ~$100. Pay $47/mo for the guide. Fund Blofin with what’s left. Hermes takes the trades." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-setup-buy.html" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -19,8 +20,8 @@
       --text: #eef3fa;
       --muted: #93a0b3;
       --accent: #f5c542;
-      --accent-dim: rgba(245, 197, 66, 0.14);
       --good: #3dd68c;
+      --warn: #ff7b72;
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; min-height: 100%; }
@@ -28,36 +29,38 @@
       font-family: "IBM Plex Mono", ui-monospace, monospace;
       color: var(--text);
       background:
-        radial-gradient(900px 520px at 12% -8%, rgba(245, 197, 66, 0.14), transparent 55%),
-        radial-gradient(700px 420px at 92% 8%, rgba(61, 214, 140, 0.08), transparent 50%),
-        linear-gradient(180deg, #0c1016 0%, var(--bg) 45%, #06080b 100%);
+        radial-gradient(1100px 640px at 8% -12%, rgba(245, 197, 66, 0.16), transparent 55%),
+        radial-gradient(800px 480px at 100% 0%, rgba(61, 214, 140, 0.07), transparent 52%),
+        linear-gradient(180deg, #0c1016 0%, var(--bg) 42%, #06080b 100%);
     }
+    a { color: var(--accent); }
     .hero {
       min-height: 100vh;
-      display: grid;
-      align-content: center;
       max-width: 920px;
       margin: 0 auto;
-      padding: clamp(32px, 6vw, 72px) 22px 48px;
+      padding: clamp(36px, 7vw, 80px) 22px 56px;
+      display: grid;
+      align-content: center;
       position: relative;
       overflow: hidden;
     }
     .hero::before {
       content: "";
       position: absolute;
-      inset: 8% -10% auto auto;
-      width: min(520px, 70vw);
-      height: min(520px, 70vw);
+      inset: 6% -12% auto auto;
+      width: min(560px, 75vw);
+      height: min(560px, 75vw);
       background:
-        repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(245,197,66,.05) 23px),
-        repeating-linear-gradient(90deg, transparent, transparent 22px, rgba(245,197,66,.05) 23px);
-      mask-image: radial-gradient(circle at center, #000 20%, transparent 70%);
-      animation: drift 18s linear infinite;
+        radial-gradient(circle at 40% 40%, rgba(245,197,66,.12), transparent 62%),
+        repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(245,197,66,.04) 23px),
+        repeating-linear-gradient(90deg, transparent, transparent 22px, rgba(245,197,66,.04) 23px);
+      mask-image: radial-gradient(circle at center, #000 18%, transparent 72%);
+      animation: drift 20s linear infinite;
       pointer-events: none;
     }
     @keyframes drift {
       from { transform: translate3d(0,0,0) rotate(0deg); }
-      to { transform: translate3d(-18px, 24px, 0) rotate(4deg); }
+      to { transform: translate3d(-16px, 22px, 0) rotate(3deg); }
     }
     @keyframes rise {
       from { opacity: 0; transform: translateY(14px); }
@@ -66,34 +69,34 @@
     .brand {
       font-family: Syne, sans-serif;
       font-weight: 800;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+      font-size: clamp(1.35rem, 3.4vw, 1.85rem);
       color: var(--accent);
-      margin: 0 0 22px;
+      margin: 0 0 18px;
       animation: rise 0.7s ease both;
     }
     h1 {
       font-family: Syne, sans-serif;
       font-weight: 800;
-      font-size: clamp(2.1rem, 6.2vw, 3.6rem);
-      line-height: 0.98;
+      font-size: clamp(1.85rem, 4.8vw, 2.85rem);
+      line-height: 1.05;
       letter-spacing: -0.03em;
       margin: 0 0 16px;
-      max-width: 14ch;
+      max-width: 18ch;
       animation: rise 0.8s ease 0.05s both;
     }
     .lead {
       margin: 0 0 28px;
       color: var(--muted);
-      font-size: clamp(0.95rem, 1.7vw, 1.05rem);
-      max-width: 42ch;
+      font-size: clamp(0.98rem, 1.8vw, 1.08rem);
+      max-width: 46ch;
       animation: rise 0.8s ease 0.12s both;
     }
     .cta-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
       align-items: center;
       animation: rise 0.85s ease 0.18s both;
     }
@@ -105,91 +108,201 @@
       color: #111;
       text-decoration: none;
       font-family: Syne, sans-serif;
-      font-weight: 700;
-      font-size: 1.05rem;
-      padding: 14px 22px;
+      font-weight: 800;
+      font-size: 1.08rem;
+      padding: 15px 24px;
       border-radius: 4px;
       box-shadow: 0 0 0 1px rgba(245,197,66,.35), 0 12px 40px rgba(245,197,66,.18);
       transition: transform .15s ease, box-shadow .15s ease;
     }
-    .buy:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(245,197,66,.5), 0 16px 48px rgba(245,197,66,.28); }
+    .buy:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 0 1px rgba(245,197,66,.5), 0 16px 48px rgba(245,197,66,.28);
+    }
     .price {
       color: var(--text);
       font-size: 0.95rem;
+      max-width: 28ch;
     }
     .price strong { color: var(--good); }
     .section {
       max-width: 920px;
       margin: 0 auto;
-      padding: 8px 22px 80px;
+      padding: 8px 22px 40px;
     }
     .section h2 {
       font-family: Syne, sans-serif;
-      font-size: 1.45rem;
-      margin: 0 0 14px;
+      font-size: clamp(1.35rem, 3vw, 1.7rem);
+      margin: 0 0 10px;
     }
-    .grid {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    .section .sub {
+      color: var(--muted);
+      margin: 0 0 22px;
+      max-width: 58ch;
     }
-    .card {
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(16,21,28,.95), rgba(10,13,18,.98));
+    .money {
+      border: 1px solid rgba(61,214,140,.35);
+      background: rgba(61,214,140,.07);
       border-radius: 10px;
-      padding: 16px 16px 18px;
+      padding: 16px 18px;
+      margin: 0 0 28px;
     }
-    .card h3 {
+    .money strong { color: var(--text); }
+    .money ol { margin: 10px 0 0; padding-left: 1.2rem; color: #d5deea; }
+    .money li { margin: 6px 0; }
+    .steps {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 28px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+    .step:last-child { border-bottom: 1px solid var(--line); }
+    .n {
       font-family: Syne, sans-serif;
-      font-size: 1rem;
-      margin: 0 0 8px;
+      font-weight: 800;
       color: var(--accent);
+      font-size: 1.2rem;
+      line-height: 1.2;
     }
-    .card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .step h3 {
+      font-family: Syne, sans-serif;
+      margin: 0 0 4px;
+      font-size: 1.05rem;
+    }
+    .step p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+    .proof {
+      margin: 0 0 28px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--accent);
+      background: rgba(245,197,66,.06);
+      color: #d5deea;
+    }
+    .proof em { color: var(--text); font-style: normal; font-weight: 600; }
+    .cta-band {
+      margin: 36px 0 20px;
+      padding: 22px 0 8px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
     .fine {
-      margin-top: 28px;
+      margin: 18px 0 60px;
       color: #6f7c8e;
       font-size: 0.8rem;
+      max-width: 70ch;
     }
     .fine a { color: var(--accent); }
+    .warn {
+      color: #ffc7c2;
+      border: 1px solid rgba(255,123,114,.3);
+      background: rgba(255,123,114,.07);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      margin: 0 0 20px;
+    }
   </style>
 </head>
 <body>
   <main class="hero">
-    <p class="brand">Hermes · Brokerage &amp; Exchange API</p>
-    <h1>Get Hermes trading any stock or crypto account</h1>
-    <p class="lead">The tutorial shows how to plug your brokerage or exchange API keys into Hermes so it can trade for you — stocks, crypto, whichever account Hermes can reach through that API.</p>
+    <p class="brand">Hermes</p>
+    <h1>Your laptop. Your $50. Hermes takes the trades.</h1>
+    <p class="lead">
+      Never touched crypto? Fine. Pay <strong style="color:var(--text)">$47/month</strong>, keep about $50 for Blofin,
+      follow the beginner walkthrough on Windows or Mac — Hermes runs a 1-minute loop and trades for you.
+    </p>
     <div class="cta-row">
-      <a class="buy" id="buy" href="https://buy.stripe.com/bJe3cw9QG1pOehhbkoe3e05">Buy instant access — $47</a>
-      <span class="price">Secure checkout via <strong>Stripe</strong></span>
+      <a class="buy" id="buy" href="https://buy.stripe.com/cNi5kE0g65G4b552NSe3e08">Start monthly access — $47</a>
+      <span class="price">Unlocks the full tutorial instantly via <strong>Stripe</strong>. Cancel anytime in Stripe.</span>
     </div>
   </main>
 
   <section class="section">
-    <h2>What you get</h2>
-    <div class="grid">
-      <article class="card">
-        <h3>Your API → Hermes</h3>
-        <p>How to store and point Hermes at your brokerage/exchange API credentials so it can read the account and place trades.</p>
-      </article>
-      <article class="card">
-        <h3>Any supported venue</h3>
-        <p>Same pattern for crypto exchanges and stock brokerages: keys in, Hermes loop on, it trades that account.</p>
-      </article>
-      <article class="card">
-        <h3>Windows + Mac beginner path</h3>
-        <p>Debit card → Blofin USDT → VPN → API keys → Hermes 1-minute cron. Written for people who have never used crypto.</p>
-      </article>
+    <h2>Built for someone with about $100 left</h2>
+    <p class="sub">Most “trading bots” assume you already know exchanges, VPNs, and API keys. This one doesn’t.</p>
+
+    <div class="money">
+      <strong>Simple money math</strong>
+      <ol>
+        <li>You have about <strong>$100</strong>.</li>
+        <li><strong>$47/month</strong> unlocks this Hermes setup tutorial.</li>
+        <li>Put about <strong>$50</strong> onto Blofin with your <strong>debit card</strong> (step-by-step inside).</li>
+        <li>Hermes uses that balance to trade — you don’t need to become a chart nerd first.</li>
+      </ol>
     </div>
+
+    <h2>What $47/month unlocks</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <div>
+          <h3>Free Proton VPN → Blofin-allowed country</h3>
+          <p>Exact Connect / Change server timing so free Proton lands somewhere Blofin accepts.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <div>
+          <h3>Debit card → USDT onramp</h3>
+          <p>Create Blofin, buy ~$50 USDT with your card, move it into Futures so it can actually trade.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <div>
+          <h3>API keys done right</h3>
+          <p>Compendium application name, Trading + Transfer checked, keys saved in a text file Hermes can read.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">04</div>
+        <div>
+          <h3>Hermes on Windows or Mac</h3>
+          <p>Copy-paste install, open the dashboard, set Nous + tencent/hy free, paste the personalized 1-minute prompt.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">05</div>
+        <div>
+          <h3>Watch Hermes take trades</h3>
+          <p>Finish line is clear: VPN on, USDT in Futures, cron running — then you see activity on Blofin.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="proof">
+      <em>This is not a signal group.</em>
+      It’s a public, copy-button walkthrough that takes a complete beginner from “I have a debit card”
+      to “Hermes is looping every minute on my account.”
+    </div>
+
+    <div class="warn">
+      Trading can lose money — including all of a small ~$50 balance. Only use cash you can afford to lose.
+      This is a setup guide, not financial advice. Follow Blofin’s terms and your local laws.
+    </div>
+
+    <div class="cta-band">
+      <a class="buy" href="https://buy.stripe.com/cNi5kE0g65G4b552NSe3e08">Get monthly access — $47</a>
+      <span class="price">After checkout you’re sent straight into the tutorial.</span>
+    </div>
+
     <p class="fine">
-      After payment you’re sent straight to the guide.
-      Preview:
-      <a href="./hermes-windows-1min-cron.html">hermes-windows-1min-cron.html</a>
-      · Also:
-      <a href="./poly-setup-buy.html">Polly Alert Deck ($37)</a>
-      ·
-      <a href="./bundle-buy.html">Hermes + Polly bundle ($67)</a>
-      ·
+      Secure recurring checkout via Stripe Payment Link.
+      Success redirect:
+      <a href="./hermes-windows-1min-cron.html">Hermes beginner tutorial</a>.
+      Manage or cancel the subscription anytime from your Stripe receipt / Customer Portal email.
+      Also:
+      <a href="./poly-setup-buy.html">Polly Alert Deck</a> ·
+      <a href="./bundle-buy.html">Bundle</a> ·
       <a href="./index.html">All guides</a>
     </p>
   </section>

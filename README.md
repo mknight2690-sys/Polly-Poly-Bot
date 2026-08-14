@@ -10,7 +10,7 @@ Dashboard: `http://127.0.0.1:18112`
 
 | Product | Price | Buy | Guide |
 |---------|-------|-----|-------|
-| Hermes beginner setup (Win/Mac) | $47 | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-setup-buy.html) | [Guide](https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html) |
+| Hermes beginner setup (Win/Mac) | **$47/mo** | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-setup-buy.html) | [Guide](https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html) |
 | Polly Alert Deck setup | $37 | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/poly-setup-buy.html) | [Guide](https://mknight2690-sys.github.io/Polly-Poly-Bot/poly-alert-deck-setup.html) |
 | Hermes + Polly bundle | $67 | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/bundle-buy.html) | [Unlock](https://mknight2690-sys.github.io/Polly-Poly-Bot/bundle-unlock.html) |
 
