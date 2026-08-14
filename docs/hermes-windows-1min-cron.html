@@ -152,6 +152,36 @@
       color: #d5deea;
       font-size: 0.95rem;
     }
+    .country-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 14px 0 18px;
+    }
+    @media (max-width: 700px) {
+      .country-grid { grid-template-columns: 1fr; }
+    }
+    .country-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 14px 16px;
+    }
+    .country-card h3 { margin: 0 0 10px; }
+    .country-card ul { margin: 0; }
+    .country-card.ok { border-color: rgba(61,214,140,.35); }
+    .country-card.bad { border-color: rgba(255,123,114,.35); }
+    .tag-ok { color: var(--good); font-weight: 700; }
+    .tag-bad { color: var(--warn); font-weight: 700; }
+    .flow-box {
+      border: 1px solid rgba(245,197,66,.35);
+      background: rgba(245,197,66,.06);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 14px 0 18px;
+    }
+    .flow-box ol { margin: 8px 0 0; }
+    .flow-box li { color: #ffe7a3; }
   </style>
 </head>
 <body>
@@ -159,7 +189,7 @@
     <h1>Get Hermes trading for you on Windows</h1>
     <p class="lead">
       Follow this page alone. No Cursor. No ChatGPT. No OpenRouter.
-      Install Hermes → open the browser dashboard → VPN in a Blofin-accepted country → paste your Blofin key path →
+      Install Hermes → open the browser dashboard → Proton VPN to a Blofin-accepted country → paste your Blofin key path →
       create the cron in the dashboard <strong>Cron</strong> section → set Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong> →
       paste the prompt → Hermes trades for you.
     </p>
@@ -184,7 +214,7 @@
     </div>
 
     <div class="goal">
-      <strong>Simple path:</strong> install Hermes → <code>hermes dashboard</code> → VPN accepted country →
+      <strong>Simple path:</strong> install Hermes → <code>hermes dashboard</code> → free Proton Connect / Change server until Blofin-allowed →
       paste Blofin key path below → open dashboard <strong>Cron</strong> section → Provider <strong>Nous</strong> + Model <strong>tencent/hy free</strong> →
       paste personalized prompt → save → done.
     </div>
@@ -193,7 +223,7 @@
       <div><strong style="color:var(--text)">Do these in order</strong></div>
       <a href="#install">1. Install Hermes</a>
       <a href="#dashboard">2. Open the browser dashboard</a>
-      <a href="#vpn">3. Put VPN in a Blofin-accepted country</a>
+      <a href="#vpn">3. Proton VPN → Blofin-accepted country</a>
       <a href="#path">4. Paste your Blofin key path (builds the prompt)</a>
       <a href="#cron">5. Create the cron in the dashboard Cron section</a>
       <a href="#prompt">6. Copy your personalized prompt into that cron</a>
@@ -257,19 +287,113 @@ hermes doctor</pre>
       We create the job in the dashboard <strong>Cron</strong> section — not from Hermes chat, not from CLI.
     </div>
 
-    <h2 id="vpn">3. Put VPN in a Blofin-accepted country</h2>
+    <h2 id="vpn">3. Proton VPN → Blofin-accepted country</h2>
     <p>
-      Blofin blocks many jurisdictions. Your VPN exit IP must be in a country Blofin allows.
-      Netherlands and many other EU countries are commonly used accepted exits.
+      Blofin blocks many jurisdictions. Your VPN exit IP must land in a country Blofin allows
+      or private API calls return an HTML geo/WAF page instead of JSON and Hermes looks “broken.”
+      This guide uses free <strong>Proton VPN</strong> (what most people start with).
     </p>
 
-    <h3>Do this before first private API call</h3>
+    <h3>Install / open Proton VPN (free)</h3>
     <ol>
-      <li>Turn your VPN <strong>on</strong>.</li>
-      <li>Choose an exit in a <strong>Blofin-accepted</strong> country (example: Netherlands / NL).</li>
-      <li>Confirm your public IP country matches that exit:</li>
+      <li>Install Proton VPN for Windows from the official site:</li>
+    </ol>
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Proton VPN download</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>https://protonvpn.com/download</pre>
+    </div>
+    <ol start="2">
+      <li>Sign up / log in on the <strong>Free</strong> plan.</li>
+      <li>On free Proton you <strong>cannot pick a country</strong>. You hit <strong>Connect</strong>, then use <strong>Change server</strong> until you land somewhere Blofin allows.</li>
     </ol>
 
+    <h3>Countries free Proton VPN can put you on</h3>
+    <p>
+      Official free-server countries (Proton docs): United States, Canada, Mexico, Netherlands, Japan,
+      Romania, Poland, Norway, Switzerland, Singapore.
+      Free plan first connect usually lands on the <strong>United States</strong>.
+    </p>
+
+    <div class="country-grid">
+      <div class="country-card ok">
+        <h3><span class="tag-ok">Blofin allows</span> (use these)</h3>
+        <ul>
+          <li><strong>Mexico</strong></li>
+          <li><strong>Netherlands</strong></li>
+          <li><strong>Japan</strong></li>
+          <li><strong>Switzerland</strong></li>
+          <li><strong>Norway</strong></li>
+          <li><strong>Romania</strong></li>
+          <li><strong>Poland</strong></li>
+        </ul>
+      </div>
+      <div class="country-card bad">
+        <h3><span class="tag-bad">Blofin blocks</span> (do not stay here)</h3>
+        <ul>
+          <li><strong>United States</strong> (common first Connect)</li>
+          <li><strong>Canada</strong></li>
+          <li><strong>Singapore</strong></li>
+        </ul>
+        <p class="hint" style="margin-top:10px;color:var(--muted);font-size:0.9rem;">
+          Also blocked by Blofin Terms (not on free Proton): China, India, UAE, and many others —
+          see Blofin Restricted Locations in their Terms of Use.
+        </p>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Quick read of free Proton vs Blofin:</strong>
+      Mexico / Netherlands / Japan / Switzerland / Norway / Romania / Poland = keep.
+      United States / Canada / Singapore = Change server (or restart the flow below).
+    </div>
+
+    <h3>Free Proton “Connect → Change server” flow (exact)</h3>
+    <div class="flow-box">
+      <strong style="color:var(--text)">Do this before any private Blofin / Hermes API call:</strong>
+      <ol>
+        <li>Hit <strong>Connect</strong>. On free Proton it usually connects to the <strong>United States</strong> first (blocked by Blofin).</li>
+        <li>Wait <strong>1 minute 30 seconds</strong> for traffic to settle.</li>
+        <li>Hit <strong>Change server</strong>.</li>
+        <li>
+          Check the country shown in Proton (or verify with the IP links below).
+          If it is Blofin-allowed (Mexico, Netherlands, Japan, Switzerland, Norway, Romania, Poland) → <strong>done</strong>. Stay connected.
+        </li>
+        <li>
+          If still blocked (US / Canada / Singapore): wait <strong>1 minute 40 seconds</strong>, then hit <strong>Change server</strong> again.
+          Done if allowed.
+        </li>
+        <li>
+          If still blocked: wait <strong>1 minute 50 seconds</strong>, then hit <strong>Change server</strong> again.
+          Done if allowed.
+        </li>
+        <li>
+          If you are <strong>still</strong> not on a Blofin-allowed country: free Proton will usually force a
+          <strong>~10 minute</strong> wait before the next Change server. Do <strong>not</strong> sit on that timer.
+          Instead: <strong>Disconnect</strong> → hit <strong>Connect</strong> again (likely US again) →
+          wait the <strong>10 minutes</strong> for the change-server cooldown to clear → then restart this whole process
+          from step 2 (1:30 → Change server → 1:40 → Change server → 1:50 → Change server).
+        </li>
+      </ol>
+    </div>
+
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Free Proton VPN cheat-sheet</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>1) Connect (often lands US — Blofin blocked)
+2) Wait 1:30 → Change server → keep if MX/NL/JP/CH/NO/RO/PL
+3) Still blocked? Wait 1:40 → Change server
+4) Still blocked? Wait 1:50 → Change server
+5) Still blocked on free plan? Disconnect → Connect (likely US) → wait 10:00 cooldown → restart from step 2
+Blocked free exits: US, Canada, Singapore
+Allowed free exits: Mexico, Netherlands, Japan, Switzerland, Norway, Romania, Poland</pre>
+    </div>
+
+    <h3>Confirm your public IP country</h3>
     <div class="copy-block" data-copy>
       <header>
         <span>Check your IP country in the browser</span>
@@ -289,15 +413,9 @@ curl.exe https://ipinfo.io/country</pre>
     </div>
 
     <div class="warn">
-      <strong>Restricted / not accepted examples include:</strong> United States, Canada, China, India, Singapore, UAE,
-      and other locations listed in Blofin’s Terms of Use Restricted Locations.
-      If your VPN lands in a restricted country, Blofin may return an HTML geo/WAF page instead of JSON and trading will fail.
-      Stay on an accepted exit the whole time Hermes is trading.
-    </div>
-
-    <div class="note">
-      <strong>Why this matters:</strong> when the IP is wrong, Hermes looks “broken” even with perfect API keys.
-      Fix VPN first, then credentials, then trades.
+      <strong>Stay on an allowed exit the whole time Hermes is trading.</strong>
+      If Proton drops you back onto US / Canada / Singapore, private Blofin calls fail with HTML geo pages
+      and Hermes will look broken even with perfect API keys. Fix VPN first, then credentials, then trades.
     </div>
 
     <h2 id="path">4. Paste your Blofin key path (builds the prompt)</h2>
