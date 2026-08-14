@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Get Hermes Trading for You on Windows (Free Nous + 1-Minute Cron)</title>
-  <meta name="description" content="Public tutorial: install Hermes on Windows, open the dashboard, put VPN in a Blofin-accepted country, paste your API key path, set Nous in cron, and start 1-minute trading." />
+  <title>Hermes + Blofin Setup — Complete Beginner Guide (Windows &amp; Mac)</title>
+  <meta name="description" content="Start with ~$50 after the setup guide: free Proton VPN, Blofin account, debit-card USDT buy, API keys, install Hermes on Windows or Mac, 1-minute cron — Hermes takes trades for you." />
   <style>
     :root {
       --bg: #0b0d10;
@@ -182,123 +182,132 @@
     }
     .flow-box ol { margin: 8px 0 0; }
     .flow-box li { color: #ffe7a3; }
+    .money {
+      border: 1px solid rgba(61,214,140,.35);
+      background: rgba(61,214,140,.07);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 14px 0 20px;
+    }
+    .money ol { margin: 8px 0 0; }
+    .os-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 8px;
+    }
+    .os-tabs button {
+      appearance: none; border: 1px solid #3a4a60; background: #1b2430; color: var(--text);
+      border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .os-tabs button.active {
+      border-color: var(--accent); color: var(--accent); background: rgba(245,197,66,.1);
+    }
+    .os-panel { display: none; }
+    .os-panel.active { display: block; }
+    .checkdone {
+      list-style: none; padding-left: 0;
+    }
+    .checkdone li {
+      margin: 10px 0;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #10151c;
+    }
+    .checkdone li::before {
+      content: "☐ ";
+      color: var(--accent);
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <h1>Get Hermes trading for you on Windows</h1>
+    <h1>Get Hermes trading for you (Windows or Mac)</h1>
     <p class="lead">
-      Follow this page alone. No Cursor. No ChatGPT. No OpenRouter.
-      Install Hermes → open the browser dashboard → Proton VPN to a Blofin-accepted country → create Blofin API (Compendium) → paste key path →
-      create the cron in the dashboard <strong>Cron</strong> section → set Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong> →
-      paste the prompt → Hermes trades for you.
+      This page is for someone who has <strong>never used crypto</strong> and is not a computer person.
+      You already bought this setup guide (~$47). You should still have about <strong>$50</strong> left.
+      Follow every step in order. Tap every <strong>Copy</strong> button. By the end, Hermes should place
+      a trade or two on Blofin for you.
     </p>
 
     <div class="pill-row">
-      <span class="pill good">Dashboard Cron only</span>
-      <span class="pill good">Nous + tencent/hy free</span>
-      <span class="pill">No OpenRouter</span>
-      <span class="pill">1-minute loop</span>
+      <span class="pill good">Complete beginner</span>
+      <span class="pill good">Windows + Mac</span>
+      <span class="pill">Debit card → USDT</span>
+      <span class="pill">1-minute Hermes loop</span>
     </div>
 
     <div class="share">
-      <strong style="color:var(--text)">Public link (share this):</strong><br />
+      <strong style="color:var(--text)">Your guide link (bookmark this):</strong><br />
       <code>https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html</code>
       <div style="margin-top:10px" class="copy-block" data-copy>
         <header>
-          <span>Share URL</span>
+          <span>Share / bookmark URL</span>
           <button class="copy-btn" type="button">Copy</button>
         </header>
         <pre>https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html</pre>
       </div>
     </div>
 
+    <div class="money">
+      <strong style="color:var(--text)">Your money plan (example)</strong>
+      <ol>
+        <li>You started with about <strong>$100</strong>.</li>
+        <li>You paid about <strong>$47</strong> for this setup guide.</li>
+        <li>Keep about <strong>$50</strong> to put onto Blofin with your <strong>debit card</strong>.</li>
+        <li>That ~$50 becomes <strong>USDT</strong> (digital dollars Hermes trades with).</li>
+        <li>Fees exist — you might receive a little less than $50 in USDT. That is normal. Still continue.</li>
+      </ol>
+    </div>
+
     <div class="goal">
-      <strong>Simple path:</strong> install Hermes → <code>hermes dashboard</code> → free Proton Connect / Change server until Blofin-allowed →
-      create Blofin API with Application Name <strong>Compendium</strong> + Trading + Transfer → paste key path below →
-      open dashboard <strong>Cron</strong> section → Provider <strong>Nous</strong> + Model <strong>tencent/hy free</strong> →
-      paste personalized prompt → save → done.
+      <strong>Finish line:</strong> VPN on an allowed country → Blofin has USDT in Futures → Hermes installed →
+      1-minute job running → you see Hermes take at least one trade on Blofin.
+    </div>
+
+    <div class="warn">
+      <strong>Risk (plain English):</strong> Trading can lose money. With ~$50 you can lose some or all of it.
+      Only use money you can afford to lose. This is a how-to, not financial advice. Follow Blofin’s rules and your local laws.
     </div>
 
     <nav class="toc" aria-label="Table of contents">
-      <div><strong style="color:var(--text)">Do these in order</strong></div>
-      <a href="#install">1. Install Hermes</a>
-      <a href="#dashboard">2. Open the browser dashboard</a>
-      <a href="#vpn">3. Proton VPN → Blofin-accepted country</a>
-      <a href="#api">4. Create your Blofin API key (Compendium)</a>
-      <a href="#path">5. Paste your Blofin key path (builds the prompt)</a>
-      <a href="#cron">6. Create the cron in the dashboard Cron section</a>
-      <a href="#prompt">7. Copy your personalized prompt into that cron</a>
-      <a href="#check">8. Confirm it is working</a>
+      <div><strong style="color:var(--text)">Do these in order — do not skip</strong></div>
+      <a href="#words">0. Tiny word list (30 seconds)</a>
+      <a href="#vpn">1. Free Proton VPN → Blofin-allowed country</a>
+      <a href="#blofin">2. Create a Blofin account</a>
+      <a href="#buy">3. Put ~$50 on Blofin with your debit card (buy USDT)</a>
+      <a href="#transfer">4. Move USDT into Futures (so Hermes can trade)</a>
+      <a href="#api">5. Create Blofin API key (Compendium + Trading + Transfer)</a>
+      <a href="#savekeys">6. Save keys in a text file on your computer</a>
+      <a href="#install">7. Install Hermes (Windows or Mac)</a>
+      <a href="#dashboard">8. Open the Hermes dashboard in your browser</a>
+      <a href="#path">9. Paste your key-file path (builds the prompt)</a>
+      <a href="#cron">10. Create the 1-minute cron job</a>
+      <a href="#prompt">11. Copy the prompt into that cron job</a>
+      <a href="#check">12. Confirm Hermes takes a trade or two</a>
     </nav>
 
-    <h2 id="install">1. Install Hermes</h2>
-    <ol>
-      <li>Open <strong>PowerShell</strong>.</li>
-      <li>Paste this and press Enter:</li>
-    </ol>
+    <h2 id="words">0. Tiny word list (30 seconds)</h2>
+    <ul>
+      <li><strong>Blofin</strong> — the exchange website where your money and trades live.</li>
+      <li><strong>USDT</strong> — “digital dollars” on Blofin. Roughly 1 USDT ≈ $1.</li>
+      <li><strong>VPN</strong> — app that changes which country the internet thinks you are in. Required.</li>
+      <li><strong>API key</strong> — a password-like key that lets Hermes trade for you (not your login password).</li>
+      <li><strong>Hermes</strong> — the free program on your computer that thinks and places trades.</li>
+      <li><strong>Dashboard</strong> — Hermes’ control page in your web browser.</li>
+      <li><strong>Cron</strong> — a repeating timer. Ours runs Hermes every 1 minute.</li>
+      <li><strong>PowerShell</strong> (Windows) / <strong>Terminal</strong> (Mac) — the black/white text window where you paste install commands. You open it from the Start menu (Windows) or Spotlight (Mac).</li>
+    </ul>
 
-    <div class="copy-block" data-copy>
-      <header>
-        <span>PowerShell — install Hermes</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>iex (irm https://hermes-agent.nousresearch.com/install.ps1)</pre>
-    </div>
-
-    <ol start="3">
-      <li>Close PowerShell, open a <strong>new</strong> window.</li>
-      <li>Confirm:</li>
-    </ol>
-
-    <div class="copy-block" data-copy>
-      <header>
-        <span>PowerShell — verify</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>hermes --version
-hermes doctor</pre>
-    </div>
-
-    <div class="note">
-      You do <strong>not</strong> need OpenRouter at all. In the dashboard Cron setup you will pick
-      Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong> from the dropdowns.
-      If the dashboard asks you to log into Nous Portal, finish that once.
-    </div>
-
-    <h2 id="dashboard">2. Open the browser dashboard</h2>
-    <div class="copy-block" data-copy>
-      <header>
-        <span>PowerShell — launch dashboard</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>hermes dashboard</pre>
-    </div>
-
-    <p>Browser should open. If not:</p>
-    <div class="copy-block" data-copy>
-      <header>
-        <span>Dashboard URL</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>http://127.0.0.1:9119</pre>
-    </div>
-
-    <div class="steps-inline">
-      Keep this browser dashboard open.<br />
-      We create the job in the dashboard <strong>Cron</strong> section — not from Hermes chat, not from CLI.
-    </div>
-
-    <h2 id="vpn">3. Proton VPN → Blofin-accepted country</h2>
+    <h2 id="vpn">1. Free Proton VPN → Blofin-allowed country</h2>
     <p>
-      Blofin blocks many jurisdictions. Your VPN exit IP must land in a country Blofin allows
-      or private API calls return an HTML geo/WAF page instead of JSON and Hermes looks “broken.”
-      This guide uses free <strong>Proton VPN</strong> (what most people start with).
+      Do this <strong>before</strong> you sign up for Blofin or buy crypto.
+      Blofin blocks some countries (including the United States, Canada, and Singapore).
+      Free Proton VPN fixes that for most beginners.
     </p>
 
-    <h3>Install / open Proton VPN (free)</h3>
+    <h3>Install Proton VPN</h3>
     <ol>
-      <li>Install Proton VPN for Windows from the official site:</li>
+      <li>Open this link and download Proton VPN for your computer (Windows or Mac):</li>
     </ol>
     <div class="copy-block" data-copy>
       <header>
@@ -308,204 +317,371 @@ hermes doctor</pre>
       <pre>https://protonvpn.com/download</pre>
     </div>
     <ol start="2">
-      <li>Sign up / log in on the <strong>Free</strong> plan.</li>
-      <li>On free Proton you <strong>cannot pick a country</strong>. You hit <strong>Connect</strong>, then use <strong>Change server</strong> until you land somewhere Blofin allows.</li>
+      <li>Install it. Create a free Proton account if asked. Stay on the <strong>Free</strong> plan.</li>
+      <li>Open Proton VPN. On free, you cannot pick a country. You use <strong>Connect</strong> and <strong>Change server</strong>.</li>
     </ol>
 
-    <h3>Countries free Proton VPN can put you on</h3>
+    <h3>Countries free Proton can land on</h3>
     <p>
-      Official free-server countries (Proton docs): United States, Canada, Mexico, Netherlands, Japan,
-      Romania, Poland, Norway, Switzerland, Singapore.
-      Free plan first connect usually lands on the <strong>United States</strong>.
+      Free servers exist in: United States, Canada, Mexico, Netherlands, Japan, Romania, Poland, Norway, Switzerland, Singapore.
+      First Connect usually lands on the <strong>United States</strong> (blocked by Blofin).
     </p>
 
     <div class="country-grid">
       <div class="country-card ok">
-        <h3><span class="tag-ok">Blofin allows</span> (use these)</h3>
+        <h3><span class="tag-ok">Keep these</span> (Blofin allows)</h3>
         <ul>
-          <li><strong>Mexico</strong></li>
-          <li><strong>Netherlands</strong></li>
-          <li><strong>Japan</strong></li>
-          <li><strong>Switzerland</strong></li>
-          <li><strong>Norway</strong></li>
-          <li><strong>Romania</strong></li>
-          <li><strong>Poland</strong></li>
+          <li>Mexico</li>
+          <li>Netherlands</li>
+          <li>Japan</li>
+          <li>Switzerland</li>
+          <li>Norway</li>
+          <li>Romania</li>
+          <li>Poland</li>
         </ul>
       </div>
       <div class="country-card bad">
-        <h3><span class="tag-bad">Blofin blocks</span> (do not stay here)</h3>
+        <h3><span class="tag-bad">Leave these</span> (Blofin blocks)</h3>
         <ul>
-          <li><strong>United States</strong> (common first Connect)</li>
-          <li><strong>Canada</strong></li>
-          <li><strong>Singapore</strong></li>
+          <li>United States (common first Connect)</li>
+          <li>Canada</li>
+          <li>Singapore</li>
         </ul>
-        <p class="hint" style="margin-top:10px;color:var(--muted);font-size:0.9rem;">
-          Also blocked by Blofin Terms (not on free Proton): China, India, UAE, and many others —
-          see Blofin Restricted Locations in their Terms of Use.
-        </p>
       </div>
     </div>
 
-    <div class="note">
-      <strong>Quick read of free Proton vs Blofin:</strong>
-      Mexico / Netherlands / Japan / Switzerland / Norway / Romania / Poland = keep.
-      United States / Canada / Singapore = Change server (or restart the flow below).
-    </div>
-
-    <h3>Free Proton “Connect → Change server” flow (exact)</h3>
+    <h3>Exact free Proton flow</h3>
     <div class="flow-box">
-      <strong style="color:var(--text)">Do this before any private Blofin / Hermes API call:</strong>
+      <strong style="color:var(--text)">Do this until Proton shows an allowed country:</strong>
       <ol>
-        <li>Hit <strong>Connect</strong>. On free Proton it usually connects to the <strong>United States</strong> first (blocked by Blofin).</li>
-        <li>Wait <strong>1 minute 30 seconds</strong> for traffic to settle.</li>
-        <li>Hit <strong>Change server</strong>.</li>
+        <li>Hit <strong>Connect</strong>. Free plan often connects to the <strong>United States</strong> first.</li>
+        <li>Wait <strong>1 minute 30 seconds</strong>.</li>
+        <li>Hit <strong>Change server</strong>. If you land on Mexico / Netherlands / Japan / Switzerland / Norway / Romania / Poland → <strong>stop, you’re done</strong>.</li>
+        <li>If still blocked (US / Canada / Singapore): wait <strong>1 minute 40 seconds</strong>, then <strong>Change server</strong> again.</li>
+        <li>If still blocked: wait <strong>1 minute 50 seconds</strong>, then <strong>Change server</strong> again.</li>
         <li>
-          Check the country shown in Proton (or verify with the IP links below).
-          If it is Blofin-allowed (Mexico, Netherlands, Japan, Switzerland, Norway, Romania, Poland) → <strong>done</strong>. Stay connected.
-        </li>
-        <li>
-          If still blocked (US / Canada / Singapore): wait <strong>1 minute 40 seconds</strong>, then hit <strong>Change server</strong> again.
-          Done if allowed.
-        </li>
-        <li>
-          If still blocked: wait <strong>1 minute 50 seconds</strong>, then hit <strong>Change server</strong> again.
-          Done if allowed.
-        </li>
-        <li>
-          If you are <strong>still</strong> not on a Blofin-allowed country: free Proton will usually force a
-          <strong>~10 minute</strong> wait before the next Change server. Do <strong>not</strong> sit on that timer.
-          Instead: <strong>Disconnect</strong> → hit <strong>Connect</strong> again (likely US again) →
-          wait the <strong>10 minutes</strong> for the change-server cooldown to clear → then restart this whole process
-          from step 2 (1:30 → Change server → 1:40 → Change server → 1:50 → Change server).
+          If still blocked: free Proton usually forces a ~<strong>10 minute</strong> wait.
+          Instead: <strong>Disconnect</strong> → <strong>Connect</strong> (likely US again) → wait the <strong>10 minutes</strong> → restart from the 1:30 step.
         </li>
       </ol>
     </div>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>Free Proton VPN cheat-sheet</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>1) Connect (often lands US — Blofin blocked)
-2) Wait 1:30 → Change server → keep if MX/NL/JP/CH/NO/RO/PL
-3) Still blocked? Wait 1:40 → Change server
-4) Still blocked? Wait 1:50 → Change server
-5) Still blocked on free plan? Disconnect → Connect (likely US) → wait 10:00 cooldown → restart from step 2
-Blocked free exits: US, Canada, Singapore
-Allowed free exits: Mexico, Netherlands, Japan, Switzerland, Norway, Romania, Poland</pre>
-    </div>
-
-    <h3>Confirm your public IP country</h3>
-    <div class="copy-block" data-copy>
-      <header>
-        <span>Check your IP country in the browser</span>
+        <span>Prove your country (open in browser while VPN is on)</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
       <pre>https://ipinfo.io
 https://ifconfig.co/country</pre>
     </div>
 
-    <div class="copy-block" data-copy>
-      <header>
-        <span>Optional PowerShell check</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>curl.exe https://ifconfig.co/country
-curl.exe https://ipinfo.io/country</pre>
-    </div>
-
     <div class="warn">
-      <strong>Stay on an allowed exit the whole time Hermes is trading.</strong>
-      If Proton drops you back onto US / Canada / Singapore, private Blofin calls fail with HTML geo pages
-      and Hermes will look broken even with perfect API keys. Fix VPN first, then credentials, then trades.
+      Leave Proton VPN <strong>connected</strong> for the rest of this tutorial and whenever Hermes is trading.
+      If it drops back to US / Canada / Singapore, Blofin will look “broken.”
+      Also: keep your laptop <strong>awake</strong> (plugged in helps). If the computer sleeps, the 1-minute loop pauses.
     </div>
 
-    <h2 id="api">4. Create your Blofin API key (Compendium)</h2>
-    <p>
-      Do this while your Proton VPN is already on a <strong>Blofin-allowed</strong> country (Section 3).
-      You need three values later: <strong>Passphrase</strong>, <strong>API Key</strong>, and <strong>API Secret</strong>.
-    </p>
-
+    <h2 id="blofin">2. Create a Blofin account</h2>
     <ol>
-      <li>Open Blofin (browser) and log in.</li>
+      <li>VPN still on an allowed country? Good.</li>
+      <li>Open Blofin:</li>
     </ol>
     <div class="copy-block" data-copy>
       <header>
-        <span>Blofin site</span>
+        <span>Blofin website</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
       <pre>https://blofin.com</pre>
     </div>
+    <ol start="3">
+      <li>Click <strong>Sign Up</strong>. Use email + password you will remember.</li>
+      <li>Verify your email if asked.</li>
+      <li>Log in. You should see the Blofin home / assets area.</li>
+      <li>If Blofin asks for identity verification (KYC) later when buying with a card, complete it — that is normal for debit-card buys.</li>
+    </ol>
 
-    <ol start="2">
-      <li>Click your profile / account menu (top right) → <strong>API</strong> / <strong>API Management</strong>.</li>
-      <li>Click <strong>Create API Key</strong> (or <strong>+ Create API Key</strong>).</li>
-      <li>Choose <strong>Connect to Third-Party Applications</strong> (not the generic “API Transaction” option).</li>
-      <li>
-        <strong>Application Name</strong> dropdown: select <strong>Compendium</strong>
-        (type <code>compendium</code> if the list is long — pick that exact app name).
-      </li>
-      <li>API Key Name: anything you’ll recognize later (example: <code>Hermes</code>).</li>
-      <li>
-        Permissions — check these boxes:
-        <ul>
-          <li><strong>Trading</strong> (Trade) — required so Hermes can place / manage orders</li>
-          <li><strong>Transfer</strong> — required for this setup (check it)</li>
-          <li>Read is usually on by default — leave it on</li>
-        </ul>
-      </li>
-      <li>Set a <strong>Passphrase</strong> you will save (Blofin will not show it again later — you choose it now).</li>
-      <li>Leave IP whitelist empty unless you know you need one (local Hermes on your PC usually needs no fixed IP list).</li>
-      <li>Click Next / Confirm and finish email + 2FA verification.</li>
-      <li>
-        Copy <strong>API Key</strong> and <strong>API Secret</strong> immediately (Secret is shown once).
-        Put them in a <code>.txt</code> file with your Passphrase (Section 5).
-      </li>
+    <div class="note">
+      You do <strong>not</strong> need to understand charts yet. You only need an account, USDT balance, and an API key.
+    </div>
+
+    <h2 id="buy">3. Put ~$50 on Blofin with your debit card (buy USDT)</h2>
+    <p>
+      This turns your remaining cash into USDT on Blofin using your debit card.
+      Aim for about <strong>$50</strong> (or whatever you have left after the $47 guide).
+    </p>
+    <ol>
+      <li>On Blofin (web), click <strong>Buy Crypto</strong>.</li>
+      <li>Spend currency: pick your fiat (example: <strong>USD</strong>).</li>
+      <li>Receive crypto: choose <strong>USDT</strong>.</li>
+      <li>Enter about <strong>50</strong> (or your leftover amount).</li>
+      <li>Payment method: <strong>Card (VISA/Mastercard)</strong>.</li>
+      <li>Click <strong>Buy</strong>.</li>
+      <li>If asked, click <strong>Add New Card</strong>, enter your debit card, confirm.</li>
+      <li>If Blofin asks for identity verification, finish it, then return to Buy Crypto.</li>
+      <li>Review fees and amount → <strong>Buy Now</strong>.</li>
+      <li>Approve the bank / card text message or one-time password if your bank asks.</li>
+      <li>Wait until USDT shows in your Blofin account (Funding).</li>
     </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>Blofin API create checklist</span>
+        <span>Debit-card onramp checklist</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>Blofin → Profile → API Management → Create API Key
-Type: Connect to Third-Party Applications
-Application Name: Compendium
-API Key Name: Hermes (or any label)
-Permissions: Trading (checked) + Transfer (checked) + Read
-Passphrase: choose one and save it
-Save API Key + API Secret + Passphrase into a .txt file</pre>
-    </div>
-
-    <div class="warn">
-      <strong>Must be checked:</strong> <strong>Trading</strong> and <strong>Transfer</strong>.
-      If Trading is off, Hermes cannot place orders. If Transfer is off, this setup can fail when Hermes needs transfer permission.
-      Do <strong>not</strong> enable Withdraw unless you deliberately want withdrawal rights (this guide does not need Withdraw).
+      <pre>Blofin → Buy Crypto
+Spend: ~50 (your leftover cash)
+Receive: USDT
+Pay with: Card (VISA/Mastercard)
+Add debit card → verify KYC if asked → Buy Now
+Wait until USDT appears in Funding</pre>
     </div>
 
     <div class="note">
-      Application Name must be <strong>Compendium</strong> from the dropdown — not a custom typed broker name,
-      and not “API Transaction” alone. Wrong application selection can break partner tagging / expected broker behavior.
+      Official Blofin card-buy help:
+      <a href="https://blofin.com/en/support/FAQ/Buy-Crypto/12016051211023-How-to-Buy-Crypto-with-CreditDebit-Card-Web" target="_blank" rel="noreferrer">Buy with card (web)</a>.
+      Fiat buys can have a 24–48h hold before <em>withdrawals</em>. Trading can still work after USDT arrives — you are funding Hermes, not withdrawing yet.
     </div>
 
-    <h2 id="path">5. Paste your Blofin key path (builds the prompt)</h2>
+    <div class="warn">
+      If your card is declined, try again after KYC, try another card, or pick another payment method Blofin shows on the Buy Crypto screen.
+      Do not continue to Hermes until you can see a USDT balance under Assets.
+      If Buy Crypto is greyed out or blocked, your VPN is probably still on a blocked country — go back to Section 1.
+    </div>
+
+    <h2 id="transfer">4. Move USDT into Futures (so Hermes can trade)</h2>
     <p>
-      Put the Passphrase / API Key / API Secret you just created into a plain <code>.txt</code> file on your PC.
-      Then paste that full file path below. The prompt updates automatically so you can copy it into cron.
+      Card buys land in <strong>Funding</strong>. Hermes trading needs USDT in the <strong>Futures</strong> / <strong>USDT-M</strong> account.
+      Moving money between them is free and instant.
     </p>
+    <ol>
+      <li>On Blofin, open <strong>Assets</strong> (or Wallet).</li>
+      <li>Click <strong>Transfer</strong>.</li>
+      <li>From: <strong>Funding</strong></li>
+      <li>To: <strong>Futures</strong> / <strong>USDT-M</strong> (same idea — futures trading wallet)</li>
+      <li>Coin: <strong>USDT</strong></li>
+      <li>Amount: almost all of it (leave a tiny bit in Funding if the screen wants a minimum — otherwise Max is fine)</li>
+      <li>Confirm.</li>
+      <li>Check Assets → Futures and confirm you see USDT there.</li>
+    </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>Example credentials file contents</span>
+        <span>Funding → Futures transfer</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>Passphrase: YOUR_PASSPHRASE
-API Key: YOUR_API_KEY
-API Secret: YOUR_API_SECRET</pre>
+      <pre>Assets → Transfer
+From: Funding
+To: Futures / USDT-M
+Coin: USDT
+Amount: Max (or almost all)
+Confirm → verify Futures balance shows USDT</pre>
     </div>
 
+    <h2 id="api">5. Create Blofin API key (Compendium + Trading + Transfer)</h2>
+    <p>This is how Hermes gets permission to trade your account. VPN must still be on.</p>
+    <ol>
+      <li>Blofin → profile / account menu (top right) → <strong>API</strong> / <strong>API Management</strong>.</li>
+      <li>Click <strong>Create API Key</strong>.</li>
+      <li>Choose <strong>Connect to Third-Party Applications</strong>.</li>
+      <li>
+        <strong>Application Name</strong> dropdown: select <strong>Compendium</strong>
+        (type <code>compendium</code> to find it).
+      </li>
+      <li>API Key Name: type <code>Hermes</code>.</li>
+      <li>
+        Permissions — check:
+        <ul>
+          <li><strong>Trading</strong> (Trade) — required</li>
+          <li><strong>Transfer</strong> — required for this setup</li>
+          <li>Read — leave on</li>
+        </ul>
+        Do <strong>not</strong> turn on Withdraw for this guide.
+      </li>
+      <li>Create a <strong>Passphrase</strong> (like a mini-password). Write it down — you need it in the next step.</li>
+      <li>Leave IP whitelist empty unless you know you need one.</li>
+      <li>Confirm with email / 2FA codes.</li>
+      <li>Copy <strong>API Key</strong> and <strong>API Secret</strong> right away (Secret is shown once).</li>
+    </ol>
+
+    <div class="copy-block" data-copy>
+      <header>
+        <span>API create checklist</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>API Management → Create API Key
+Connect to Third-Party Applications
+Application Name: Compendium
+API Key Name: Hermes
+Permissions: Trading ON + Transfer ON + Read ON
+Withdraw: OFF
+Save Passphrase + API Key + API Secret now</pre>
+    </div>
+
+    <h2 id="savekeys">6. Save keys in a text file on your computer</h2>
+    <p>Hermes will read this file. Do not email it. Do not put it in cloud chat.</p>
+
+    <div class="os-tabs" role="tablist" aria-label="Choose your computer">
+      <button type="button" class="active" data-os="win">I’m on Windows</button>
+      <button type="button" data-os="mac">I’m on Mac</button>
+    </div>
+
+    <div class="os-panel active" data-os-panel="win">
+      <ol>
+        <li>Click Start → type <strong>Notepad</strong> → open it.</li>
+        <li>Paste this template, then replace the three values with yours:</li>
+      </ol>
+      <div class="copy-block" data-copy>
+        <header>
+          <span>Credentials file template</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>Passphrase: YOUR_PASSPHRASE
+API Key: YOUR_API_KEY
+API Secret: YOUR_API_SECRET</pre>
+      </div>
+      <ol start="3">
+        <li>File → Save As.</li>
+        <li>Folder: <strong>Downloads</strong></li>
+        <li>File name: <code>My Blofin API Compendium.txt</code></li>
+        <li>Save as type: <strong>All files</strong> (important) so it stays a <code>.txt</code>.</li>
+        <li>Save.</li>
+        <li>In File Explorer, open Downloads, hold <strong>Shift</strong>, right-click the file → <strong>Copy as path</strong>. You’ll paste that path in Section 9.</li>
+      </ol>
+    </div>
+
+    <div class="os-panel" data-os-panel="mac">
+      <ol>
+        <li>Open <strong>TextEdit</strong> (Spotlight: press Cmd+Space, type TextEdit).</li>
+        <li>Format menu → <strong>Make Plain Text</strong> (important).</li>
+        <li>Paste this template, then replace the three values with yours:</li>
+      </ol>
+      <div class="copy-block" data-copy>
+        <header>
+          <span>Credentials file template</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>Passphrase: YOUR_PASSPHRASE
+API Key: YOUR_API_KEY
+API Secret: YOUR_API_SECRET</pre>
+      </div>
+      <ol start="4">
+        <li>File → Save.</li>
+        <li>Save to <strong>Downloads</strong>.</li>
+        <li>Name: <code>My Blofin API Compendium.txt</code></li>
+        <li>In Finder → Downloads, right-click the file → hold <strong>Option</strong> → <strong>Copy … as Pathname</strong>. You’ll paste that path in Section 9.</li>
+      </ol>
+    </div>
+
+    <h2 id="install">7. Install Hermes (Windows or Mac)</h2>
+    <p>Hermes is free. Pick your computer type and follow only that column.</p>
+
+    <div class="os-tabs" role="tablist" aria-label="Install OS">
+      <button type="button" class="active" data-os="win">Windows install</button>
+      <button type="button" data-os="mac">Mac install</button>
+    </div>
+
+    <div class="os-panel active" data-os-panel="win">
+      <h3>Windows</h3>
+      <ol>
+        <li>Click Start → type <strong>PowerShell</strong> → open <strong>Windows PowerShell</strong>.</li>
+        <li>Copy-paste this line and press Enter:</li>
+      </ol>
+      <div class="copy-block" data-copy>
+        <header>
+          <span>Windows — install Hermes</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>iex (irm https://hermes-agent.nousresearch.com/install.ps1)</pre>
+      </div>
+      <ol start="3">
+        <li>Wait until it finishes (can take several minutes).</li>
+        <li><strong>Close</strong> that PowerShell window. Open a <strong>new</strong> PowerShell.</li>
+        <li>Check it worked:</li>
+      </ol>
+      <div class="copy-block" data-copy>
+        <header>
+          <span>Windows — verify</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>hermes --version
+hermes doctor</pre>
+      </div>
+      <div class="note">
+        If Windows says <code>hermes</code> is not recognized, you forgot to open a <strong>new</strong> PowerShell after install. Close and reopen, then try again.
+      </div>
+    </div>
+
+    <div class="os-panel" data-os-panel="mac">
+      <h3>Mac</h3>
+      <ol>
+        <li>Open <strong>Terminal</strong> (Cmd+Space, type Terminal, Enter).</li>
+        <li>If Mac asks to install developer tools / git the first time you run install commands, click Install and wait.</li>
+        <li>Copy-paste this line and press Enter:</li>
+      </ol>
+      <div class="copy-block" data-copy>
+        <header>
+          <span>Mac — install Hermes</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</pre>
+      </div>
+      <ol start="4">
+        <li>When it finishes, close Terminal and open a <strong>new</strong> Terminal window.</li>
+        <li>Check it worked:</li>
+      </ol>
+      <div class="copy-block" data-copy>
+        <header>
+          <span>Mac — verify</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>hermes --version
+hermes doctor</pre>
+      </div>
+      <div class="note">
+        If <code>hermes</code> is not found, close Terminal completely and open a new one so your PATH updates.
+      </div>
+    </div>
+
+    <div class="steps-inline">
+      You do <strong>not</strong> need OpenRouter. You do <strong>not</strong> need ChatGPT paid.
+      In the dashboard cron setup you will pick Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong>.
+      If Hermes asks you to log into <strong>Nous Portal</strong>, finish that once — it is free.
+    </div>
+
+    <h2 id="dashboard">8. Open the Hermes dashboard in your browser</h2>
+    <p>In the same PowerShell (Windows) or Terminal (Mac):</p>
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Launch dashboard</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>hermes dashboard</pre>
+    </div>
+    <p>A browser page should open. If it does not, open this yourself:</p>
+    <div class="copy-block" data-copy>
+      <header>
+        <span>Dashboard URL</span>
+        <button class="copy-btn" type="button">Copy</button>
+      </header>
+      <pre>http://127.0.0.1:9119</pre>
+    </div>
+    <div class="warn">
+      Leave that terminal window open. If you close it, the dashboard / cron loop can stop.
+    </div>
+
+    <h2 id="path">9. Paste your key-file path (builds the prompt)</h2>
+    <p>
+      Paste the full path to the text file from Section 6.
+      The big prompt in Section 11 updates automatically.
+    </p>
+
     <div class="builder">
-      <label for="credPath">Blofin credentials file path</label>
+      <label for="osPick">Which computer did you save the file on?</label>
+      <div class="os-tabs" style="margin-top:0">
+        <button type="button" class="active" id="pathWinBtn">Windows path</button>
+        <button type="button" id="pathMacBtn">Mac path</button>
+      </div>
+      <label for="credPath" style="margin-top:12px">Blofin credentials file path</label>
       <input
         id="credPath"
         type="text"
@@ -514,58 +690,47 @@ API Secret: YOUR_API_SECRET</pre>
         placeholder="C:\Users\YOURNAME\Downloads\My Blofin API Compendium.txt"
         value=""
       />
-      <p class="hint">
-        Tip: in File Explorer, hold Shift → right-click the file → <strong>Copy as path</strong>, then paste here
-        (quotes are fine; they get stripped).
+      <p class="hint" id="pathHint">
+        Windows tip: File Explorer → Downloads → Shift+right-click file → Copy as path → paste here (quotes are fine).
       </p>
       <div class="status" id="pathStatus">Prompt uses placeholder path until you paste yours.</div>
     </div>
 
-    <h2 id="cron">6. Create the cron in the dashboard Cron section</h2>
+    <h2 id="cron">10. Create the 1-minute cron job</h2>
     <p>
-      Do this in the browser dashboard only — the <strong>Cron</strong> section/tab at
-      <code>http://127.0.0.1:9119</code>. Do <strong>not</strong> create it from Hermes chat.
+      Do this in the browser dashboard only — the <strong>Cron</strong> section at
+      <code>http://127.0.0.1:9119</code>. Not from chat.
     </p>
     <ol>
       <li>In the dashboard, open <strong>Cron</strong>.</li>
       <li>Click create / new job.</li>
-      <li>Schedule: <code>every 1m</code></li>
+      <li>Schedule: type or pick <code>every 1m</code> (every 1 minute).</li>
       <li>Name: <code>blofin-equity-vertical</code></li>
       <li>Provider dropdown: <strong>Nous</strong></li>
-      <li>Model dropdown: <strong>tencent/hy free</strong> (same free Tencent Hy option shown in the UI)</li>
+      <li>Model dropdown: <strong>tencent/hy free</strong></li>
       <li>Delivery: <code>local</code> is fine</li>
-      <li>Prompt field: paste the personalized prompt from Section 7</li>
-      <li>Save, then run once from the Cron section to test</li>
+      <li>Now go to Section 11, hit <strong>Copy</strong> on the big prompt, come back, paste it into the Prompt box, then <strong>Save</strong>.</li>
+      <li>Click <strong>Run</strong> / run once if the dashboard shows that button.</li>
     </ol>
 
     <div class="copy-block" data-copy>
       <header>
-        <span>Dashboard Cron settings</span>
+        <span>Cron settings</span>
         <button class="copy-btn" type="button">Copy</button>
       </header>
-      <pre>Where: Dashboard → Cron section (browser)
+      <pre>Dashboard → Cron
 Schedule: every 1m
 Name: blofin-equity-vertical
 Provider: Nous
 Model: tencent/hy free
 Deliver: local
-Prompt: paste Section 7</pre>
+Prompt: paste Section 11</pre>
     </div>
 
-    <div class="note">
-      Keep <code>hermes dashboard</code> running so cron keeps ticking.
-      If you close the dashboard host process, the 1-minute loop stops.
-    </div>
-
-    <div class="warn">
-      If one tick takes longer than 60 seconds, the next tick can be delayed. That is normal.
-      Do not force bad entries just to “stay busy.”
-    </div>
-
-    <h2 id="prompt">7. Copy your personalized prompt into that cron</h2>
+    <h2 id="prompt">11. Copy the prompt into that cron job</h2>
     <p>
-      After you paste your path in Section 5, this prompt updates.
-      Hit <strong>Copy</strong>, then paste it into the Prompt box in the dashboard Cron create/edit form.
+      After your path is in Section 9, hit <strong>Copy</strong> below, then paste into the Cron Prompt box and save.
+      Then use the dashboard’s <strong>Run once</strong> / run button if you see one.
     </p>
 
     <div class="copy-block" data-copy>
@@ -576,50 +741,76 @@ Prompt: paste Section 7</pre>
       <pre id="cronPrompt"></pre>
     </div>
 
-    <h2 id="check">8. Confirm it is working</h2>
-    <ol>
-      <li>VPN still shows an accepted country.</li>
-      <li>Blofin API was created with Application Name <strong>Compendium</strong> and <strong>Trading + Transfer</strong> checked.</li>
-      <li>In dashboard <strong>Cron</strong>, the job is listed with Provider <strong>Nous</strong> and Model <strong>tencent/hy free</strong>.</li>
-      <li>Run one tick from the Cron section.</li>
-      <li>Hermes reads real USDT equity/available as JSON (not an HTML geo page).</li>
-      <li>When it takes a trade, it shows up on Blofin with TP/SL.</li>
-      <li>Lesson/memory files grow under <code>%LOCALAPPDATA%\hermes\</code> over time.</li>
-    </ol>
+    <h2 id="check">12. Confirm Hermes takes a trade or two</h2>
+    <p>Stay calm. The first minute may only “look around.” Keep VPN on and the dashboard/terminal open.</p>
 
-    <div class="copy-block" data-copy>
-      <header>
-        <span>PowerShell — peek learning folders</span>
-        <button class="copy-btn" type="button">Copy</button>
-      </header>
-      <pre>Get-ChildItem "$env:LOCALAPPDATA\hermes\memories" -ErrorAction SilentlyContinue
-Get-ChildItem "$env:LOCALAPPDATA\hermes\cron" -ErrorAction SilentlyContinue</pre>
-    </div>
+    <ul class="checkdone">
+      <li>Proton still shows an allowed country (not US / Canada / Singapore).</li>
+      <li>Blofin Futures shows your USDT.</li>
+      <li>Cron job exists with Nous + tencent/hy free.</li>
+      <li>You ran the job at least once from the Cron section.</li>
+      <li>Hermes can read your balance (real numbers — not a blocked HTML page).</li>
+      <li>Within a few cycles, open Blofin → Futures / Orders / Positions and look for Hermes activity (open position or filled order with TP/SL).</li>
+    </ul>
 
     <div class="goal">
-      <strong>Done when:</strong> Hermes installed → browser dashboard open → VPN accepted →
-      Blofin API on <strong>Compendium</strong> with Trading + Transfer →
-      Cron section job on <strong>Nous + tencent/hy free</strong> → personalized prompt pasted →
-      account JSON works → Hermes keeps the equity curve vertical on its own.
+      <strong>You are done when:</strong> you can open Blofin → Futures and see that Hermes opened at least one position
+      or filled at least one order (often with take-profit / stop-loss attached), while the 1-minute cron keeps running.
+      “Looking around / no edge this minute” in the log is OK — wait a few more minutes before panicking.
+    </div>
+
+    <div class="note">
+      <strong>If nothing trades for a while:</strong> that can be normal — the prompt tells Hermes not to force bad entries.
+      Check the Cron run log/output in the dashboard. If you see “restricted country” or HTML errors, fix VPN first (Section 1), then re-run.
+      If balance is 0, redo Sections 3–4 (buy + transfer to Futures).
+    </div>
+
+    <div class="os-tabs" role="tablist" aria-label="Optional peek folders">
+      <button type="button" class="active" data-os="win">Windows folders (optional)</button>
+      <button type="button" data-os="mac">Mac folders (optional)</button>
+    </div>
+    <div class="os-panel active" data-os-panel="win">
+      <div class="copy-block" data-copy>
+        <header>
+          <span>Windows — peek learning folders</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>Get-ChildItem "$env:LOCALAPPDATA\hermes\memories" -ErrorAction SilentlyContinue
+Get-ChildItem "$env:LOCALAPPDATA\hermes\cron" -ErrorAction SilentlyContinue</pre>
+      </div>
+    </div>
+    <div class="os-panel" data-os-panel="mac">
+      <div class="copy-block" data-copy>
+        <header>
+          <span>Mac — peek learning folders</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </header>
+        <pre>ls -la ~/.hermes/memories 2>/dev/null
+ls -la ~/.hermes/cron 2>/dev/null</pre>
+      </div>
     </div>
 
     <footer>
-      Public tutorial. Trading involves risk of loss. Follow Blofin’s Terms of Use and your local laws.
-      This is operational documentation, not financial advice.<br />
+      Public tutorial for Windows and Mac beginners. Trading involves risk of loss.
+      Follow Blofin’s Terms of Use and your local laws. This is operational documentation, not financial advice.<br />
       Official Hermes docs:
-      <a href="https://hermes-agent.nousresearch.com/docs/user-guide/windows-native" target="_blank" rel="noreferrer">Windows install</a> ·
+      <a href="https://hermes-agent.nousresearch.com/docs/getting-started/installation" target="_blank" rel="noreferrer">Install</a> ·
       <a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard" target="_blank" rel="noreferrer">Dashboard</a> ·
-      <a href="https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron" target="_blank" rel="noreferrer">Cron</a>
+      <a href="https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron" target="_blank" rel="noreferrer">Cron</a> ·
+      Blofin card buy:
+      <a href="https://blofin.com/en/support/FAQ/Buy-Crypto/12016051211023-How-to-Buy-Crypto-with-CreditDebit-Card-Web" target="_blank" rel="noreferrer">Help article</a>
     </footer>
   </main>
 
   <script>
-    const DEFAULT_PATH = String.raw`C:\Users\YOURNAME\Downloads\My Blofin API Compendium.txt`;
+    const DEFAULT_WIN = String.raw`C:\Users\YOURNAME\Downloads\My Blofin API Compendium.txt`;
+    const DEFAULT_MAC = `/Users/YOURNAME/Downloads/My Blofin API Compendium.txt`;
+    let defaultPath = DEFAULT_WIN;
     const PLACEHOLDER = "__BLOFIN_CRED_PATH__";
 
     const PROMPT_TEMPLATE = `LEARNING ACROSS CRON TICKS (READ FIRST)
 Each cron run is a fresh session. Do not assume chat memory from prior ticks.
-Before trading: read your durable learning artifacts (skills / memory / lessons files under %LOCALAPPDATA%\\hermes\\ and any project lessons files) and apply them.
+Before trading: read your durable learning artifacts (skills / memory / lessons files under %LOCALAPPDATA%\\hermes\\ or ~/.hermes/ and any project lessons files) and apply them.
 If lessons say a setup type loses, respect that. If lessons say a setup type wins, bias toward it only when live structure still confirms.
 Learning that stays only in this turn’s reply is wasted — you must use durable files.
 
@@ -633,7 +824,7 @@ Use exactly: ${PLACEHOLDER}
 (Passphrase / API Key / API Secret). Prefer this file over any older repo credentials/blofin.txt paths. Confirm which key is loaded before first private call.
 
 SCOREBOARD
-Only scoreboard: take and keep the Blofin equity curve vertical. No rushing. No forced entries. Isolated margin only. Longs and shorts both allowed when the edge is real. Do not deny a good edge just because other positions are open. Never be in a rush to lose money.
+Only scoreboard: take and keep the Blofin equity curve vertical. No rushing. No forced entries. Isolated margin only. Longs and shorts both allowed when the edge is real. Do not deny a good edge just because other positions are open. Never be in a rush to lose money. Account is small (~$50 USDT class) — size tiny, protect equity, still take real edges when they appear.
 
 --- HOW TO ACTUALLY GET TRADES THROUGH (THE “UNCONQUERABLE” BLOCKER) ---
 What looks like a hard block is usually NOT “Blofin banned you” and NOT “API keys invalid.”
@@ -648,6 +839,7 @@ WHY IT HAPPENS
 4) Broken/incompatible PyPI \`blofin\` package (missing methods, bad AccountAPI). Do not depend on that package as the only path.
 5) Clock skew on signed requests — sync to Blofin server time when signing.
 6) Missing ACCESS headers / passphrase / brokerId when the key requires them.
+7) USDT still sitting in Funding instead of Futures / USDT-M — transfer first.
 
 WHAT IS TRUE FOR THIS SETUP
 - Operator VPN is already in a Blofin-accepted country (NL-compatible posture). Netherlands is not on Blofin’s restricted list for retail access; Dutch/EU users can register and trade. MiCA/offshore status is regulatory context, not a reason to invent geo-blocks.
@@ -662,6 +854,7 @@ D) Confirm live endpoints and live credentials. Test in this order: public time 
 E) If “Failed to get server time”: fix transport first (CF bypass), then re-sync timestamp. Do not keep retrying signed trade calls against HTML.
 F) If package SDK is broken: call REST directly with correct ACCESS-KEY / ACCESS-SIGN / ACCESS-TIMESTAMP / ACCESS-PASSPHRASE (and broker id if required). Parse only JSON. If body starts with <!DOCTYPE html>, treat as transport failure and escalate A–C — never parse HTML as account data.
 G) Never fall back to a fake demo $40 equity when live sync fails. Refuse phantom balances. Fix the pipe, then trade.
+H) Confirm Futures / USDT-M available balance is non-zero before claiming there is nothing to trade.
 
 SUCCESS CRITERIA FOR “API WORKS”
 - Account balance returns JSON with real USDT equity/available.
@@ -670,11 +863,11 @@ SUCCESS CRITERIA FOR “API WORKS”
 Only after that do you scale activity.
 
 --- TRADING RULES (MANUAL, AUTONOMOUS) ---
-Scan the full USDT universe yourself (REST/WS/Camoufox — your eyes and judgment). Manually choose entries. Place orders yourself. Attach TP/SL yourself. Isolated margin only. Prefer clarity over activity. Compound wins; do not force rotations with thin free margin. Stay open to longs and shorts. No max position cap — but every position must have a clear edge and hard risk.
+Scan the full USDT universe yourself (REST/WS/Camoufox — your eyes and judgment). Manually choose entries. Place orders yourself. Attach TP/SL yourself. Isolated margin only. Prefer clarity over activity. Compound wins; do not force rotations with thin free margin. Stay open to longs and shorts. No max position cap — but every position must have a clear edge and hard risk. With a small account, prefer the smallest valid size that still has a clear edge.
 If something breaks mid-session: TROUBLESHOOT AND FIX ANY/ALL ISSUES THAT ARISE using the blocker playbook above. Do not stop at “blocked.” Fix transport, verify JSON, then resume trading.
 
 PROCEED NOW
-Confirm credentials path → confirm VPN accepted country → prove JSON account read (Camoufox and/or curl_cffi) → scan → take righteous trades by hand → manage positions → keep equity curve vertical.
+Confirm credentials path → confirm VPN accepted country → prove JSON account read (Camoufox and/or curl_cffi) → confirm Futures USDT → scan → take righteous trades by hand → manage positions → keep equity curve vertical.
 
 LEARNING ACROSS CRON TICKS (WRITE BEFORE YOU FINISH)
 After this cycle: write what worked, what failed, and the exact reusable rule into a durable skill or lessons file (Hermes skills/memory and/or a local lessons markdown/jsonl file).
@@ -694,16 +887,58 @@ If nothing material changed, still append a one-line “hold / no edge” note w
       const input = document.getElementById("credPath");
       const out = document.getElementById("cronPrompt");
       const status = document.getElementById("pathStatus");
-      const path = cleanPath(input.value) || DEFAULT_PATH;
+      const path = cleanPath(input.value) || defaultPath;
       out.textContent = PROMPT_TEMPLATE.replaceAll(PLACEHOLDER, path);
       if (cleanPath(input.value)) {
-        status.textContent = "Prompt updated with your path. Copy Section 7 into the cron.";
+        status.textContent = "Prompt updated with your path. Copy Section 11 into the cron.";
       } else {
         status.textContent = "Prompt uses placeholder path until you paste yours.";
       }
     }
 
     document.getElementById("credPath").addEventListener("input", renderPrompt);
+
+    // Sync all OS tab groups independently by nearest section panels
+    document.querySelectorAll(".os-tabs").forEach((tabRow) => {
+      const buttons = [...tabRow.querySelectorAll("button[data-os]")];
+      if (!buttons.length) return;
+      // Find panels that follow this tab row until next h2 or another os-tabs
+      let el = tabRow.nextElementSibling;
+      const panels = [];
+      while (el && !el.matches("h2") && !(el.matches(".os-tabs") && el !== tabRow)) {
+        if (el.matches("[data-os-panel]")) panels.push(el);
+        el = el.nextElementSibling;
+      }
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const os = btn.getAttribute("data-os");
+          buttons.forEach((b) => b.classList.toggle("active", b === btn));
+          panels.forEach((p) => p.classList.toggle("active", p.getAttribute("data-os-panel") === os));
+        });
+      });
+    });
+
+    const pathWinBtn = document.getElementById("pathWinBtn");
+    const pathMacBtn = document.getElementById("pathMacBtn");
+    const pathHint = document.getElementById("pathHint");
+    const credPath = document.getElementById("credPath");
+    pathWinBtn.addEventListener("click", () => {
+      pathWinBtn.classList.add("active");
+      pathMacBtn.classList.remove("active");
+      defaultPath = DEFAULT_WIN;
+      credPath.placeholder = DEFAULT_WIN;
+      pathHint.textContent = "Windows tip: File Explorer → Downloads → Shift+right-click file → Copy as path → paste here (quotes are fine).";
+      renderPrompt();
+    });
+    pathMacBtn.addEventListener("click", () => {
+      pathMacBtn.classList.add("active");
+      pathWinBtn.classList.remove("active");
+      defaultPath = DEFAULT_MAC;
+      credPath.placeholder = DEFAULT_MAC;
+      pathHint.textContent = "Mac tip: Finder → Downloads → right-click file → hold Option → Copy as Pathname → paste here.";
+      renderPrompt();
+    });
+
     renderPrompt();
 
     document.querySelectorAll("[data-copy]").forEach((block) => {

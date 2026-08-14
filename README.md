@@ -10,17 +10,17 @@ Dashboard: `http://127.0.0.1:18112`
 
 | Product | Price | Buy | Guide |
 |---------|-------|-----|-------|
-| Hermes API / Windows setup | $47 | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-setup-buy.html) | [Guide](https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html) |
+| Hermes beginner setup (Win/Mac) | $47 | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-setup-buy.html) | [Guide](https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html) |
 | Polly Alert Deck setup | $37 | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/poly-setup-buy.html) | [Guide](https://mknight2690-sys.github.io/Polly-Poly-Bot/poly-alert-deck-setup.html) |
 | Hermes + Polly bundle | $67 | [Buy](https://mknight2690-sys.github.io/Polly-Poly-Bot/bundle-buy.html) | [Unlock](https://mknight2690-sys.github.io/Polly-Poly-Bot/bundle-unlock.html) |
 
-## Hermes Windows how-to (public)
+## Hermes beginner how-to (public)
 
 Anyone can open this with no GitHub login:
 
 **https://mknight2690-sys.github.io/Polly-Poly-Bot/hermes-windows-1min-cron.html**
 
-Install Hermes → open browser dashboard → VPN in a Blofin-accepted country → paste Blofin key path (auto-builds prompt) → create the job in dashboard **Cron** with Provider **Nous** and Model **tencent/hy free** → paste prompt. No OpenRouter. Copy buttons are on the page.
+Built for someone with ~$50 left after buying the guide: free Proton VPN → Blofin signup → debit-card USDT buy → Funding→Futures transfer → Compendium API (Trading+Transfer) → install Hermes on **Windows or Mac** → dashboard Cron with **Nous + tencent/hy free** → personalized prompt. Copy buttons throughout.
 
 Local file: [docs/hermes-windows-1min-cron.html](docs/hermes-windows-1min-cron.html)
 
