@@ -527,6 +527,33 @@ Confirm credentials path → detect key type → prove JSON balance read (sync c
 
       applyOS('windows');
 
+      document.querySelectorAll('.video').forEach(function(videoBlock) {
+        var video = videoBlock.querySelector('video');
+        if (!video) return;
+        var sources = Array.from(video.querySelectorAll('source'));
+        var checked = 0;
+        var hasValid = false;
+        sources.forEach(function(source) {
+          var img = new Image();
+          img.src = source.src;
+          checked++;
+          img.onload = function() { hasValid = true; checkDone(); };
+          img.onerror = function() { checkDone(); };
+        });
+        if (checked === 0) showFallback(videoBlock);
+        function checkDone() {
+          if (hasValid || --checked > 0) return;
+          if (!video.querySelector('source[src]')) showFallback(videoBlock);
+        }
+        function showFallback(block) {
+          var msg = document.createElement('div');
+          msg.style.cssText = 'aspect-ratio:16/9;width:100%;display:flex;align-items:center;justify-content:center;color:#9aa3ad;background:#0f1115;border-top:1px solid #262c34;padding:18px;text-align:center;';
+          msg.textContent = 'Video walkthrough will appear here once the published assets are added for this step.';
+          block.appendChild(msg);
+          video.style.display = 'none';
+        }
+      });
+
       document.querySelectorAll('.copybtn').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var text = btn.getAttribute('data-copy');
